@@ -1,24 +1,18 @@
 import {z} from "zod";
 import {getZodParams} from "../../helpers/getZodParams";
-import {RequestHandler} from "express";
-import {getParseErrorMessage} from "../../helpers/getParseErrorMessage";
-import {StatusError} from "../../index";
+import {asyncExpressHandler, StatusError} from "../../helpers/asyncExpressHandler";
 
 const queriesSchema = z.object({
     name: z.string(getZodParams("string")),
     age: z.preprocess(value => value ? Number(value) : value, z.number(getZodParams("number"))),
 })
 
-export const greeting: RequestHandler = async ({query: unknownQueries}, res, next) => {
-    try {
-        const parsedQueries = queriesSchema.safeParse(unknownQueries)
-        if (parsedQueries.success) {
-            const {name, age} = parsedQueries.data
-            res.status(200).json(`Hello ${name}, you are ${age} years old`)
-        } else {
-            throw new StatusError(500, getParseErrorMessage(parsedQueries.error))
+export const greeting = asyncExpressHandler<string>(
+    async ({query: unknownQueries}, res) => {
+        const {name, age} = queriesSchema.parse(unknownQueries)
+        if (age < 18) {
+            throw new StatusError(401, "You are under 18, you are not authorized")
         }
-    } catch (e) {
-        next(e)
+        res.status(200).json(`Hello ${name}, you are ${age} years old`)
     }
-}
+)
