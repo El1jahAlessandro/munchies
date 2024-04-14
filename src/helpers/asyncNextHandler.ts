@@ -1,8 +1,7 @@
 import _ from 'lodash';
-import {ZodError} from 'zod';
-import {RequestHandler} from "express";
-import expressAsyncHandler from "express-async-handler";
-import {getParseErrorMessage} from "./getParseErrorMessage";
+import { ZodError } from 'zod';
+import { getParseErrorMessage } from './getParseErrorMessage';
+import { NextRequest, NextResponse } from 'next/server';
 
 export class StatusError extends Error {
     public statusCode: number;
@@ -17,16 +16,14 @@ export class StatusError extends Error {
     }
 }
 
-type ResponseType<T> = T | { name?: string; message: string }
+type ResponseType<T> = NextResponse<T> | NextResponse<{ error: string } | unknown>;
 
-export function asyncExpressHandler<ResponseBody = unknown>(
-    f: RequestHandler<undefined, ResponseType<ResponseBody>>
-): RequestHandler<undefined, ResponseType<ResponseBody>> {
-    if (!_.isFunction(f)) throw new Error(`Missing async HTTP handler function: ${f}`);
-
-    return expressAsyncHandler<undefined, ResponseType<ResponseBody>>(async (req, res, next) => {
+export function asyncNextHandler<ResBody = unknown>(
+    fn: (request: NextRequest, response: NextResponse<ResBody>) => Promise<ResponseType<ResBody>>
+) {
+    return async function (req: NextRequest, res: NextResponse<ResBody>): Promise<ResponseType<ResBody>> {
         try {
-            await f(req, res, next)
+            return await fn(req, res);
         } catch (unknownError) {
             console.error(unknownError);
             let err;
@@ -45,10 +42,11 @@ export function asyncExpressHandler<ResponseBody = unknown>(
                     err = new Error('internal server error');
                 }
             }
-            res.status(err instanceof StatusError ? err.statusCode : 400).send({
-                name: err.name,
-                message: err.message,
-            })
+
+            return NextResponse.json(
+                { error: err.message },
+                { status: err instanceof StatusError ? err.statusCode : 400 }
+            );
         }
-    })
+    };
 }

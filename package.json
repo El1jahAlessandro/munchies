@@ -1,0 +1,60 @@
+{
+  "name": "functions",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "prisma:db:pull": "prisma db pull",
+    "prisma:db:push": "prisma db push",
+    "prisma:db:seed": "prisma db seed",
+    "prisma:generate": "prisma generate",
+    "prisma:generate:watch": "prisma generate --watch",
+    "prisma:migrate:deploy": "prisma migrate deploy",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:reset": "prisma migrate reset",
+    "start:migrate:dev": "prisma migrate dev && npm run dev",
+    "start:migrate:prod": "prisma migrate deploy && npm run start"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.12.7",
+    "@types/react": "^18.2.77",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "3.2.5",
+    "prisma": "^5.12.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "@emotion/cache": "^11.11.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@hookform/resolvers": "^3.3.4",
+    "@mui/material": "^5.15.15",
+    "@mui/material-nextjs": "^5.15.11",
+    "@prisma/client": "^5.12.1",
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "next": "^14.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.51.3",
+    "zod": "^3.22.4"
+  }
+}

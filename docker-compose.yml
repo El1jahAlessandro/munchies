@@ -1,0 +1,29 @@
+services:
+  database:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    hostname: postgres
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:?err}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?err}
+      POSTGRES_DB: ${DATABASE_NAME:?err}
+    ports:
+      - ${DATABASE_PORT}:${DATABASE_PORT}
+  next-app:
+    container_name: next-app
+    image: next-app
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - database
+
+volumes:
+  postgres:
+    name: munchies-db

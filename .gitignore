@@ -1,5 +1,7 @@
-/.idea
-*/node_modules/
-*/dist/
+.idea
+.next/
+node_modules/
+dist/
 *.env*
-*/npm-debug.log
+npm-debug.log
+next-env.d.ts
