@@ -4,11 +4,14 @@ import { prisma } from '@/utils/prisma';
 import { getHashedPassword } from '@/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/utils/jwt';
 import { createUserBodySchema } from '@/schemas/user.schema';
+import { uploadImage } from '@/utils/cloudinary';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
     const data = createUserBodySchema.parse(await req.json());
-    const { email, password } = data;
+    const { email, password, profilePic } = data;
+
+    uploadImage(profilePic ?? '');
 
     // check if user already exists in the database based on the email
     const userExists = await prisma.user.findUnique({ where: { email } });

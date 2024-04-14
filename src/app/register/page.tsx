@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
-import * as fs from 'node:fs';
 
 export default function RegisterPage() {
     const { push } = useRouter();
@@ -42,12 +41,7 @@ export default function RegisterPage() {
     const onSubmit = (formData: CreateUserBodyType) => {
         setIsLoading(true);
         setErrorMessage(undefined);
-        console.log({
-            ...formData,
-            profilePic: formData.profilePic,
-        });
-        const byteArrayBuffer = fs.readFileSync(formData.profilePic ?? '');
-        console.log('byteArrayBuffer', byteArrayBuffer);
+        console.log(formData);
         setTimeout(async () => {
             try {
                 await axios.post(api.user.create, formData).then(() => {

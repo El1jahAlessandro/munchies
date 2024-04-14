@@ -12,7 +12,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?err}
       POSTGRES_DB: ${DATABASE_NAME:?err}
     ports:
-      - ${DATABASE_PORT}:${DATABASE_PORT}
+      - "5432:5432"
   next-app:
     container_name: next-app
     image: next-app

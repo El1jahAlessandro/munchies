@@ -6,3 +6,7 @@ v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
     secure: true,
 });
+
+export function uploadImage(file: string) {
+    v2.uploader.upload(file).then(result => console.log(result));
+}
