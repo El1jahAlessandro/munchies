@@ -8,10 +8,21 @@ import { uploadImage } from '@/utils/cloudinary';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
-    const data = createUserBodySchema.parse(await req.json());
+    const formData = await req.formData();
+    const data = createUserBodySchema.parse({
+        email: formData.get('email'),
+        password: formData.get('password'),
+        forename: formData.get('forename'),
+        lastname: formData.get('lastname'),
+        profilePic: formData.get('profilePic'),
+        accountType: formData.get('accountType'),
+    });
     const { email, password, profilePic } = data;
 
-    uploadImage(profilePic ?? '');
+    console.log('data: ', data);
+    /*    if (profilePic) {
+        uploadImage(profilePic);
+    }*/
 
     // check if user already exists in the database based on the email
     const userExists = await prisma.user.findUnique({ where: { email } });
@@ -24,6 +35,7 @@ export const POST = asyncNextHandler(async req => {
     const createdUser = await prisma.user.create({
         data: {
             ...data,
+            profilePic: '',
             password: await getHashedPassword(password),
             createdAt: new Date(),
             updatedAt: new Date(),

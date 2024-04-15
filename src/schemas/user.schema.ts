@@ -13,7 +13,7 @@ export const authUserBodySchema = z.object({
 export const createUserBodySchema = authUserBodySchema.merge(
     z.object({
         accountType: accountTypeSchema,
-        profilePic: z.string().optional(),
+        profilePic: z.instanceof(File).optional(),
         forename: z.string().nullish(),
         lastname: z.string().nullish(),
     })

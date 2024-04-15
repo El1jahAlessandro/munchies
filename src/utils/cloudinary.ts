@@ -6,13 +6,13 @@ v2.config({
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadImage(FileStream: ArrayBuffer) {
+export async function uploadImage(File: File) {
     const uploadResult = await new Promise(resolve => {
         v2.uploader
             .upload_stream((error, uploadResult) => {
                 return resolve(uploadResult);
             })
-            .end(FileStream);
+            .end(File);
     });
 
     console.log(uploadResult);
