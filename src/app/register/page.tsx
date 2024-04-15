@@ -74,6 +74,7 @@ export default function RegisterPage() {
                                 {Object.values($Enums.AccountType).map(type => (
                                     <FormControlLabel
                                         value={type}
+                                        key={type}
                                         control={<Radio />}
                                         label={type.charAt(0).toUpperCase() + type.slice(1)}
                                     />
