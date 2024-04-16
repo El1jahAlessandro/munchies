@@ -40,8 +40,6 @@ export const POST = asyncNextHandler(async req => {
             ...data,
             profilePic: uploadedPictureId,
             password: await getHashedPassword(password),
-            createdAt: new Date(),
-            updatedAt: new Date(),
         },
     });
 
