@@ -1,5 +1,7 @@
-import { prisma } from '@/utils/prisma';
-import { getHashedPassword } from '@/helpers/getHashedPassword';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
+
+const prisma = new PrismaClient();
 
 async function main() {
     const max = await prisma.user.create({
@@ -7,7 +9,7 @@ async function main() {
             email: 'max.mustermann@gmail.com',
             forename: 'Max',
             lastname: 'Mustermann',
-            password: await getHashedPassword('test123'),
+            password: await bcrypt.hash('test123', await bcrypt.genSalt()),
             accountType: 'user',
         },
     });

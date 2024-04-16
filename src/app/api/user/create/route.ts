@@ -19,7 +19,7 @@ export const POST = asyncNextHandler(async req => {
     });
     const { email, password, profilePic } = data;
 
-    let uploadedPictureId = '';
+    let uploadedPictureId: string | undefined;
     if (profilePic) {
         const uploadedImage = await uploadImage(profilePic);
         if (uploadedImage) {
