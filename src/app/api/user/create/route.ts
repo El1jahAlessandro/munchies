@@ -19,10 +19,13 @@ export const POST = asyncNextHandler(async req => {
     });
     const { email, password, profilePic } = data;
 
-    console.log('data: ', data);
-    /*    if (profilePic) {
-        uploadImage(profilePic);
-    }*/
+    let uploadedPictureId = '';
+    if (profilePic) {
+        const uploadedImage = await uploadImage(profilePic);
+        if (uploadedImage) {
+            uploadedPictureId = uploadedImage.public_id;
+        }
+    }
 
     // check if user already exists in the database based on the email
     const userExists = await prisma.user.findUnique({ where: { email } });
@@ -35,7 +38,7 @@ export const POST = asyncNextHandler(async req => {
     const createdUser = await prisma.user.create({
         data: {
             ...data,
-            profilePic: '',
+            profilePic: uploadedPictureId,
             password: await getHashedPassword(password),
             createdAt: new Date(),
             updatedAt: new Date(),

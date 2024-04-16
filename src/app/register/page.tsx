@@ -26,7 +26,6 @@ export default function RegisterPage() {
     const { push } = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const {
-        register,
         control,
         watch,
         formState: { errors },
@@ -52,8 +51,7 @@ export default function RegisterPage() {
             action={api.user.create}
             method={'post'}
             control={control}
-            onSubmit={formData => {
-                console.log(formData.formData.values());
+            onSubmit={() => {
                 setIsLoading(true);
                 setErrorMessage(undefined);
             }}
@@ -187,14 +185,15 @@ export default function RegisterPage() {
                     <Button type={'submit'} color={'success'} variant={'contained'}>
                         {isLoading ? <CircularProgress /> : 'Submit'}
                     </Button>
-                    {/* errorMessage?.response?.error ||
-                        (errors.root?.message && (
+                    {(errorMessage?.error || errors.root?.message) && (
+                        <>
                             <div>
                                 <span style={{ color: 'red' }}>
-                                    {errorMessage?.error ?? errors.root?.message ?? ''}
+                                    {(errorMessage?.error as string) ?? errors.root?.message ?? ''}
                                 </span>
                             </div>
-                        )) */}
+                        </>
+                    )}
                     <div>
                         <span>
                             Already have an account? <Link href={pages.login}>Log in here</Link>

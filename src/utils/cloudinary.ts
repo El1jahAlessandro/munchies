@@ -1,4 +1,5 @@
 import { v2 } from 'cloudinary';
+import { cloudinaryResponseSchema } from '@/schemas/common.schema';
 
 v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -7,13 +8,15 @@ v2.config({
 });
 
 export async function uploadImage(File: File) {
-    const uploadResult = await new Promise(resolve => {
+    const arrayBuffer = await File.arrayBuffer();
+    const byteArray = new Uint8Array(arrayBuffer);
+    const cloudinaryResponse = await new Promise(resolve => {
         v2.uploader
             .upload_stream((error, uploadResult) => {
                 return resolve(uploadResult);
             })
-            .end(File);
+            .end(byteArray);
     });
 
-    console.log(uploadResult);
+    return cloudinaryResponseSchema.parse(cloudinaryResponse);
 }
