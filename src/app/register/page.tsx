@@ -1,9 +1,8 @@
 'use client';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { AuthUserInputType, CreateUserBodyType, createUserInputSchema } from '@/schemas/user.schema';
+import { AuthUserInputType, createUserInputSchema } from '@/schemas/user.schema';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
-import axios, { AxiosError } from 'axios';
 import { api, pages } from '@/utils/routes';
 import {
     Button,
