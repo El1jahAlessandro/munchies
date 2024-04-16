@@ -7,7 +7,11 @@ import { cookieOptions, createAuthorizationToken } from '@/utils/jwt';
 
 export const POST = asyncNextHandler(async req => {
     // extract login data from request body
-    const data = authUserBodySchema.parse(await req.json());
+    const formData = await req.formData();
+    const data = authUserBodySchema.parse({
+        email: formData.get('email'),
+        password: formData.get('password'),
+    });
     const { email, password } = data;
 
     // get user from the database based on email
