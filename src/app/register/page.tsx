@@ -1,6 +1,6 @@
 'use client';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { AuthUserInputType, createUserInputSchema } from '@/schemas/user.schema';
+import { CreateUserBodyType, createUserInputSchema } from '@/schemas/user.schema';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 import { api, pages } from '@/utils/routes';
@@ -28,7 +28,7 @@ export default function RegisterPage() {
         control,
         watch,
         formState: { errors },
-    } = useForm<AuthUserInputType>({
+    } = useForm<CreateUserBodyType>({
         defaultValues: {
             accountType: 'user',
         },

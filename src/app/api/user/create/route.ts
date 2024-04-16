@@ -9,14 +9,21 @@ import { uploadImage } from '@/utils/cloudinary';
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
     const formData = await req.formData();
-    const data = createUserBodySchema.parse({
-        email: formData.get('email'),
-        password: formData.get('password'),
-        forename: formData.get('forename'),
-        lastname: formData.get('lastname'),
-        profilePic: formData.get('profilePic'),
-        accountType: formData.get('accountType'),
-    });
+    const unknownTypedProfilePic = formData.get('profilePic');
+    const parsedProfilePic =
+        !!unknownTypedProfilePic && unknownTypedProfilePic instanceof File
+            ? createUserBodySchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
+            : null;
+    const data = {
+        profilePic: parsedProfilePic,
+        ...createUserBodySchema.omit({ profilePic: true }).parse({
+            email: formData.get('email'),
+            password: formData.get('password'),
+            forename: formData.get('forename'),
+            lastname: formData.get('lastname'),
+            accountType: formData.get('accountType'),
+        }),
+    };
     const { email, password, profilePic } = data;
 
     let uploadedPictureId: string | undefined;

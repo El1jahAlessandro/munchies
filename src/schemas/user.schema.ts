@@ -1,9 +1,8 @@
 import { z } from 'zod';
 import { accountTypeSchema, zodMissingError } from '@/schemas/common.schema';
 
-export type CreateUserBodyType = z.infer<typeof createUserBodySchema>;
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
-export type AuthUserInputType = z.infer<typeof createUserInputSchema>;
+export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
 
 export const authUserBodySchema = z.object({
     email: z.string(zodMissingError).email(),
@@ -13,7 +12,7 @@ export const authUserBodySchema = z.object({
 export const createUserBodySchema = authUserBodySchema.merge(
     z.object({
         accountType: accountTypeSchema,
-        profilePic: z.instanceof(File).optional(),
+        profilePic: z.instanceof(File).nullish(),
         forename: z.string().nullish(),
         lastname: z.string().nullish(),
     })

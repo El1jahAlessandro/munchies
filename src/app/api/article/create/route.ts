@@ -22,8 +22,6 @@ export const POST = asyncNextHandler(async req => {
         data: {
             ...data,
             userId,
-            createdAt: new Date(),
-            updatedAt: new Date(),
         },
     });
 
