@@ -3,6 +3,43 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+const categoryData = ['dessert', 'drinks', 'pizza', 'indian', 'pasta', 'burger', 'salad', 'asian'];
+
+const articleData = [
+    {
+        name: 'Weißbrotschnitzel',
+        price: 19.99,
+        picture: '',
+        description: 'Ein Weißbrotschnitzel',
+        ingredients: 'Mehl, Fleisch, Eier',
+        articleCategoriesId: 1,
+    },
+    {
+        name: 'Döner',
+        price: 3,
+        picture: '',
+        description: 'Ein Weißbrotschnitzel',
+        ingredients: 'Mehl, Fleisch, Eier',
+        articleCategoriesId: 1,
+    },
+    {
+        name: 'Pommes',
+        price: 2,
+        picture: '',
+        description: 'Ein Weißbrotschnitzel',
+        ingredients: 'Mehl, Fleisch, Eier',
+        articleCategoriesId: 1,
+    },
+    {
+        name: 'Wiener Schnitzel',
+        price: 17,
+        picture: '',
+        description: 'Ein Weißbrotschnitzel',
+        ingredients: 'Mehl, Fleisch, Eier',
+        articleCategoriesId: 1,
+    },
+];
+
 async function main() {
     const max = await prisma.user.create({
         data: {
@@ -15,7 +52,7 @@ async function main() {
     });
 
     const categories = await prisma.articleCategories.createMany({
-        data: ['dessert', 'drinks', 'pizza', 'indian', 'pasta', 'burger', 'salad', 'asian'].map(category => {
+        data: categoryData.map(category => {
             return {
                 name: category,
                 icon: '',
@@ -23,16 +60,13 @@ async function main() {
         }),
     });
 
-    const article = await prisma.article.create({
-        data: {
-            name: 'Weißbrotschnitzel',
-            price: 19.99,
-            picture: '',
-            description: 'Ein Weißbrotschnitzel',
-            ingredients: 'Mehl, Fleisch, Eier',
-            articleCategoriesId: 1,
-            userId: max.id,
-        },
+    const article = await prisma.article.createMany({
+        data: articleData.map(article => {
+            return {
+                ...article,
+                userId: max.id,
+            };
+        }),
     });
 
     console.log({ max, categories, article });

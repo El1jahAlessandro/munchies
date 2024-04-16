@@ -5,6 +5,10 @@ export const api = {
     },
     article: {
         create: 'api/article/create',
+        get: {
+            all: 'api/article/get/all',
+            byId: 'api/article/get/byId',
+        },
     },
 };
 
