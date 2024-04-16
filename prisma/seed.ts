@@ -8,8 +8,6 @@ async function main() {
             forename: 'Max',
             lastname: 'Mustermann',
             password: await getHashedPassword('test123'),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
             accountType: 'user',
         },
     });
@@ -32,8 +30,6 @@ async function main() {
             ingredients: 'Mehl, Fleisch, Eier',
             articleCategoriesId: 1,
             userId: max.id,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
         },
     });
 
