@@ -34,13 +34,7 @@ export default function RegisterPage() {
         },
         resolver: zodResolver(createUserInputSchema),
     });
-    const [errorMessage, setErrorMessage] = useState<
-        | { response: Response; error?: undefined }
-        | {
-              response?: undefined;
-              error: unknown;
-          }
-    >();
+    const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
     const RadioLabelId = 'account-type-group';
     const PictureLabelId = 'profile-picture-input';
@@ -58,9 +52,9 @@ export default function RegisterPage() {
                 setIsLoading(false);
                 push('/');
             }}
-            onError={error => {
+            onError={async error => {
                 setIsLoading(false);
-                setErrorMessage(error);
+                setErrorMessage(await error.response?.json());
             }}
         >
             <Container maxWidth="sm">

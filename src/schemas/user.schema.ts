@@ -1,12 +1,12 @@
 import { z } from 'zod';
-import { accountTypeSchema, zodMissingError } from '@/schemas/common.schema';
+import { accountTypeSchema } from '@/schemas/common.schema';
 
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
 
 export const authUserBodySchema = z.object({
-    email: z.string(zodMissingError).email(),
-    password: z.string(zodMissingError),
+    email: z.string().email(),
+    password: z.string(),
 });
 
 export const createUserBodySchema = authUserBodySchema.merge(

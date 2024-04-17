@@ -10,13 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 export default function LoginPage() {
     const { push } = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState<
-        | { response: Response; error?: undefined }
-        | {
-              response?: undefined;
-              error: unknown;
-          }
-    >();
+    const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
     const {
         control,
@@ -38,9 +32,9 @@ export default function LoginPage() {
                 setIsLoading(false);
                 push('/');
             }}
-            onError={error => {
+            onError={async error => {
                 setIsLoading(false);
-                setErrorMessage(error);
+                setErrorMessage(await error.response?.json());
             }}
         >
             <Container maxWidth="sm">
