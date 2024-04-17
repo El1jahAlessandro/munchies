@@ -5,7 +5,7 @@ import { Article } from '@prisma/client';
 import { z } from 'zod';
 
 export const GET = asyncNextHandler<Article>(async req => {
-    const { id } = z.object({ id: z.coerce.number() }).parse(await req.json());
+    const id = z.coerce.number().parse(req.nextUrl.searchParams.get('id'));
 
     const article = await prisma.article.findUnique({ where: { id } });
 

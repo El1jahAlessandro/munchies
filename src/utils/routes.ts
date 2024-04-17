@@ -15,4 +15,5 @@ export const api = {
 export const pages = {
     login: '/login',
     register: '/register',
+    article: '/article',
 };

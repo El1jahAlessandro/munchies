@@ -1,5 +1,8 @@
 import { z } from 'zod';
 import { AccountType } from '@prisma/client';
+import { AxiosError } from 'axios';
+
+export type APIError = AxiosError<{ error: string }>;
 
 export const accountTypeSchema = z.nativeEnum(AccountType);
 
