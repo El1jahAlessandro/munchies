@@ -4,12 +4,13 @@ import { Avatar } from '@mui/material';
 import stc from 'string-to-color';
 import { fill } from '@cloudinary/url-gen/actions/resize';
 import { cldImage } from '@/lib/utils/cloudinary-frontend';
+import { User } from '@prisma/client';
 
 type Props = {
     className?: string;
     width?: number;
     height?: number;
-};
+} & Pick<User, 'forename' | 'lastname' | 'profilePic'>;
 
 function getInitials(name: string) {
     const words = name.split(' ');
@@ -17,15 +18,7 @@ function getInitials(name: string) {
     return words.length ? words.map(word => first(word) ?? '').join('') : first(name);
 }
 
-export const ProfilePic = ({ className, width = 100, height = 100 }: Props) => {
-    const user = {
-        forename: 'Elijah',
-        lastname: 'Freimuth',
-        profilePic: 'h31xtbne7rfupukdhbml',
-    };
-    if (!user) {
-        return <>no user found/</>;
-    }
+export const ProfilePic = ({ className, width = 100, height = 100, ...user }: Props) => {
     const name = user.forename + ' ' + (user.lastname ?? '');
     const pictureUrl = !!user.profilePic
         ? cldImage.image(user.profilePic).resize(fill().width(width?.toString()).height(height?.toString())).toURL()

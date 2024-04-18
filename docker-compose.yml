@@ -2,7 +2,6 @@ services:
   database:
     image: postgres:16-alpine
     restart: unless-stopped
-    hostname: postgres
     env_file:
       - .env
     volumes:
@@ -12,10 +11,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?err}
       POSTGRES_DB: ${DATABASE_NAME:?err}
     ports:
-      - target: 5432
-        published: 5432
-        protocol: tcp
-        mode: host
+      - "5433:5432"
   next-app:
     container_name: next-app
     image: next-app
