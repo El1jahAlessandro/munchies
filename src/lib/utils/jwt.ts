@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { User } from '@prisma/client';
 import { pick } from 'lodash';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
 
 type SignOption = {
     expiresIn?: string | number;
@@ -45,6 +46,6 @@ export function tokenExpired(token: string) {
 
 export function createAuthorizationToken(user: User) {
     return createToken({
-        ...pick(user, ['id', 'email', 'accountType']),
+        ...pick(user, AuthorizationTokenSchema.keyof().options),
     });
 }

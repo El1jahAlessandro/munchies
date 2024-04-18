@@ -1,5 +1,5 @@
 import { v2 } from 'cloudinary';
-import { cloudinaryResponseSchema } from '@/schemas/common.schema';
+import { cloudinaryResponseSchema } from '@/lib/schemas/common.schema';
 
 v2.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

@@ -1,16 +1,15 @@
+'use client';
 import { first } from 'lodash';
 import { Avatar } from '@mui/material';
 import stc from 'string-to-color';
-import { User } from '@prisma/client';
-import { v2 } from 'cloudinary';
+import { fill } from '@cloudinary/url-gen/actions/resize';
+import { cldImage } from '@/lib/utils/cloudinary-frontend';
 
 type Props = {
     className?: string;
     width?: number;
     height?: number;
-} & Pick<User, 'forename'> &
-    Pick<User, 'lastname'> &
-    Pick<User, 'profilePic'>;
+};
 
 function getInitials(name: string) {
     const words = name.split(' ');
@@ -18,21 +17,26 @@ function getInitials(name: string) {
     return words.length ? words.map(word => first(word) ?? '').join('') : first(name);
 }
 
-export const ProfilePic = ({ className, width, height, ...userData }: Props) => {
-    const name = userData.forename + ' ' + (userData.lastname ?? '');
-    const pictureUrl = userData.profilePic
-        ? v2.url(userData.profilePic, {
-              width,
-              height,
-          })
+export const ProfilePic = ({ className, width = 100, height = 100 }: Props) => {
+    const user = {
+        forename: 'Elijah',
+        lastname: 'Freimuth',
+        profilePic: 'h31xtbne7rfupukdhbml',
+    };
+    if (!user) {
+        return <>no user found/</>;
+    }
+    const name = user.forename + ' ' + (user.lastname ?? '');
+    const pictureUrl = !!user.profilePic
+        ? cldImage.image(user.profilePic).resize(fill().width(width?.toString()).height(height?.toString())).toURL()
         : undefined;
-    const hasPB = !!userData.profilePic && !!pictureUrl;
+    const hasPB = !!user.profilePic && !!pictureUrl;
     const avatarAttributes = {
         ...{
             sx: {
                 ...{ bgcolor: hasPB ? undefined : stc(name) },
-                ...{ width: width ?? undefined },
-                ...{ height: height ?? undefined },
+                width,
+                height,
             },
             children: hasPB ? undefined : getInitials(name),
             alt: hasPB ? name : undefined,

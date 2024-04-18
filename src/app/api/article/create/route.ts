@@ -1,9 +1,9 @@
-import { prisma } from '@/utils/prisma';
+import { prisma } from '@/lib/utils/prisma';
 import { decode } from 'jsonwebtoken';
-import { asyncNextHandler, StatusError } from '@/helpers/asyncNextHandler';
+import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
-import { createArticleBodySchema } from '@/schemas/article.schema';
-import { AuthorizationTokenSchema, cookieSchema } from '@/schemas/common.schema';
+import { createArticleBodySchema } from '@/lib/schemas/article.schema';
+import { AuthorizationTokenSchema, cookieSchema } from '@/lib/schemas/common.schema';
 
 export const POST = asyncNextHandler(async req => {
     // extract creation data from request body

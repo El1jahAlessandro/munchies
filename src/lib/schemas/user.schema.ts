@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { accountTypeSchema } from '@/schemas/common.schema';
+import { accountTypeSchema } from '@/lib/schemas/common.schema';
 
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;

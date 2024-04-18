@@ -12,6 +12,8 @@ export const AuthorizationTokenSchema = z.object({
     accountType: accountTypeSchema,
 });
 
+export type AuthorizationToken = z.infer<typeof AuthorizationTokenSchema>;
+
 export const cookieSchema = z.object({
     name: z.string(),
     value: z.string(),

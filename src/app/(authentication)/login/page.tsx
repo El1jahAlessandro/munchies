@@ -1,9 +1,9 @@
 'use client';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { authUserBodySchema, AuthUserBodyType } from '@/schemas/user.schema';
+import { authUserBodySchema, AuthUserBodyType } from '@/lib/schemas/user.schema';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { api, pages } from '@/utils/routes';
+import { api, pages } from '@/lib/utils/routes';
 import { Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 

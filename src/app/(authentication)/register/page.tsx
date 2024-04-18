@@ -1,9 +1,9 @@
 'use client';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { CreateUserBodyType, createUserInputSchema } from '@/schemas/user.schema';
+import { CreateUserBodyType, createUserInputSchema } from '@/lib/schemas/user.schema';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
-import { api, pages } from '@/utils/routes';
+import { api, pages } from '@/lib/utils/routes';
 import {
     Button,
     CircularProgress,

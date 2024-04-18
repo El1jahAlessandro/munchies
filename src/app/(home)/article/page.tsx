@@ -1,11 +1,11 @@
 'use client';
-import { api } from '@/utils/routes';
+import { api } from '@/lib/utils/routes';
 import useSWR from 'swr';
 import { Article } from '@prisma/client';
-import { fetcher } from '@/helpers/fetcher';
+import { fetcher } from '@/lib/helpers/fetcher';
 import { useSearchParams } from 'next/navigation';
-import { currencyFormatter } from '@/helpers/currencyFormatter';
-import { APIError } from '@/schemas/common.schema';
+import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
+import { APIError } from '@/lib/schemas/common.schema';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();

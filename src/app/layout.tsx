@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
-import { ProfilePic } from '@/components/ProfilePic/ProfilePic';
+import { UserProvider } from '@/components/hooks/userContext';
 
 export const metadata = {
     title: 'Next.js',
@@ -8,20 +8,11 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
-    // const { data, error, isLoading } = useSWR<User, APIError>(api.article.get.all, fetcher);
-
-    const userData = {
-        forename: 'Elijah',
-        lastname: 'Freimuth',
-        profilePic: 'h31xtbne7rfupukdhbml',
-    };
-
     return (
         <html lang="de">
             <body>
                 <AppRouterCacheProvider>
-                    <ProfilePic {...userData} width={60} height={60} />
-                    {children}
+                    <UserProvider>{children}</UserProvider>
                 </AppRouterCacheProvider>
             </body>
         </html>

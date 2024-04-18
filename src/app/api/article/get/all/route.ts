@@ -1,5 +1,5 @@
-import { prisma } from '@/utils/prisma';
-import { asyncNextHandler, StatusError } from '@/helpers/asyncNextHandler';
+import { prisma } from '@/lib/utils/prisma';
+import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
 import { Article } from '@prisma/client';
 

@@ -1,9 +1,9 @@
-import { prisma } from '@/utils/prisma';
+import { prisma } from '@/lib/utils/prisma';
 import bcrypt from 'bcryptjs';
-import { asyncNextHandler, StatusError } from '@/helpers/asyncNextHandler';
+import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
-import { authUserBodySchema } from '@/schemas/user.schema';
-import { cookieOptions, createAuthorizationToken } from '@/utils/jwt';
+import { authUserBodySchema } from '@/lib/schemas/user.schema';
+import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 
 export const POST = asyncNextHandler(async req => {
     // extract login data from request body
