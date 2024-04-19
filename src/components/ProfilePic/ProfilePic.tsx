@@ -2,9 +2,8 @@
 import { first } from 'lodash';
 import { Avatar } from '@mui/material';
 import stc from 'string-to-color';
-import { fill } from '@cloudinary/url-gen/actions/resize';
-import { cldImage } from '@/lib/utils/cloudinary-frontend';
 import { User } from '@prisma/client';
+import { getCldImageUrl } from 'next-cloudinary';
 
 type Props = {
     className?: string;
@@ -21,7 +20,11 @@ function getInitials(name: string) {
 export const ProfilePic = ({ className, width = 100, height = 100, ...user }: Props) => {
     const name = user.forename + ' ' + (user.lastname ?? '');
     const pictureUrl = !!user.profilePic
-        ? cldImage.image(user.profilePic).resize(fill().width(width?.toString()).height(height?.toString())).toURL()
+        ? getCldImageUrl({
+              width: width?.toString(),
+              height: height?.toString(),
+              src: user.profilePic,
+          })
         : undefined;
     const hasPB = !!user.profilePic && !!pictureUrl;
     const avatarAttributes = {

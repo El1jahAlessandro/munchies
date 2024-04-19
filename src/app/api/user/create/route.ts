@@ -4,7 +4,7 @@ import { prisma } from '@/lib/utils/prisma';
 import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
-import { uploadImage } from '@/lib/utils/cloudinary-backend';
+import { uploadImage } from '@/lib/helpers/imageUpload';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
@@ -28,7 +28,7 @@ export const POST = asyncNextHandler(async req => {
 
     let uploadedPictureId: string | undefined;
     if (profilePic) {
-        const uploadedImage = await uploadImage(profilePic);
+        const uploadedImage = await uploadImage(profilePic, 'Profile Pictures');
         if (uploadedImage) {
             uploadedPictureId = uploadedImage.public_id;
         }
