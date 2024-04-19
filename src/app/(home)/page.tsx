@@ -14,7 +14,6 @@ export default function HomePage() {
     return (
         <>
             <h2>Homepage</h2>
-            {user && <ProfilePic {...user} />}
             <div style={{ marginTop: '20px', display: 'flex' }}>
                 {data &&
                     data.map(article => (

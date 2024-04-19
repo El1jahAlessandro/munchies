@@ -5,11 +5,19 @@ import stc from 'string-to-color';
 import { User } from '@prisma/client';
 import { getCldImageUrl } from 'next-cloudinary';
 
+type UserProps = Partial<Pick<User, 'forename' | 'lastname' | 'profilePic'>>;
+
 type Props = {
     className?: string;
     width?: number;
     height?: number;
-} & Pick<User, 'forename' | 'lastname' | 'profilePic'>;
+} & UserProps;
+
+type AvatarAttrProps = {
+    hasPB: Boolean;
+    pictureUrl: string | false;
+} & UserProps &
+    Props;
 
 function getInitials(name: string) {
     const words = name.split(' ');
@@ -17,27 +25,32 @@ function getInitials(name: string) {
     return words.length ? words.map(word => first(word) ?? '').join('') : first(name);
 }
 
-export const ProfilePic = ({ className, width = 100, height = 100, ...user }: Props) => {
-    const name = user.forename + ' ' + (user.lastname ?? '');
-    const pictureUrl = !!user.profilePic
-        ? getCldImageUrl({
-              width: width?.toString(),
-              height: height?.toString(),
-              src: user.profilePic,
-          })
-        : undefined;
-    const hasPB = !!user.profilePic && !!pictureUrl;
-    const avatarAttributes = {
+function getAvatarAttributes({ width, height, hasPB, pictureUrl, className, ...user }: AvatarAttrProps) {
+    const name = (user?.forename ?? '') + ' ' + (user?.lastname ?? '');
+    const bgcolor = !hasPB ? stc(name) : undefined;
+    return {
         ...{
             sx: {
-                ...{ bgcolor: hasPB ? undefined : stc(name) },
+                ...{ bgcolor },
                 width,
                 height,
             },
-            children: hasPB ? undefined : getInitials(name),
-            alt: hasPB ? name : undefined,
-            src: hasPB && pictureUrl ? pictureUrl : undefined,
+            ...{ children: !hasPB ? getInitials(name) : undefined },
+            ...{ alt: hasPB ? name : undefined },
+            ...{ src: hasPB && pictureUrl ? pictureUrl : undefined },
+            className,
         },
     };
-    return <Avatar {...avatarAttributes} />;
+}
+
+export const ProfilePic = ({ className, width = 50, height = 50, ...user }: Props) => {
+    const pictureUrl =
+        !!user?.profilePic &&
+        getCldImageUrl({
+            width,
+            height,
+            src: user.profilePic,
+        });
+    const hasPB = !!user.profilePic && !!pictureUrl;
+    return <Avatar {...getAvatarAttributes({ className, width, height, pictureUrl, hasPB, ...user })} />;
 };
