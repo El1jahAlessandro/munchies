@@ -4,6 +4,8 @@ import { pick } from 'lodash';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
 
+const secretKey = process.env.JWT_SECRET_KEY;
+
 type SignOption = {
     expiresIn?: string | number;
 };
@@ -19,7 +21,6 @@ export function createToken(
         expiresIn: '12h',
     }
 ) {
-    const secretKey = process.env.JWT_SECRET_KEY;
     if (!secretKey) {
         throw new Error('No JWT Secret Key');
     }
@@ -27,7 +28,6 @@ export function createToken(
 }
 
 export function verifyToken(token: string | undefined) {
-    const secretKey = process.env.JWT_SECRET_KEY;
     if (!secretKey) {
         throw new Error('No JWT Secret Key');
     }

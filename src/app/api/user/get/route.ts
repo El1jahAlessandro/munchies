@@ -10,5 +10,13 @@ export const GET = asyncNextHandler<User>(async req => {
     const cookieData = cookieSchema.parse(req.cookies.get('Authorization'));
     const userTokenData = AuthorizationTokenSchema.parse(decode(cookieData.value));
     const user = await prisma.user.findUnique({ where: { id: userTokenData.id } });
+
+    if (!user) {
+        const response = NextResponse.json({}, { status: 401 });
+        response.cookies.delete('Authorization');
+
+        return response;
+    }
+
     return NextResponse.json(omit(user, ['password']), { status: 200 });
 });
