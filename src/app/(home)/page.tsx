@@ -5,11 +5,8 @@ import { fetcher } from '@/lib/helpers/fetcher';
 import { api, pages } from '@/lib/utils/routes';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import { APIError } from '@/lib/schemas/common.schema';
-import { useUserContext } from '@/components/hooks/userContext';
-import { ProfilePic } from '@/components/ProfilePic/ProfilePic';
 
 export default function HomePage() {
-    const { user } = useUserContext();
     const { data, error, isLoading } = useSWR<Article[], APIError>(api.article.get.all, fetcher);
     return (
         <>
