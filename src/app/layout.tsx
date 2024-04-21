@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { UserProvider } from '@/components/hooks/userContext';
+import { ArticlesProvider } from '@/components/hooks/articlesContext';
 
 export const metadata = {
     title: 'Next.js',
@@ -12,7 +13,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <html lang="de">
             <body>
                 <AppRouterCacheProvider>
-                    <UserProvider>{children}</UserProvider>
+                    <UserProvider>
+                        <ArticlesProvider>{children}</ArticlesProvider>
+                    </UserProvider>
                 </AppRouterCacheProvider>
             </body>
         </html>

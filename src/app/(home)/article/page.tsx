@@ -1,26 +1,21 @@
 'use client';
-import { api } from '@/lib/utils/routes';
-import useSWR from 'swr';
-import { Article } from '@prisma/client';
-import { fetcher } from '@/lib/helpers/fetcher';
 import { useSearchParams } from 'next/navigation';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
-import { APIError } from '@/lib/schemas/common.schema';
+import { useArticlesContext } from '@/components/hooks/articlesContext';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
-    const { data, error, isLoading } = useSWR<Article, APIError>(
-        api.article.get.byId + `?id=${searchParams.get('id')}`,
-        fetcher
-    );
+    const articleId = searchParams.get('id');
+    const { articles, error } = useArticlesContext();
+    const article = articles?.find(article => article.id === Number(articleId));
     return (
         <>
-            {data && (
+            {article && (
                 <>
-                    <h1>{data.name}</h1>
-                    <p>{data.description}</p>
-                    <p>{data.ingredients}</p>
-                    <span style={{ fontWeight: 'bold' }}>{currencyFormatter(data.price)}</span>
+                    <h1>{article.name}</h1>
+                    <p>{article.description}</p>
+                    <p>{article.ingredients}</p>
+                    <span style={{ fontWeight: 'bold' }}>{currencyFormatter(article.price)}</span>
                 </>
             )}
             {error && <span>{error?.response?.data?.error}</span>}

@@ -12,7 +12,6 @@ import {
     FormLabel,
     Grid,
     Input,
-    Link,
     Radio,
     RadioGroup,
     Stack,
@@ -20,6 +19,7 @@ import {
 } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
+import Link from 'next/link';
 
 export default function RegisterPage() {
     const { push } = useRouter();

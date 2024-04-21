@@ -1,20 +1,18 @@
 'use client';
-import useSWR from 'swr';
-import { Article } from '@prisma/client';
-import { fetcher } from '@/lib/helpers/fetcher';
-import { api, pages } from '@/lib/utils/routes';
+import { pages } from '@/lib/utils/routes';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
-import { APIError } from '@/lib/schemas/common.schema';
+import Link from 'next/link';
+import { useArticlesContext } from '@/components/hooks/articlesContext';
 
 export default function HomePage() {
-    const { data, error, isLoading } = useSWR<Article[], APIError>(api.article.get.all, fetcher);
+    const { articles, error } = useArticlesContext();
     return (
         <>
             <h2>Homepage</h2>
             <div style={{ marginTop: '20px', display: 'flex' }}>
-                {data &&
-                    data.map(article => (
-                        <a
+                {articles &&
+                    articles.map(article => (
+                        <Link
                             href={pages.article + '?id=' + article.id}
                             key={article.id}
                             style={{
@@ -28,7 +26,7 @@ export default function HomePage() {
                             <span style={{ fontWeight: 'bold' }}>{article.name}</span>
                             <p>{article.description}</p>
                             <p style={{ fontWeight: 'bold' }}>{currencyFormatter(article.price)}</p>
-                        </a>
+                        </Link>
                     ))}
                 {error && <span>{error?.response?.data?.error}</span>}
             </div>

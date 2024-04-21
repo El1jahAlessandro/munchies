@@ -4,11 +4,11 @@ import useSWR from 'swr';
 import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
 import { fetcher } from '@/lib/helpers/fetcher';
-import { AxiosError } from 'axios';
+import { APIError } from '@/lib/schemas/common.schema';
 
-type UserContext = { user: User | undefined };
+type UserContext = { user: User | undefined; error: APIError | undefined };
 
-const UserContext = createContext<UserContext>({ user: undefined });
+const UserContext = createContext<UserContext>({ user: undefined, error: undefined });
 
 export function useUserContext() {
     const userContext = useContext(UserContext);
@@ -19,7 +19,7 @@ export function useUserContext() {
 }
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const { data: user, error } = useSWR<User, AxiosError>(api.user.get, fetcher);
+    const { data: user, error } = useSWR<User, APIError>(api.user.get, fetcher);
 
     const value = useMemo(() => ({ user, error }), [user, error]);
 

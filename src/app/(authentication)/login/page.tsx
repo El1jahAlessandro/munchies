@@ -4,8 +4,9 @@ import { authUserBodySchema, AuthUserBodyType } from '@/lib/schemas/user.schema'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, pages } from '@/lib/utils/routes';
-import { Button, CircularProgress, Container, Link, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Container, Stack, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 
 export default function LoginPage() {
     const { push } = useRouter();
