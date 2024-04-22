@@ -8,6 +8,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import EmailIcon from '@mui/icons-material/Email';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
@@ -58,6 +59,14 @@ export function MenuButton({ toggleDrawer }: { toggleDrawer: ToggleDrawerType })
     );
 }
 
+function LogOutButton({}) {
+    return (
+        <Button variant={'contained'} color={'success'} startIcon={<PowerSettingsNewIcon />}>
+            Logout
+        </Button>
+    );
+}
+
 export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggleDrawer: ToggleDrawerType }) {
     return (
         <Drawer open={open} onClose={toggleDrawer(false)}>
@@ -72,6 +81,7 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
                         </ListItem>
                     ))}
                 </List>
+                <LogOutButton />
             </Box>
         </Drawer>
     );
