@@ -6,7 +6,7 @@ import { useArticlesContext } from '@/components/hooks/articlesContext';
 import { chunk } from 'lodash';
 import Carousel from 'react-material-ui-carousel';
 import { Card, useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2'; // Grid version 2
+import Grid from '@mui/material/Unstable_Grid2';
 import { useMemo } from 'react';
 
 export default function HomePage() {
@@ -22,10 +22,9 @@ export default function HomePage() {
     return (
         <>
             <h2>Homepage</h2>
-            {/*<div style={{ marginTop: '20px', display: 'flex' }}>*/}
             <Carousel autoPlay={false}>
                 {chunkedArticles.map((articleChunk, i) => (
-                    <Grid container spacing={2} key={i}>
+                    <Grid container spacing={2} key={'chunk-' + i}>
                         {articleChunk &&
                             articleChunk.map(article => (
                                 <Grid xs={12 / articlesColumns} key={article.id}>
@@ -48,7 +47,6 @@ export default function HomePage() {
                 ))}
             </Carousel>
             {error && <span>{error?.response?.data?.error}</span>}
-            {/*</div>*/}
         </>
     );
 }
