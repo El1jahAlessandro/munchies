@@ -1,4 +1,4 @@
-import { BottomNavigation, BottomNavigationAction } from '@mui/material';
+import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { NextLinkComposed } from '@/components/BottomBar/NextLinkComposed';
 import ExploreIcon from '@mui/icons-material/Explore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -44,17 +44,19 @@ export default function BottomBar() {
     };
 
     return (
-        <BottomNavigation value={value} onChange={handleChange}>
-            {bottomNavigations.map(nav => (
-                <BottomNavigationAction
-                    key={nav.value}
-                    value={nav.value}
-                    component={NextLinkComposed}
-                    to={nav.to}
-                    label={first(nav.value)?.toUpperCase() + nav.value.slice(1)}
-                    icon={nav.icon}
-                />
-            ))}
-        </BottomNavigation>
+        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+            <BottomNavigation value={value} onChange={handleChange}>
+                {bottomNavigations.map(nav => (
+                    <BottomNavigationAction
+                        key={nav.value}
+                        value={nav.value}
+                        component={NextLinkComposed}
+                        to={nav.to}
+                        label={first(nav.value)?.toUpperCase() + nav.value.slice(1)}
+                        icon={nav.icon}
+                    />
+                ))}
+            </BottomNavigation>
+        </Paper>
     );
 }
