@@ -10,6 +10,9 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
+import { useUserContext } from '@/components/hooks/userContext';
+import { ProfilePic } from '@/components/ProfilePic/ProfilePic';
+import { getFullName } from '@/lib/helpers/getFullName';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -68,8 +71,14 @@ function LogOutButton({}) {
 }
 
 export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggleDrawer: ToggleDrawerType }) {
+    const { user } = useUserContext();
     return (
         <Drawer open={open} onClose={toggleDrawer(false)}>
+            <div>
+                <ProfilePic {...user} width={100} height={100} />
+                <div>{getFullName(user)}</div>
+                <div>{user?.email}</div>
+            </div>
             <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
                 <List>
                     {menuList.map(({ label, icon, href }) => (
