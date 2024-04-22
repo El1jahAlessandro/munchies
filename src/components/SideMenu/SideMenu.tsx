@@ -8,7 +8,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import EmailIcon from '@mui/icons-material/Email';
 import SettingsIcon from '@mui/icons-material/Settings';
 import HelpIcon from '@mui/icons-material/Help';
-import { NextLinkComposed } from '@/components/BottomBar/NextLinkComposed';
+import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 

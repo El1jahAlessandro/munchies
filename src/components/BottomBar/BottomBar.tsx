@@ -1,5 +1,5 @@
 import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
-import { NextLinkComposed } from '@/components/BottomBar/NextLinkComposed';
+import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import ExploreIcon from '@mui/icons-material/Explore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
