@@ -15,11 +15,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
     return (
         <>
-            <>
+            <SideMenu {...{ open, toggleDrawer }} />
+            <div style={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr 200px 1fr' }}>
                 <MenuButton {...{ toggleDrawer }} />
-                <SideMenu {...{ open, toggleDrawer }} />
-            </>
-            <ProfilePic {...user} />
+                <div>{/* Location Select */}</div>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                    <ProfilePic {...user} />
+                </div>
+            </div>
             {children}
             <BottomBar />
         </>
