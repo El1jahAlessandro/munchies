@@ -1,14 +1,21 @@
 'use client';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
 import { fetcher } from '@/lib/helpers/fetcher';
 import { APIError } from '@/lib/schemas/common.schema';
 
-type UserContext = { user: User | undefined; error: APIError | undefined };
+type VoidFunction = () => void;
+type UserContext = ReturnType<typeof getUserData> & { mutate: KeyedMutator<User> | VoidFunction };
 
-const UserContext = createContext<UserContext>({ user: undefined, error: undefined });
+const UserContext = createContext<UserContext>({
+    isLoading: false,
+    isValidating: false,
+    user: undefined,
+    mutate: async () => new Promise(() => undefined),
+    error: undefined,
+});
 
 export function useUserContext() {
     const userContext = useContext(UserContext);
@@ -18,10 +25,24 @@ export function useUserContext() {
     return userContext;
 }
 
-export const UserProvider = ({ children }: { children: ReactNode }) => {
-    const { data: user, error } = useSWR<User, APIError>(api.user.get, fetcher);
+function getUserData() {
+    const { data: user, error, isLoading, mutate, isValidating } = useSWR<User, APIError>(api.user.get, fetcher);
+    return { user, error, isLoading, mutate, isValidating };
+}
 
-    const value = useMemo(() => ({ user, error }), [user, error]);
+export const UserProvider = ({ children }: { children: ReactNode }) => {
+    const { user, error, isLoading, mutate, isValidating } = getUserData();
+
+    const value = useMemo(
+        () => ({
+            user,
+            error,
+            isLoading,
+            mutate,
+            isValidating,
+        }),
+        [user, error, isLoading, mutate, isValidating]
+    );
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };

@@ -5,6 +5,7 @@ import stc from 'string-to-color';
 import { User } from '@prisma/client';
 import { getCldImageUrl } from 'next-cloudinary';
 import { getFullName } from '@/lib/helpers/getFullName';
+import { useUserContext } from '@/components/hooks/userContext';
 
 type UserProps = Partial<Pick<User, 'forename' | 'lastname' | 'profilePic'>>;
 
@@ -44,7 +45,8 @@ function getAvatarAttributes({ width, height, hasPB, pictureUrl, className, ...u
     };
 }
 
-export const ProfilePic = ({ className, width = 50, height = 50, ...user }: Props) => {
+export default function ProfilePic({ className, width = 50, height = 50 }: Props) {
+    const { user } = useUserContext();
     const pictureUrl =
         !!user?.profilePic &&
         getCldImageUrl({
@@ -52,6 +54,6 @@ export const ProfilePic = ({ className, width = 50, height = 50, ...user }: Prop
             height,
             src: user.profilePic,
         });
-    const hasPB = !!user.profilePic && !!pictureUrl;
+    const hasPB = !!user?.profilePic && !!pictureUrl;
     return <Avatar {...getAvatarAttributes({ className, width, height, pictureUrl, hasPB, ...user })} />;
-};
+}
