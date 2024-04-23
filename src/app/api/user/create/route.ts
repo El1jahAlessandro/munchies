@@ -5,6 +5,7 @@ import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
 import { uploadImage } from '@/lib/helpers/imageUpload';
+import { authorizationCookieName } from '@/lib/utils/constants';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
@@ -58,7 +59,7 @@ export const POST = asyncNextHandler(async req => {
 
     // Create Token and send it back as Cookie
     const response = NextResponse.json({}, { status: 200 });
-    response.cookies.set('Authorization', createAuthorizationToken(createdUser), cookieOptions);
+    response.cookies.set(authorizationCookieName, createAuthorizationToken(createdUser), cookieOptions);
 
     return response;
 });

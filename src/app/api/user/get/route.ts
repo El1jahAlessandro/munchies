@@ -5,15 +5,16 @@ import { User } from '@prisma/client';
 import { prisma } from '@/lib/utils/prisma';
 import { decode } from 'jsonwebtoken';
 import { omit } from 'lodash';
+import { authorizationCookieName } from '@/lib/utils/constants';
 
 export const GET = asyncNextHandler<User>(async req => {
-    const cookieData = cookieSchema.parse(req.cookies.get('Authorization'));
+    const cookieData = cookieSchema.parse(req.cookies.get(authorizationCookieName));
     const userTokenData = AuthorizationTokenSchema.parse(decode(cookieData.value));
     const user = await prisma.user.findUnique({ where: { id: userTokenData.id } });
 
     if (!user) {
         const response = NextResponse.json({}, { status: 401 });
-        response.cookies.delete('Authorization');
+        response.cookies.delete(authorizationCookieName);
 
         return response;
     }

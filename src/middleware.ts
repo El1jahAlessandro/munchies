@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { authorizationCookieName } from '@/lib/utils/constants';
 
 export function middleware(req: NextRequest) {
-    const isAuthenticated = req.cookies.has('Authorization');
+    const isAuthenticated = req.cookies.has(authorizationCookieName);
 
     // If the user is authenticated or on an login/register page, continue as normal
     if (isAuthenticated || ['/login', '/register', '/api'].some(page => req.nextUrl.pathname.startsWith(page))) {

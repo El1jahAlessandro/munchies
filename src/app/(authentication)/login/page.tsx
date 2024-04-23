@@ -7,9 +7,11 @@ import { api, pages } from '@/lib/utils/routes';
 import { Button, CircularProgress, Container, Stack, TextField } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
+import { useUserContext } from '@/components/hooks/userContext';
 
 export default function LoginPage() {
     const { push } = useRouter();
+    const { mutate } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
@@ -29,7 +31,8 @@ export default function LoginPage() {
                 setIsLoading(true);
                 setErrorMessage(undefined);
             }}
-            onSuccess={() => {
+            onSuccess={async () => {
+                await mutate();
                 push('/');
                 setIsLoading(false);
             }}

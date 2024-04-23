@@ -20,9 +20,11 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
 import Link from 'next/link';
+import { useUserContext } from '@/components/hooks/userContext';
 
 export default function RegisterPage() {
     const { push } = useRouter();
+    const { mutate } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
     const {
         control,
@@ -48,7 +50,8 @@ export default function RegisterPage() {
                 setIsLoading(true);
                 setErrorMessage(undefined);
             }}
-            onSuccess={() => {
+            onSuccess={async () => {
+                await mutate();
                 push('/');
                 setIsLoading(false);
             }}
