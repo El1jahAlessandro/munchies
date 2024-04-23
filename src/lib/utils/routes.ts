@@ -3,6 +3,7 @@ export const api = {
         auth: 'api/user/auth',
         create: 'api/user/create',
         get: 'api/user/get',
+        logout: 'api/user/logout',
     },
     article: {
         create: 'api/article/create',

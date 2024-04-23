@@ -13,6 +13,9 @@ import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import { useUserContext } from '@/components/hooks/userContext';
 import ProfilePic from '@/components/ProfilePic/ProfilePic';
 import { getFullName } from '@/lib/helpers/getFullName';
+import { postFetcher } from '@/lib/helpers/getFetcher';
+import { api, pages } from '@/lib/utils/routes';
+import { useRouter } from 'next/navigation';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -63,8 +66,13 @@ export function MenuButton({ toggleDrawer }: { toggleDrawer: ToggleDrawerType })
 }
 
 function LogOutButton({}) {
+    const { push } = useRouter();
+    const handleClick = async () => {
+        postFetcher(api.user.logout).then(() => push(pages.login));
+    };
+
     return (
-        <Button variant={'contained'} color={'success'} startIcon={<PowerSettingsNewIcon />}>
+        <Button onClick={handleClick} variant={'contained'} color={'success'} startIcon={<PowerSettingsNewIcon />}>
             Logout
         </Button>
     );

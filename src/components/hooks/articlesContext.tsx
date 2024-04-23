@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useMemo } from 'react';
 import useSWR from 'swr';
 import { Article } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
-import { fetcher } from '@/lib/helpers/fetcher';
+import { getFetcher } from '@/lib/helpers/getFetcher';
 import { APIError } from '@/lib/schemas/common.schema';
 
 type ArticlesContext = { articles: Article[] | undefined; error: APIError | undefined };
@@ -19,7 +19,7 @@ export function useArticlesContext() {
 }
 
 export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
-    const { data: articles, error, isLoading } = useSWR<Article[], APIError>(api.article.get, fetcher);
+    const { data: articles, error, isLoading } = useSWR<Article[], APIError>(api.article.get, getFetcher);
 
     const value = useMemo(() => ({ articles, error }), [articles, error]);
 

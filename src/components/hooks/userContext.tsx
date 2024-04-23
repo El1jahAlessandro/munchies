@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useMemo } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
-import { fetcher } from '@/lib/helpers/fetcher';
+import { getFetcher } from '@/lib/helpers/getFetcher';
 import { APIError } from '@/lib/schemas/common.schema';
 
 type VoidFunction = () => void;
@@ -26,7 +26,7 @@ export function useUserContext() {
 }
 
 function getUserData() {
-    const { data: user, error, isLoading, mutate, isValidating } = useSWR<User, APIError>(api.user.get, fetcher);
+    const { data: user, error, isLoading, mutate, isValidating } = useSWR<User, APIError>(api.user.get, getFetcher);
     return { user, error, isLoading, mutate, isValidating };
 }
 
