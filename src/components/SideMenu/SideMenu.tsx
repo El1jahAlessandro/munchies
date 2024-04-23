@@ -28,32 +28,32 @@ const menuList = [
     {
         icon: <PersonIcon />,
         label: 'My Profile',
-        href: '/',
+        href: pages.home,
     },
     {
         icon: <LocationOnIcon />,
         label: 'Delivery Address',
-        href: '/',
+        href: pages.home,
     },
     {
         icon: <PaymentIcon />,
         label: 'Payment Methods',
-        href: '/',
+        href: pages.home,
     },
     {
         icon: <EmailIcon />,
         label: 'Contact Us',
-        href: '/',
+        href: pages.home,
     },
     {
         icon: <SettingsIcon />,
         label: 'Settings',
-        href: '/',
+        href: pages.home,
     },
     {
         icon: <HelpIcon />,
         label: 'Helps & FAQs',
-        href: '/',
+        href: pages.home,
     },
 ];
 

@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import { UserMutateType } from '@/components/hooks/userContext';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { pages } from '@/lib/utils/routes';
 
 type ErrorType = { response: Response; error?: undefined } | { response?: undefined; error: unknown };
 
@@ -18,7 +19,7 @@ export const authenticationForm = ({ setIsLoading, setErrorMessage, push, mutate
     };
     const onSuccess = async () => {
         await mutate();
-        push('/');
+        push(pages.home);
         setIsLoading(false);
     };
     const onError = async (error: ErrorType) => {

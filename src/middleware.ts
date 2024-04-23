@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authorizationCookieName } from '@/lib/utils/constants';
+import { pages } from '@/lib/utils/routes';
 
 export function middleware(req: NextRequest) {
     const isAuthenticated = req.cookies.has(authorizationCookieName);
@@ -14,5 +15,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/((?!_next|api).*)(.+)', '/'],
+    matcher: ['/((?!_next|api).*)(.+)', pages.home],
 };
