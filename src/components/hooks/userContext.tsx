@@ -6,8 +6,10 @@ import { api } from '@/lib/utils/routes';
 import { getFetcher } from '@/lib/helpers/getFetcher';
 import { APIError } from '@/lib/schemas/common.schema';
 
+export type UserMutateType = KeyedMutator<User> | VoidFunction;
+
 type VoidFunction = () => void;
-type UserContext = ReturnType<typeof getUserData> & { mutate: KeyedMutator<User> | VoidFunction };
+type UserContext = ReturnType<typeof getUserData> & { mutate: UserMutateType };
 
 const UserContext = createContext<UserContext>({
     isLoading: false,

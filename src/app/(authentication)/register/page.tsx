@@ -21,11 +21,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
+import { authenticationForm } from '@/lib/helpers/authenticationForm';
 
 export default function RegisterPage() {
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
+
     const {
         control,
         watch,
@@ -36,7 +39,6 @@ export default function RegisterPage() {
         },
         resolver: zodResolver(createUserInputSchema),
     });
-    const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
     const RadioLabelId = 'account-type-group';
     const PictureLabelId = 'profile-picture-input';
@@ -46,19 +48,7 @@ export default function RegisterPage() {
             action={api.user.create}
             method={'post'}
             control={control}
-            onSubmit={() => {
-                setIsLoading(true);
-                setErrorMessage(undefined);
-            }}
-            onSuccess={async () => {
-                await mutate();
-                push('/');
-                setIsLoading(false);
-            }}
-            onError={async error => {
-                setIsLoading(false);
-                setErrorMessage(await error.response?.json());
-            }}
+            {...authenticationForm({ setIsLoading, setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>

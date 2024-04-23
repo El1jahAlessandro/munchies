@@ -8,6 +8,7 @@ import { Button, CircularProgress, Container, Stack, TextField } from '@mui/mate
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
+import { authenticationForm } from '@/lib/helpers/authenticationForm';
 
 export default function LoginPage() {
     const { push } = useRouter();
@@ -27,19 +28,7 @@ export default function LoginPage() {
             action={api.user.auth}
             method={'post'}
             control={control}
-            onSubmit={() => {
-                setIsLoading(true);
-                setErrorMessage(undefined);
-            }}
-            onSuccess={async () => {
-                await mutate();
-                push('/');
-                setIsLoading(false);
-            }}
-            onError={async error => {
-                setIsLoading(false);
-                setErrorMessage(await error.response?.json());
-            }}
+            {...authenticationForm({ setIsLoading, setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>
