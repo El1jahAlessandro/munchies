@@ -48,6 +48,7 @@ export const POST = asyncNextHandler(async req => {
     const createdUser = await prisma.user.create({
         data: {
             ...data,
+            email: email.toLowerCase(),
             profilePic: uploadedPictureId,
             password: await getHashedPassword(password),
         },

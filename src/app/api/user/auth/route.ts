@@ -16,7 +16,7 @@ export const POST = asyncNextHandler(async req => {
     const { email, password } = data;
 
     // get user from the database based on email
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
 
     if (!user) {
         throw new StatusError(400, 'User with that Email does not exists');
