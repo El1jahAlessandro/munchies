@@ -30,8 +30,8 @@ export default function LoginPage() {
                 setErrorMessage(undefined);
             }}
             onSuccess={() => {
-                setIsLoading(false);
                 push('/');
+                setIsLoading(false);
             }}
             onError={async error => {
                 setIsLoading(false);
