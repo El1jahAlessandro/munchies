@@ -28,7 +28,7 @@ const menuList = [
     {
         icon: <PersonIcon />,
         label: 'My Profile',
-        href: pages.home,
+        href: pages.profile,
     },
     {
         icon: <LocationOnIcon />,
