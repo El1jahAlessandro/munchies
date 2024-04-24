@@ -33,7 +33,7 @@
     "@types/react": "^18.2.77",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "3.2.5",
-    "prisma": "^5.12.1",
+    "prisma": "^5.13.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
