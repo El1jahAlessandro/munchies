@@ -14,3 +14,14 @@ export async function uploadImage(file: File, folder: string) {
 
     return cloudinaryResponseSchema.parse(cloudinaryResponse);
 }
+
+export async function getImagePublicId(image: File | string | null | undefined) {
+    if (image instanceof File) {
+        const uploadedImage = await uploadImage(image, 'Profile Pictures');
+        if (uploadedImage) {
+            return uploadedImage.public_id;
+        }
+    } else {
+        return image ?? undefined;
+    }
+}

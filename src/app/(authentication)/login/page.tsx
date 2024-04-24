@@ -13,12 +13,11 @@ import { authenticationForm } from '@/lib/helpers/authenticationForm';
 export default function LoginPage() {
     const { push } = useRouter();
     const { mutate } = useUserContext();
-    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
     const {
         control,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<AuthUserBodyType>({
         resolver: zodResolver(authUserBodySchema),
     });
@@ -28,7 +27,7 @@ export default function LoginPage() {
             action={api.user.auth}
             method={'post'}
             control={control}
-            {...authenticationForm({ setIsLoading, setErrorMessage, push, mutate })}
+            {...authenticationForm({ setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>
@@ -61,7 +60,7 @@ export default function LoginPage() {
                         )}
                     />
                     <Button type={'submit'} color={'success'} variant={'contained'}>
-                        {isLoading ? <CircularProgress /> : 'Submit'}
+                        {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>
                     {(errorMessage?.error || errors.root?.message) && (
                         <>

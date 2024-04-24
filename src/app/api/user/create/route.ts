@@ -4,10 +4,11 @@ import { prisma } from '@/lib/utils/prisma';
 import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
-import { uploadImage } from '@/lib/helpers/imageUpload';
+import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import { authorizationCookieName } from '@/lib/utils/constants';
 
 export const POST = asyncNextHandler(async req => {
+    // todo: clean this mess up
     // extract register data from request body
     const formData = await req.formData();
     const unknownTypedProfilePic = formData.get('profilePic');
@@ -16,7 +17,7 @@ export const POST = asyncNextHandler(async req => {
     const parsedProfilePic =
         !!unknownTypedProfilePic && unknownTypedProfilePic !== 'undefined' && unknownTypedProfilePic instanceof File
             ? createUserBodySchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
-            : null;
+            : undefined;
     const data = {
         profilePic: parsedProfilePic,
         ...createUserBodySchema.omit({ profilePic: true }).parse({
@@ -29,13 +30,7 @@ export const POST = asyncNextHandler(async req => {
     };
     const { email, password, profilePic } = data;
 
-    let uploadedPictureId: string | undefined;
-    if (profilePic) {
-        const uploadedImage = await uploadImage(profilePic, 'Profile Pictures');
-        if (uploadedImage) {
-            uploadedPictureId = uploadedImage.public_id;
-        }
-    }
+    const uploadedPictureId = await getImagePublicId(profilePic);
 
     // check if user already exists in the database based on the email
     const userExists = await prisma.user.findUnique({ where: { email } });

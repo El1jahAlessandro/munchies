@@ -3,21 +3,27 @@ import { accountTypeSchema } from '@/lib/schemas/common.schema';
 
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
-export type EditUserBodyType = z.infer<typeof editUserBodySchema>;
+export type EditUserFormType = z.infer<typeof editUserFormSchema>;
 
 export const authUserBodySchema = z.object({
     email: z.string().email(),
     password: z.string(),
 });
 
-export const editUserBodySchema = z.object({
+export const otherUserInfoSchema = z.object({
     accountType: accountTypeSchema,
-    profilePic: z.instanceof(File).nullish(),
+    profilePic: z.instanceof(File).optional(),
     forename: z.string().nullish(),
     lastname: z.string().nullish(),
 });
 
-export const createUserBodySchema = authUserBodySchema.merge(editUserBodySchema);
+export const editUserFormSchema = otherUserInfoSchema.merge(
+    z.object({
+        profilePic: z.instanceof(File).or(z.string()).nullish(),
+    })
+);
+
+export const createUserBodySchema = authUserBodySchema.merge(otherUserInfoSchema);
 
 export const createUserInputSchema = createUserBodySchema
     .merge(

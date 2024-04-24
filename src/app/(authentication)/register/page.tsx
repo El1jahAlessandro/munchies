@@ -26,13 +26,12 @@ import { authenticationForm } from '@/lib/helpers/authenticationForm';
 export default function RegisterPage() {
     const { push } = useRouter();
     const { mutate } = useUserContext();
-    const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
 
     const {
         control,
         watch,
-        formState: { errors },
+        formState: { errors, isSubmitting },
     } = useForm<CreateUserBodyType>({
         defaultValues: {
             accountType: 'user',
@@ -48,7 +47,7 @@ export default function RegisterPage() {
             action={api.user.create}
             method={'post'}
             control={control}
-            {...authenticationForm({ setIsLoading, setErrorMessage, push, mutate })}
+            {...authenticationForm({ setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>
@@ -169,7 +168,7 @@ export default function RegisterPage() {
                         </>
                     )}
                     <Button type={'submit'} color={'success'} variant={'contained'}>
-                        {isLoading ? <CircularProgress /> : 'Submit'}
+                        {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>
                     {(errorMessage?.error || errors.root?.message) && (
                         <>

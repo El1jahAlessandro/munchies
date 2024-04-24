@@ -20,7 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <MenuButton {...{ toggleDrawer }} />
                 <div>{/* Location Select */}</div>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <ProfilePic {...user} />
+                    <ProfilePic />
                 </div>
             </div>
             {children}

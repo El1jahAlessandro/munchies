@@ -13,7 +13,8 @@ type Props = {
     className?: string;
     width?: number;
     height?: number;
-} & UserProps;
+    previewPicture?: string;
+};
 
 type AvatarAttrProps = {
     hasPB: Boolean;
@@ -27,7 +28,15 @@ function getInitials(name: string) {
     return words.length ? words.map(word => first(word) ?? '').join('') : first(name);
 }
 
-function getAvatarAttributes({ width, height, hasPB, pictureUrl, className, ...user }: AvatarAttrProps) {
+function getAvatarAttributes({
+    width,
+    height,
+    hasPB,
+    pictureUrl,
+    className,
+    previewPicture,
+    ...user
+}: AvatarAttrProps) {
     const name = getFullName(user);
     const bgcolor = !hasPB ? stc(name) : undefined;
     return {
@@ -37,23 +46,26 @@ function getAvatarAttributes({ width, height, hasPB, pictureUrl, className, ...u
                 width,
                 height,
             },
-            ...{ children: !hasPB ? getInitials(name) : undefined },
+            ...{ children: !hasPB && !previewPicture ? getInitials(name) : undefined },
             ...{ alt: hasPB ? name : undefined },
-            ...{ src: hasPB && pictureUrl ? pictureUrl : undefined },
+            ...{ src: previewPicture ?? (hasPB && pictureUrl ? pictureUrl : undefined) },
             className,
         },
     };
 }
 
-export default function ProfilePic({ className, width = 50, height = 50 }: Props) {
+export default function ProfilePic({ className, width = 50, height = 50, previewPicture }: Props) {
     const { user } = useUserContext();
     const pictureUrl =
         !!user?.profilePic &&
+        !previewPicture &&
         getCldImageUrl({
             width,
             height,
             src: user.profilePic,
         });
     const hasPB = !!user?.profilePic && !!pictureUrl;
-    return <Avatar {...getAvatarAttributes({ className, width, height, pictureUrl, hasPB, ...user })} />;
+    return (
+        <Avatar {...getAvatarAttributes({ className, width, height, pictureUrl, hasPB, previewPicture, ...user })} />
+    );
 }
