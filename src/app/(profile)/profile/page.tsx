@@ -18,7 +18,6 @@ export default function ProfilePage() {
     const { user, mutate } = useUserContext();
     const userDefaultValues = pick(user as User, editUserFormSchema.omit({ profilePic: true }).keyof().options);
     const {
-        getValues,
         reset,
         control,
         formState: { errors, isDirty, isSubmitting },
