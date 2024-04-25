@@ -22,7 +22,7 @@ const UserContext = createContext<UserContext>({
 export function useUserContext() {
     const userContext = useContext(UserContext);
     if (userContext === undefined) {
-        throw new Error('useUserContext must be used within a CounterProvider');
+        throw new Error('useUserContext must be used within a UserProvider');
     }
     return userContext;
 }

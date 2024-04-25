@@ -4,6 +4,12 @@ import { decode } from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
 
 export default function getCookieValue(nextRequest: NextRequest) {
-    const cookieData = cookieSchema.parse(nextRequest.cookies.get(authorizationCookieName));
-    return AuthorizationTokenSchema.parse(decode(cookieData.value));
+    const cookieData = cookieSchema.safeParse(nextRequest.cookies.get(authorizationCookieName));
+    if (cookieData.success) {
+        const cookieValue = AuthorizationTokenSchema.safeParse(decode(cookieData.data.value));
+        if (cookieValue.success) {
+            return cookieValue.data;
+        }
+    }
+    return { id: undefined, email: undefined, accountType: undefined };
 }

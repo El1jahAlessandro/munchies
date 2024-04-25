@@ -8,6 +8,11 @@ import getCookieValue from '@/lib/helpers/getCookieValues';
 
 export const GET = asyncNextHandler<User>(async req => {
     const { id } = getCookieValue(req);
+
+    if (!id) {
+        return NextResponse.json({}, { status: 401 });
+    }
+
     const user = await prisma.user.findUnique({ where: { id } });
 
     if (!user) {

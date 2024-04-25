@@ -23,7 +23,7 @@ export const authenticationForm = <TFieldValues extends FieldValues>({
         setErrorMessage(undefined);
     };
     const onSuccess = async () => {
-        await mutate();
+        mutate && (await mutate());
         push && push(pages.home);
         reset && reset();
     };

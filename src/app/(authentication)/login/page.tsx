@@ -9,6 +9,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
+import { z } from 'zod';
+
+const inputPropsSchema = z
+    .object({
+        name: z.enum(['email', 'password']),
+        label: z.string(),
+    })
+    .array();
+
+const inputProps = inputPropsSchema.parse([
+    { name: 'email', label: 'Email address' },
+    { name: 'password', label: 'Password' },
+]);
 
 export default function LoginPage() {
     const { push } = useRouter();
@@ -31,34 +44,24 @@ export default function LoginPage() {
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required={true}
-                                label="Email address"
-                                error={!!errors.email}
-                                autoComplete={'email'}
-                                helperText={errors.email ? errors.email.message : ''}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required={true}
-                                label="Password"
-                                error={!!errors.password}
-                                autoComplete={'password'}
-                                helperText={errors.password ? errors.password.message : ''}
-                            />
-                        )}
-                    />
+                    {inputProps.map(({ name, label }) => (
+                        <Controller
+                            key={name}
+                            name={name}
+                            control={control}
+                            render={({ field }) => (
+                                <TextField
+                                    {...field}
+                                    id={`input-id-${name}`}
+                                    required={true}
+                                    label={label}
+                                    error={!!errors[name]}
+                                    autoComplete={name}
+                                    helperText={errors[name] ? errors[name]?.message : ''}
+                                />
+                            )}
+                        />
+                    ))}
                     <Button type={'submit'} color={'success'} variant={'contained'}>
                         {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>
