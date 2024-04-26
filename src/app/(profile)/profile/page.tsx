@@ -27,7 +27,7 @@ export default function ProfilePage() {
         watch,
         reset,
         control,
-        formState: { errors, isDirty, isSubmitting, defaultValues },
+        formState: { errors, isDirty, isSubmitting },
     } = useForm<EditUserFormType>({
         defaultValues: useMemo(() => userDefaultValues, [user]),
     });
