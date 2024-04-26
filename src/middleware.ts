@@ -1,5 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { authorizationCookieName } from '@/lib/utils/constants';
+import { NextRequest } from 'next/server';
 import { pages } from '@/lib/utils/routes';
 
 export function middleware(req: NextRequest) {

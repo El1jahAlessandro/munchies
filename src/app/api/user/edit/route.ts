@@ -13,8 +13,7 @@ export const POST = asyncNextHandler(async req => {
     // extract edit data from request body
     const formData = await req.formData();
     const unknownTypedProfilePic = formData.get('profilePic');
-    const unknownForeName = formData.get('forename');
-    const unknownLastName = formData.get('lastname');
+    const unknownName = formData.get('name');
     const parsedProfilePic =
         !!unknownTypedProfilePic && unknownTypedProfilePic !== 'undefined' && unknownTypedProfilePic instanceof File
             ? editUserFormSchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
@@ -25,14 +24,22 @@ export const POST = asyncNextHandler(async req => {
             .omit({ profilePic: true })
             .partial()
             .parse({
-                forename: unknownForeName !== 'undefined' ? unknownForeName : undefined,
-                lastname: unknownLastName !== 'undefined' ? unknownLastName : undefined,
+                name: unknownName !== 'undefined' ? unknownName : undefined,
                 accountType: formData.get('accountType') ?? undefined,
+                email: formData.get('email') ?? undefined,
             }),
     };
-    const { profilePic } = data;
+    const { profilePic, email } = data;
 
     const uploadedPictureId = await getImagePublicId(profilePic);
+
+    if (email) {
+        const emailAlreadyUsed = await prisma.user.findUnique({ where: { email } });
+
+        if (emailAlreadyUsed) {
+            throw new StatusError(500, 'This Email is already used');
+        }
+    }
 
     const editedUser = await prisma.user.update({
         data: {

@@ -71,42 +71,21 @@ export default function RegisterPage() {
                             </RadioGroup>
                         )}
                     />
-                    {watch('accountType') === 'user' && (
-                        <Grid container columns={2}>
-                            <Grid xs={1}>
-                                <Controller
-                                    name="forename"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            fullWidth={true}
-                                            label="Firstname"
-                                            error={!!errors.forename}
-                                            autoComplete={'given-name'}
-                                            helperText={errors.forename ? errors.forename.message : ''}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                            <Grid xs={1}>
-                                <Controller
-                                    name="lastname"
-                                    control={control}
-                                    render={({ field }) => (
-                                        <TextField
-                                            {...field}
-                                            fullWidth={true}
-                                            label="Lastname"
-                                            error={!!errors.lastname}
-                                            autoComplete={'family-name'}
-                                            helperText={errors.lastname ? errors.lastname.message : ''}
-                                        />
-                                    )}
-                                />
-                            </Grid>
-                        </Grid>
-                    )}
+                    <Controller
+                        name="name"
+                        control={control}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                fullWidth={true}
+                                label={watch('accountType') === 'user' ? 'Firstname' : 'Company Name'}
+                                required={watch('accountType') !== 'user'}
+                                error={!!errors.name}
+                                autoComplete={'name'}
+                                helperText={errors.name ? errors.name.message : ''}
+                            />
+                        )}
+                    />
                     <Controller
                         name="email"
                         control={control}

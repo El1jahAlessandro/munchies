@@ -12,7 +12,6 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import { useUserContext } from '@/components/hooks/userContext';
 import ProfilePic from '@/components/ProfilePic/ProfilePic';
-import { getFullName } from '@/lib/helpers/getFullName';
 import { postFetcher } from '@/lib/helpers/getFetcher';
 import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
@@ -84,7 +83,7 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
         <Drawer open={open} onClose={toggleDrawer(false)}>
             <div>
                 <ProfilePic width={100} height={100} />
-                <div>{getFullName(user)}</div>
+                <div>{user?.name}</div>
                 <div>{user?.email}</div>
             </div>
             <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>

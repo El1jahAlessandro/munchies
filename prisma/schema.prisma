@@ -11,8 +11,7 @@ datasource db {
 model User {
   id          Int         @id @default(autoincrement())
   email       String      @unique
-  forename    String?
-  lastname    String?
+  name        String
   password    String
   profilePic  String?
   accountType AccountType

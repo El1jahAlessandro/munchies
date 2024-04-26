@@ -44,8 +44,7 @@ async function main() {
     const max = await prisma.user.create({
         data: {
             email: 'max.mustermann@gmail.com',
-            forename: 'Max',
-            lastname: 'Mustermann',
+            name: 'Max Mustermann',
             password: await bcrypt.hash('test123', await bcrypt.genSalt()),
             accountType: 'user',
         },

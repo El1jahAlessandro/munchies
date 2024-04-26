@@ -11,10 +11,10 @@ export const authUserBodySchema = z.object({
 });
 
 export const otherUserInfoSchema = z.object({
+    email: z.string().email(),
     accountType: accountTypeSchema,
     profilePic: z.instanceof(File).optional(),
-    forename: z.string().nullish(),
-    lastname: z.string().nullish(),
+    name: z.string(),
 });
 
 export const editUserFormSchema = otherUserInfoSchema.merge(

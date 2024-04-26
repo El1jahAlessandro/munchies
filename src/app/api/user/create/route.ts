@@ -12,8 +12,7 @@ export const POST = asyncNextHandler(async req => {
     // extract register data from request body
     const formData = await req.formData();
     const unknownTypedProfilePic = formData.get('profilePic');
-    const unknownForeName = formData.get('forename');
-    const unknownLastName = formData.get('lastname');
+    const unknownName = formData.get('name');
     const parsedProfilePic =
         !!unknownTypedProfilePic && unknownTypedProfilePic !== 'undefined' && unknownTypedProfilePic instanceof File
             ? createUserBodySchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
@@ -23,8 +22,7 @@ export const POST = asyncNextHandler(async req => {
         ...createUserBodySchema.omit({ profilePic: true }).parse({
             email: formData.get('email'),
             password: formData.get('password'),
-            forename: unknownForeName !== 'undefined' ? unknownForeName : undefined,
-            lastname: unknownLastName !== 'undefined' ? unknownLastName : undefined,
+            name: unknownName !== 'undefined' ? unknownName : undefined,
             accountType: formData.get('accountType'),
         }),
     };

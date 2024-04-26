@@ -4,10 +4,9 @@ import { Avatar } from '@mui/material';
 import stc from 'string-to-color';
 import { User } from '@prisma/client';
 import { getCldImageUrl } from 'next-cloudinary';
-import { getFullName } from '@/lib/helpers/getFullName';
 import { useUserContext } from '@/components/hooks/userContext';
 
-type UserProps = Partial<Pick<User, 'forename' | 'lastname' | 'profilePic'>>;
+type UserProps = Partial<Pick<User, 'name' | 'profilePic'>>;
 
 type Props = {
     className?: string;
@@ -37,8 +36,7 @@ function getAvatarAttributes({
     previewPicture,
     ...user
 }: AvatarAttrProps) {
-    const name = getFullName(user);
-    const bgcolor = !hasPB ? stc(name) : undefined;
+    const bgcolor = !hasPB ? stc(user.name) : undefined;
     return {
         ...{
             sx: {
@@ -46,8 +44,8 @@ function getAvatarAttributes({
                 width,
                 height,
             },
-            ...{ children: !hasPB && !previewPicture ? getInitials(name) : undefined },
-            ...{ alt: hasPB ? name : undefined },
+            ...{ children: !hasPB && !previewPicture ? getInitials(user.name ?? '') : undefined },
+            ...{ alt: hasPB ? user.name : undefined },
             ...{ src: previewPicture ?? (hasPB && pictureUrl ? pictureUrl : undefined) },
             className,
         },
