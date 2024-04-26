@@ -4,24 +4,13 @@ import { authUserBodySchema, AuthUserBodyType } from '@/lib/schemas/user.schema'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, pages } from '@/lib/utils/routes';
-import { Button, CircularProgress, Container, Stack, TextField } from '@mui/material';
+import { Button, CircularProgress, Container, Stack } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
-import { z } from 'zod';
-
-const inputPropsSchema = z
-    .object({
-        name: z.enum(['email', 'password']),
-        label: z.string(),
-    })
-    .array();
-
-const inputProps = inputPropsSchema.parse([
-    { name: 'email', label: 'Email address' },
-    { name: 'password', label: 'Password' },
-]);
+import { FormInputOptionType } from '@/lib/schemas/common.schema';
+import { FormInputController } from '@/components/FormInputs/FormInputController';
 
 export default function LoginPage() {
     const { push } = useRouter();
@@ -35,6 +24,23 @@ export default function LoginPage() {
         resolver: zodResolver(authUserBodySchema),
     });
 
+    const formInputOptions: FormInputOptionType<AuthUserBodyType>[] = [
+        {
+            name: 'email',
+            label: 'Email address',
+            required: true,
+            autocomplete: 'email',
+            inputType: 'textInput',
+        },
+        {
+            name: 'password',
+            label: 'Password',
+            required: true,
+            autocomplete: 'password',
+            inputType: 'password',
+        },
+    ];
+
     return (
         <Form
             action={api.user.auth}
@@ -44,22 +50,12 @@ export default function LoginPage() {
         >
             <Container maxWidth="sm">
                 <Stack spacing={2} direction={'column'}>
-                    {inputProps.map(({ name, label }) => (
+                    {formInputOptions.map(optionProps => (
                         <Controller
-                            key={name}
-                            name={name}
+                            key={optionProps.name}
+                            name={optionProps.name}
                             control={control}
-                            render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    id={`input-id-${name}`}
-                                    required={true}
-                                    label={label}
-                                    error={!!errors[name]}
-                                    autoComplete={name}
-                                    helperText={errors[name] ? errors[name]?.message : ''}
-                                />
-                            )}
+                            render={({ field }) => <FormInputController {...field} {...optionProps} />}
                         />
                     ))}
                     <Button type={'submit'} color={'success'} variant={'contained'}>

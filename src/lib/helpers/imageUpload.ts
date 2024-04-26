@@ -15,9 +15,9 @@ export async function uploadImage(file: File, folder: string) {
     return cloudinaryResponseSchema.parse(cloudinaryResponse);
 }
 
-export async function getImagePublicId(image: File | string | null | undefined) {
+export async function getImagePublicId(image: File | string | null | undefined, folder: string) {
     if (image instanceof File) {
-        const uploadedImage = await uploadImage(image, 'Profile Pictures');
+        const uploadedImage = await uploadImage(image, folder);
         if (uploadedImage) {
             return uploadedImage.public_id;
         }

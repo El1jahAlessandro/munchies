@@ -4,31 +4,14 @@ import { prisma } from '@/lib/utils/prisma';
 import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
-import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import { authorizationCookieName } from '@/lib/utils/constants';
+import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 
 export const POST = asyncNextHandler(async req => {
-    // todo: clean this mess up
     // extract register data from request body
-    const formData = await req.formData();
-    const unknownTypedProfilePic = formData.get('profilePic');
-    const unknownName = formData.get('name');
-    const parsedProfilePic =
-        !!unknownTypedProfilePic && unknownTypedProfilePic !== 'undefined' && unknownTypedProfilePic instanceof File
-            ? createUserBodySchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
-            : undefined;
-    const data = {
-        profilePic: parsedProfilePic,
-        ...createUserBodySchema.omit({ profilePic: true }).parse({
-            email: formData.get('email'),
-            password: formData.get('password'),
-            name: unknownName !== 'undefined' ? unknownName : undefined,
-            accountType: formData.get('accountType'),
-        }),
-    };
-    const { email, password, profilePic } = data;
+    const data = getFormDataValues(await req.formData(), createUserBodySchema, createUserBodySchema.keyof().options);
 
-    const uploadedPictureId = await getImagePublicId(profilePic);
+    const { email, password } = data;
 
     // check if user already exists in the database based on the email
     const userExists = await prisma.user.findUnique({ where: { email } });
@@ -42,7 +25,6 @@ export const POST = asyncNextHandler(async req => {
         data: {
             ...data,
             email: email.toLowerCase(),
-            profilePic: uploadedPictureId,
             password: await getHashedPassword(password),
         },
     });

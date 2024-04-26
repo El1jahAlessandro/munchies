@@ -2,7 +2,7 @@
 import { Controller, Form, useForm } from 'react-hook-form';
 import { CreateUserBodyType, createUserInputSchema } from '@/lib/schemas/user.schema';
 import { useRouter } from 'next/navigation';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { api, pages } from '@/lib/utils/routes';
 import {
     Button,
@@ -11,7 +11,6 @@ import {
     FormControlLabel,
     FormLabel,
     Grid,
-    Input,
     Radio,
     RadioGroup,
     Stack,
@@ -22,6 +21,10 @@ import { $Enums } from '@prisma/client';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
+import { toPascalCase } from '@/lib/helpers/toPascalCase';
+import { PasswordInput } from '@/components/FormInputs/PasswordInput';
+import { FormInputOptionType } from '@/lib/schemas/common.schema';
+import { FormInputController } from '@/components/FormInputs/FormInputController';
 
 export default function RegisterPage() {
     const { push } = useRouter();
@@ -39,8 +42,36 @@ export default function RegisterPage() {
         resolver: zodResolver(createUserInputSchema),
     });
 
+    const formInputOptions: FormInputOptionType<CreateUserBodyType>[] = [
+        {
+            label: watch('accountType') === 'user' ? 'Full Name' : 'Company Name',
+            name: 'name',
+            autocomplete: 'name',
+            required: watch('accountType') !== 'user',
+            inputType: 'textInput',
+        },
+        {
+            label: 'Email Address',
+            name: 'email',
+            autocomplete: 'email',
+            required: true,
+            inputType: 'textInput',
+        },
+        {
+            label: 'Password',
+            name: 'password',
+            required: true,
+            inputType: 'password',
+        },
+        {
+            label: 'Confirm Password',
+            name: 'confirmPassword',
+            required: true,
+            inputType: 'password',
+        },
+    ];
+
     const RadioLabelId = 'account-type-group';
-    const PictureLabelId = 'profile-picture-input';
 
     return (
         <Form
@@ -64,88 +95,21 @@ export default function RegisterPage() {
                                             value={type}
                                             key={type}
                                             control={<Radio />}
-                                            label={type.charAt(0).toUpperCase() + type.slice(1)}
+                                            label={toPascalCase(type)}
                                         />
                                     ))}
                                 </Grid>
                             </RadioGroup>
                         )}
                     />
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                fullWidth={true}
-                                label={watch('accountType') === 'user' ? 'Firstname' : 'Company Name'}
-                                required={watch('accountType') !== 'user'}
-                                error={!!errors.name}
-                                autoComplete={'name'}
-                                helperText={errors.name ? errors.name.message : ''}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="email"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required={true}
-                                label="Email address"
-                                error={!!errors.email}
-                                autoComplete={'email'}
-                                helperText={errors.email ? errors.email.message : ''}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="password"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required={true}
-                                label="Password"
-                                error={!!errors.password}
-                                autoComplete={'password'}
-                                helperText={errors.password ? errors.password.message : ''}
-                            />
-                        )}
-                    />
-                    <Controller
-                        name="confirmPassword"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                required={true}
-                                label="Confirm Password"
-                                error={!!errors.confirmPassword}
-                                autoComplete={'password'}
-                                helperText={errors.confirmPassword ? errors.confirmPassword.message : ''}
-                            />
-                        )}
-                    />
-                    {watch('accountType') === 'business' && (
-                        <>
-                            <FormLabel id={PictureLabelId}>Profile Picture</FormLabel>
-                            <Controller
-                                name="profilePic"
-                                control={control}
-                                render={({ field: { value, onChange, ...field } }) => (
-                                    <Input
-                                        {...field}
-                                        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                                            onChange(event.target.files?.[0])
-                                        }
-                                        type={'file'}
-                                    />
-                                )}
-                            />
-                        </>
-                    )}
+                    {formInputOptions.map(optionProps => (
+                        <Controller
+                            key={optionProps.name}
+                            name={optionProps.name}
+                            control={control}
+                            render={({ field }) => <FormInputController {...field} {...optionProps} />}
+                        />
+                    ))}
                     <Button type={'submit'} color={'success'} variant={'contained'}>
                         {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>

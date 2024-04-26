@@ -5,15 +5,21 @@ export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
 export type EditUserFormType = z.infer<typeof editUserFormSchema>;
 
+const emailSchema = z
+    .string()
+    .email()
+    .refine(email => !email.match(/[\u00F0-\u02AF]/g), {
+        message: 'Ä, Ö, Ü sind nicht erlaubt',
+    });
+
 export const authUserBodySchema = z.object({
-    email: z.string().email(),
+    email: emailSchema,
     password: z.string(),
 });
 
 export const otherUserInfoSchema = z.object({
-    email: z.string().email(),
+    email: emailSchema,
     accountType: accountTypeSchema,
-    profilePic: z.instanceof(File).optional(),
     name: z.string(),
 });
 

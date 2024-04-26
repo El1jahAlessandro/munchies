@@ -1,42 +1,30 @@
 import { NextResponse } from 'next/server';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { prisma } from '@/lib/utils/prisma';
-import { editUserFormSchema, otherUserInfoSchema } from '@/lib/schemas/user.schema';
+import { editUserFormSchema } from '@/lib/schemas/user.schema';
 import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import getCookieValue from '@/lib/helpers/getCookieValues';
 import { identity, pickBy } from 'lodash';
+import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
+import { profilePictureFolder } from '@/lib/utils/constants';
 
 export const POST = asyncNextHandler(async req => {
     const { id } = getCookieValue(req);
 
-    // todo: clean this mess up
-    // extract edit data from request body
-    const formData = await req.formData();
-    const unknownTypedProfilePic = formData.get('profilePic');
-    const unknownName = formData.get('name');
-    const parsedProfilePic =
-        !!unknownTypedProfilePic && unknownTypedProfilePic !== 'undefined' && unknownTypedProfilePic instanceof File
-            ? editUserFormSchema.pick({ profilePic: true }).parse({ profilePic: unknownTypedProfilePic }).profilePic
-            : undefined;
-    const data = {
-        profilePic: parsedProfilePic,
-        ...otherUserInfoSchema
-            .omit({ profilePic: true })
-            .partial()
-            .parse({
-                name: unknownName !== 'undefined' ? unknownName : undefined,
-                accountType: formData.get('accountType') ?? undefined,
-                email: formData.get('email') ?? undefined,
-            }),
-    };
+    const data = getFormDataValues(
+        await req.formData(),
+        editUserFormSchema.partial(),
+        editUserFormSchema.keyof().options
+    );
+
     const { profilePic, email } = data;
 
-    const uploadedPictureId = await getImagePublicId(profilePic);
+    const uploadedPictureId = await getImagePublicId(profilePic, profilePictureFolder);
 
     if (email) {
         const emailAlreadyUsed = await prisma.user.findUnique({ where: { email } });
 
-        if (emailAlreadyUsed) {
+        if (emailAlreadyUsed && id !== emailAlreadyUsed.id) {
             throw new StatusError(500, 'This Email is already used');
         }
     }
@@ -45,6 +33,7 @@ export const POST = asyncNextHandler(async req => {
         data: {
             ...pickBy(data, identity),
             profilePic: uploadedPictureId,
+            ...(email ? { email: email.toLowerCase() } : {}),
         },
         where: {
             id,

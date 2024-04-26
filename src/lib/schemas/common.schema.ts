@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { AccountType } from '@prisma/client';
 import { AxiosError } from 'axios';
+import { ControllerRenderProps, FieldErrors, FieldValues, Path } from 'react-hook-form';
+import { TextFieldProps } from '@mui/material/TextField/TextField';
 
 export type APIError = AxiosError<{ error: string }>;
 
@@ -41,3 +43,21 @@ export const cloudinaryResponseSchema = z.object({
     original_filename: z.string(),
     api_key: z.string(),
 });
+
+const formInputOptionSchema = z.object({
+    label: z.string(),
+    autocomplete: z.string().optional(),
+    required: z.boolean().optional(),
+    fullWidth: z.boolean().optional(),
+    inputType: z.enum(['textInput', 'password', 'dropdown']),
+});
+
+export type FormInputOptionType<T extends FieldValues> = {
+    name: Path<T>;
+} & z.infer<typeof formInputOptionSchema> &
+    Partial<Omit<TextFieldProps, 'onBlur' | 'ref'>>;
+
+export type FormInputType<T extends FieldValues> = {
+    errors?: FieldErrors<T>;
+} & FormInputOptionType<T> &
+    ControllerRenderProps<T, Path<T>>;
