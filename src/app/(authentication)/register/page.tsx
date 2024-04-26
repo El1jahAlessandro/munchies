@@ -14,7 +14,6 @@ import {
     Radio,
     RadioGroup,
     Stack,
-    TextField,
 } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
@@ -22,7 +21,6 @@ import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
-import { PasswordInput } from '@/components/FormInputs/PasswordInput';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 
