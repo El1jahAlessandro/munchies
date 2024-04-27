@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { asyncNextHandler } from '@/lib/helpers/asyncNextHandler';
 import { User } from '@prisma/client';
-import { prisma } from '@/lib/utils/prisma';
 import { omit } from 'lodash';
 import { authorizationCookieName } from '@/lib/utils/constants';
 import getCookieValue from '@/lib/helpers/getCookieValues';
+import prisma from '@/lib/utils/prisma';
 
 export const GET = asyncNextHandler<User>(async req => {
     const { id } = getCookieValue(req);

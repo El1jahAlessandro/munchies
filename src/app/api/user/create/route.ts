@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
-import { prisma } from '@/lib/utils/prisma';
 import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
 import { authorizationCookieName } from '@/lib/utils/constants';
 import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
+import prisma from '@/lib/utils/prisma';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/utils/prisma';
+import prisma from '@/lib/utils/prisma';
 import { decode } from 'jsonwebtoken';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';

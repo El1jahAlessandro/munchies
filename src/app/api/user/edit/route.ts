@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
-import { prisma } from '@/lib/utils/prisma';
 import { editUserFormSchema } from '@/lib/schemas/user.schema';
 import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import getCookieValue from '@/lib/helpers/getCookieValues';
 import { identity, pickBy } from 'lodash';
 import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 import { profilePictureFolder } from '@/lib/utils/constants';
+import prisma from '@/lib/utils/prisma';
 
 export const POST = asyncNextHandler(async req => {
     const { id } = getCookieValue(req);
