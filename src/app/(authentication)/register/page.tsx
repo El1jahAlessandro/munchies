@@ -14,6 +14,7 @@ import {
     Radio,
     RadioGroup,
     Stack,
+    Typography,
 } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
@@ -23,6 +24,7 @@ import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
+import { FormError } from '@/components/ErrorComponents/FormError';
 
 export default function RegisterPage() {
     const { push } = useRouter();
@@ -112,18 +114,12 @@ export default function RegisterPage() {
                         {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>
                     {(errorMessage?.error || errors.root?.message) && (
-                        <>
-                            <div>
-                                <span style={{ color: 'red' }}>
-                                    {(errorMessage?.error as string) ?? errors.root?.message ?? ''}
-                                </span>
-                            </div>
-                        </>
+                        <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
-                        <span>
+                        <Typography component={'span'}>
                             Already have an account? <Link href={pages.login}>Log in here</Link>
-                        </span>
+                        </Typography>
                     </div>
                 </Stack>
             </Container>

@@ -4,13 +4,14 @@ import { authUserBodySchema, AuthUserBodyType } from '@/lib/schemas/user.schema'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, pages } from '@/lib/utils/routes';
-import { Button, CircularProgress, Container, Stack } from '@mui/material';
+import { Button, CircularProgress, Container, Stack, Typography } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
+import { FormError } from '@/components/ErrorComponents/FormError';
 
 export default function LoginPage() {
     const { push } = useRouter();
@@ -62,18 +63,12 @@ export default function LoginPage() {
                         {isSubmitting ? <CircularProgress /> : 'Submit'}
                     </Button>
                     {(errorMessage?.error || errors.root?.message) && (
-                        <>
-                            <div>
-                                <span style={{ color: 'red' }}>
-                                    {(errorMessage?.error as string) ?? errors.root?.message ?? ''}
-                                </span>
-                            </div>
-                        </>
+                        <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
-                        <span>
+                        <Typography component={'span'}>
                             Don't have an account? <Link href={pages.register}>Register here</Link>
-                        </span>
+                        </Typography>
                     </div>
                 </Stack>
             </Container>

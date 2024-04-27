@@ -1,7 +1,7 @@
 'use client';
 
 import ProfilePic from '@/components/ProfilePic/ProfilePic';
-import { Badge, Button, CircularProgress, IconButton } from '@mui/material';
+import { Badge, Button, CircularProgress, Container, IconButton, Stack } from '@mui/material';
 import { CameraAlt } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { Controller, Form, useForm } from 'react-hook-form';
@@ -137,32 +137,26 @@ export default function ProfilePage() {
                     </Button>
                 )}
             </div>
-            {formInputOptions.map(optionProps => (
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '50px',
-                    }}
-                    key={optionProps.name}
-                >
-                    <Controller
-                        key={optionProps.name}
-                        name={optionProps.name}
-                        control={control}
-                        render={({ field: { value, ...field } }) => (
-                            <FormInputController
-                                {...field}
-                                InputLabelProps={{ shrink: true }}
-                                value={optionProps.name === 'accountType' ? toPascalCase(value as string) : value}
-                                inputProps={{ readOnly: !inEditMode || optionProps.name === 'accountType' }}
-                                {...optionProps}
-                            />
-                        )}
-                    />
-                </div>
-            ))}
+            <Container maxWidth="xs" sx={{ marginTop: '50px' }}>
+                <Stack spacing={6} direction={'column'}>
+                    {formInputOptions.map(optionProps => (
+                        <Controller
+                            key={optionProps.name}
+                            name={optionProps.name}
+                            control={control}
+                            render={({ field: { value, ...field } }) => (
+                                <FormInputController
+                                    InputLabelProps={{ shrink: true }}
+                                    value={optionProps.name === 'accountType' ? toPascalCase(value as string) : value}
+                                    inputProps={{ readOnly: !inEditMode || optionProps.name === 'accountType' }}
+                                    {...field}
+                                    {...optionProps}
+                                />
+                            )}
+                        />
+                    ))}
+                </Stack>
+            </Container>
             {(errorMessage?.error || errors.root?.message) && (
                 <>
                     <div
@@ -200,7 +194,7 @@ export default function ProfilePage() {
                         >
                             Abbrechen
                         </Button>
-                        <Button variant={'contained'} color={'success'} type={'submit'} disabled={!isDirty}>
+                        <Button variant={'contained'} color={'primary'} type={'submit'} disabled={!isDirty}>
                             {isSubmitting ? <CircularProgress /> : 'Speichern'}
                         </Button>
                     </div>

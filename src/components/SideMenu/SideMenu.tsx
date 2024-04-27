@@ -1,5 +1,15 @@
 import React from 'react';
-import { Box, Button, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import {
+    Box,
+    Button,
+    Drawer,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import PersonIcon from '@mui/icons-material/Person';
@@ -71,7 +81,7 @@ function LogOutButton({}) {
     };
 
     return (
-        <Button onClick={handleClick} variant={'contained'} color={'success'} startIcon={<PowerSettingsNewIcon />}>
+        <Button onClick={handleClick} variant={'contained'} color={'primary'} startIcon={<PowerSettingsNewIcon />}>
             Logout
         </Button>
     );
@@ -82,17 +92,27 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
     return (
         <Drawer open={open} onClose={toggleDrawer(false)}>
             <div>
-                <ProfilePic width={100} height={100} />
-                <div>{user?.name}</div>
-                <div>{user?.email}</div>
+                <ProfilePic width={100} height={100} sx={{ marginLeft: '16px', marginTop: '20px' }} />
+                <Typography
+                    variant="subtitle1"
+                    component="div"
+                    fontWeight={'bold'}
+                    paddingLeft={'16px'}
+                    paddingTop={'20px'}
+                >
+                    {user?.name}
+                </Typography>
+                <Typography variant="caption" component="div" paddingLeft={'16px'} sx={{ color: 'secondary.main' }}>
+                    {user?.email}
+                </Typography>
             </div>
-            <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+            <Box sx={{ width: 250 }} marginTop={'20px'} role="presentation" onClick={toggleDrawer(false)}>
                 <List>
                     {menuList.map(({ label, icon, href }) => (
                         <ListItem key={label} disablePadding component={NextLinkComposed} to={href}>
                             <ListItemButton>
                                 <ListItemIcon>{icon}</ListItemIcon>
-                                <ListItemText primary={label} />
+                                <ListItemText sx={{ color: 'secondary.main' }} primary={label} />
                             </ListItemButton>
                         </ListItem>
                     ))}

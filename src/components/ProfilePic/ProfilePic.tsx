@@ -5,6 +5,7 @@ import stc from 'string-to-color';
 import { User } from '@prisma/client';
 import { getCldImageUrl } from 'next-cloudinary';
 import { useUserContext } from '@/components/hooks/userContext';
+import { AvatarProps } from '@mui/material/Avatar/Avatar';
 
 type UserProps = Partial<Pick<User, 'name' | 'profilePic'>>;
 
@@ -13,7 +14,7 @@ type Props = {
     width?: number;
     height?: number;
     previewPicture?: string;
-};
+} & Omit<AvatarProps, 'id'>;
 
 type AvatarAttrProps = {
     hasPB: Boolean;
@@ -32,27 +33,29 @@ function getAvatarAttributes({
     height,
     hasPB,
     pictureUrl,
-    className,
     previewPicture,
-    ...user
+    name,
+    ...avatarProps
 }: AvatarAttrProps) {
-    const bgcolor = !hasPB ? stc(user.name) : undefined;
+    const { sx, ...restAvatarProps } = avatarProps;
+    const bgcolor = !hasPB ? stc(name) : undefined;
     return {
         ...{
             sx: {
                 ...{ bgcolor },
                 width,
                 height,
+                ...sx,
             },
-            ...{ children: !hasPB && !previewPicture ? getInitials(user.name ?? '') : undefined },
-            ...{ alt: hasPB ? user.name : undefined },
+            ...{ children: !hasPB && !previewPicture ? getInitials(name ?? '') : undefined },
+            ...{ alt: hasPB ? name : undefined },
             ...{ src: previewPicture ?? (hasPB && pictureUrl ? pictureUrl : undefined) },
-            className,
+            ...restAvatarProps,
         },
     };
 }
 
-export default function ProfilePic({ className, width = 50, height = 50, previewPicture }: Props) {
+export default function ProfilePic({ width = 50, height = 50, previewPicture, ...avatarProps }: Props) {
     const { user } = useUserContext();
     const pictureUrl =
         !!user?.profilePic &&
@@ -64,6 +67,16 @@ export default function ProfilePic({ className, width = 50, height = 50, preview
         });
     const hasPB = !!user?.profilePic && !!pictureUrl;
     return (
-        <Avatar {...getAvatarAttributes({ className, width, height, pictureUrl, hasPB, previewPicture, ...user })} />
+        <Avatar
+            {...getAvatarAttributes({
+                width,
+                height,
+                pictureUrl,
+                hasPB,
+                previewPicture,
+                ...user,
+                ...avatarProps,
+            })}
+        />
     );
 }
