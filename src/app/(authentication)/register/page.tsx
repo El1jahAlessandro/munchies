@@ -46,14 +46,14 @@ export default function RegisterPage() {
         {
             label: watch('accountType') === 'user' ? 'Full Name' : 'Company Name',
             name: 'name',
-            autocomplete: 'name',
+            autoComplete: 'name',
             required: watch('accountType') !== 'user',
             inputType: 'textInput',
         },
         {
             label: 'Email Address',
             name: 'email',
-            autocomplete: 'email',
+            autoComplete: 'email',
             required: true,
             inputType: 'textInput',
         },

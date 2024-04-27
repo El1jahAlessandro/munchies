@@ -46,9 +46,6 @@ export const cloudinaryResponseSchema = z.object({
 
 const formInputOptionSchema = z.object({
     label: z.string(),
-    autocomplete: z.string().optional(),
-    required: z.boolean().optional(),
-    fullWidth: z.boolean().optional(),
     inputType: z.enum(['textInput', 'password', 'dropdown']),
 });
 

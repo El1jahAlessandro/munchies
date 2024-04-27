@@ -30,14 +30,14 @@ export default function LoginPage() {
             name: 'email',
             label: 'Email address',
             required: true,
-            autocomplete: 'email',
+            autoComplete: 'email',
             inputType: 'textInput',
         },
         {
             name: 'password',
             label: 'Password',
             required: true,
-            autocomplete: 'password',
+            autoComplete: 'password',
             inputType: 'password',
         },
     ];
