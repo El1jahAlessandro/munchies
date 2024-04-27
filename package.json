@@ -16,7 +16,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:reset": "prisma migrate reset",
-    "start:migrate:dev": "prisma migrate dev && npm run dev",
+    "start:migrate:dev": "prisma migrate dev && npm run dev -- -H 192.168.0.133",
     "start:migrate:prod": "prisma migrate deploy && npm run start"
   },
   "prisma": {
@@ -30,7 +30,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.2.77",
+    "@types/react": "^18.3.1",
     "eslint-config-prettier": "^9.1.0",
     "prettier": "3.2.5",
     "prisma": "^5.13.0",
@@ -52,7 +52,7 @@
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
-    "next": "^14.2.0",
+    "next": "^14.2.3",
     "next-cloudinary": "^6.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -60,6 +60,6 @@
     "react-material-ui-carousel": "^3.4.2",
     "string-to-color": "^2.2.2",
     "swr": "^2.2.5",
-    "zod": "^3.22.4"
+    "zod": "^3.23.4"
   }
 }
