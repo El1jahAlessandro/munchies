@@ -1,18 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { authorizationCookieName } from '@/lib/utils/constants';
+import { pages } from '@/lib/utils/routes';
+import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 
 export function middleware(req: NextRequest) {
-    const isAuthenticated = req.cookies.has(authorizationCookieName);
+    const isAuthenticated = !!getAuthCookieValue(req).id;
 
-    // If the user is authenticated or on an login/register page, continue as normal
-    if (isAuthenticated || ['/login', '/register', '/api'].some(page => req.nextUrl.pathname.startsWith(page))) {
-        return NextResponse.next();
+    if (!isAuthenticated) {
+        // Redirect to login page if not authenticated
+        return NextResponse.redirect(new URL(pages.login, req.url));
     }
 
-    // Redirect to login page if not authenticated
-    return NextResponse.redirect(new URL('/login', req.url));
+    if (req.nextUrl.pathname === '/') {
+        // Redirect to overview homepage when domain is visited
+        return NextResponse.redirect(new URL(pages.home, req.url));
+    }
+
+    // If the user is authenticated or on an login/register page, continue as normal
+    return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/((?!_next|api|login|register).*)(.+)'],
+    matcher: ['/((?!_next|api|login|register).*)'],
 };
