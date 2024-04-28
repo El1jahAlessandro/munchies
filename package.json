@@ -17,6 +17,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:reset": "prisma migrate reset",
     "start:migrate:dev": "prisma migrate dev && npm run dev",
+    "start:migrate:dev:ln": "prisma migrate dev && npm run dev -- -H 192.168.0.133",
     "start:migrate:prod": "prisma migrate deploy && npm run start"
   },
   "prisma": {
