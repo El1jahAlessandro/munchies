@@ -32,7 +32,7 @@ const menuList = [
     {
         icon: <TextSnippetIcon />,
         label: 'My Orders',
-        href: 'article?id=2',
+        href: pages.home,
     },
     {
         icon: <PersonIcon />,

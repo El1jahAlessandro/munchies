@@ -4,6 +4,7 @@ import { UserProvider } from '@/components/hooks/userContext';
 import { ArticlesProvider } from '@/components/hooks/articlesContext';
 import { ThemeProvider } from '@mui/material';
 import theme from '@/theme';
+import { CartProvider } from '@/components/hooks/cartContext';
 
 export const metadata = {
     title: 'Next.js',
@@ -13,11 +14,13 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="de">
-            <body>
+            <body style={{ margin: '20px' }}>
                 <AppRouterCacheProvider>
                     <ThemeProvider theme={theme}>
                         <UserProvider>
-                            <ArticlesProvider>{children}</ArticlesProvider>
+                            <ArticlesProvider>
+                                <CartProvider>{children}</CartProvider>
+                            </ArticlesProvider>
                         </UserProvider>
                     </ThemeProvider>
                 </AppRouterCacheProvider>

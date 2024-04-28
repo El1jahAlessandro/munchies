@@ -10,11 +10,16 @@ export const api = {
         create: 'api/article/create',
         get: 'api/article/get',
     },
+    cart: {
+        add: 'api/cart/add',
+        get: 'api/cart/get',
+    },
 };
 
 export const pages = {
-    home: '/',
+    home: '/overview',
     login: '/login',
+    cart: '/cart',
     register: '/register',
     article: '/article',
     profile: '/profile',

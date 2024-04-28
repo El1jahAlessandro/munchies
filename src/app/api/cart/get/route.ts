@@ -6,5 +6,5 @@ import { GetCartItemsBodyType } from '@/lib/schemas/article.schema';
 export const GET = asyncNextHandler<GetCartItemsBodyType>(async req => {
     // extract item data from request body
     const { cartItems } = getCartCookieValue(req);
-    return NextResponse.json({ cartItems }, { status: 200 });
+    return NextResponse.json(cartItems, { status: 200 });
 });

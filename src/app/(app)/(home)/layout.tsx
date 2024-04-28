@@ -14,7 +14,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <>
             <SideMenu {...{ open, toggleDrawer }} />
-            <div style={{ display: 'grid', width: '100%', gridTemplateColumns: '1fr 200px 1fr' }}>
+            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
                 <MenuButton {...{ toggleDrawer }} />
                 <div>{/* Location Select */}</div>
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -1,4 +1,4 @@
-import { BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
+import { Badge, BottomNavigation, BottomNavigationAction, Paper } from '@mui/material';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import ExploreIcon from '@mui/icons-material/Explore';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -8,8 +8,10 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { SyntheticEvent, useState } from 'react';
 import { first } from 'lodash';
 import { pages } from '@/lib/utils/routes';
+import { useCartContext } from '@/components/hooks/cartContext';
 
 export default function BottomBar() {
+    const { cartArticles } = useCartContext();
     const bottomNavigations = [
         {
             value: 'explore',
@@ -19,12 +21,23 @@ export default function BottomBar() {
         {
             value: 'addresses',
             icon: <LocationOnIcon />,
-            to: pages.article + '?id=1',
+            to: pages.home,
         },
         {
             value: 'cart',
-            icon: <ShoppingBagIcon />,
-            to: pages.home,
+            icon: (
+                <>
+                    {cartArticles && cartArticles.length > 0 ? (
+                        <Badge badgeContent={cartArticles.length} color={'warning'}>
+                            {' '}
+                            <ShoppingBagIcon />
+                        </Badge>
+                    ) : (
+                        <ShoppingBagIcon />
+                    )}
+                </>
+            ),
+            to: pages.cart,
         },
         {
             value: 'favorites',

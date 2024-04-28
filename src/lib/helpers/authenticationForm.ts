@@ -8,7 +8,7 @@ type ErrorType = { response: Response; error?: undefined } | { response?: undefi
 
 type FormFunctionType<TFieldValues extends FieldValues> = {
     setErrorMessage: Dispatch<SetStateAction<{ error: unknown } | undefined>>;
-    mutate: UserMutateType;
+    mutate?: UserMutateType;
     push?: AppRouterInstance['push'];
     reset?: UseFormReset<TFieldValues>;
 };
