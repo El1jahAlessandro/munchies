@@ -11,16 +11,12 @@ export function getFormDataValues<DataSchemaType extends z.Schema>(
     propertyKeys: string[]
 ) {
     // get the checked formdata value from each schema key
-    const properties = propertyKeys
-        .map(key => {
-            return {
-                [key]: checkFormData(formData.get(key)),
-            };
-        })
-        // convert Array of Objects into one single Object
-        .reduce(function (memo, current) {
-            return assign(memo, current);
-        }, {});
+    const properties = propertyKeys.reduce((previousProperties, currentKey) => {
+        return {
+            ...previousProperties,
+            [currentKey]: checkFormData(formData.get(currentKey)),
+        };
+    }, {});
     return {
         ...dataSchema.parse(properties),
     } as z.infer<typeof dataSchema>;

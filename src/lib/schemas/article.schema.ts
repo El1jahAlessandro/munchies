@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export type AddCartItemBodyType = z.infer<typeof addCartItemBodySchema>;
+export type GetCartItemsBodyType = z.infer<typeof cartItemsSchema>;
 
 export const createArticleBodySchema = z.object({
     name: z.string(),
@@ -12,10 +13,14 @@ export const createArticleBodySchema = z.object({
 });
 
 export const addCartItemBodySchema = z.object({
-    id: z.string(),
-    amount: z.number(),
+    id: z.coerce.number(),
+    amount: z.coerce.number(),
 });
 
-export const CartCookieTokenSchema = z.array(addCartItemBodySchema);
+const cartItemsSchema = z.array(addCartItemBodySchema);
+
+export const CartCookieTokenSchema = z.object({
+    cartItems: cartItemsSchema,
+});
 
 export type CartItems = z.infer<typeof CartCookieTokenSchema>;

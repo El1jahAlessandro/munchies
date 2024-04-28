@@ -3,17 +3,11 @@ import { asyncNextHandler } from '@/lib/helpers/asyncNextHandler';
 import { User } from '@prisma/client';
 import { omit } from 'lodash';
 import { authorizationCookieName } from '@/lib/utils/constants';
-import { getCookieValue } from '@/lib/helpers/getCookieValues';
 import prisma from '@/lib/utils/prisma';
-import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
+import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 
 export const GET = asyncNextHandler<User>(async req => {
-    const { id } = getCookieValue(
-        req,
-        authorizationCookieName,
-        AuthorizationTokenSchema,
-        AuthorizationTokenSchema.keyof().options
-    );
+    const { id } = getAuthCookieValue(req);
 
     if (!id) {
         return NextResponse.json({}, { status: 401 });
