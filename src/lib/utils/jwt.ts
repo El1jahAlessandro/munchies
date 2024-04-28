@@ -3,6 +3,7 @@ import { User } from '@prisma/client';
 import { pick } from 'lodash';
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
+import { CartItems } from '@/lib/schemas/article.schema';
 
 const secretKey = process.env.JWT_SECRET_KEY;
 
@@ -48,4 +49,8 @@ export function createAuthorizationToken(user: User) {
     return createToken({
         ...pick(user, AuthorizationTokenSchema.keyof().options),
     });
+}
+
+export function createCartToken(cartItems: CartItems) {
+    return createToken(cartItems);
 }

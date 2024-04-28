@@ -1,7 +1,8 @@
 import { AuthorizationTokenSchema, cookieSchema } from '@/lib/schemas/common.schema';
-import { authorizationCookieName } from '@/lib/utils/constants';
 import { decode } from 'jsonwebtoken';
 import { NextRequest } from 'next/server';
+
+function getCookieData(nextRequest: NextRequest, cookieName: string) ⁄
 
 export default function getCookieValue(nextRequest: NextRequest) {
     const cookieData = cookieSchema.safeParse(nextRequest.cookies.get(authorizationCookieName));

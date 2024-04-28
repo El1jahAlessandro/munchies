@@ -2,14 +2,20 @@ import { NextResponse } from 'next/server';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { editUserFormSchema } from '@/lib/schemas/user.schema';
 import { getImagePublicId } from '@/lib/helpers/imageUpload';
-import getCookieValue from '@/lib/helpers/getCookieValues';
+import { getCookieValue } from '@/lib/helpers/getCookieValues';
 import { identity, pickBy } from 'lodash';
 import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
-import { profilePictureFolder } from '@/lib/utils/constants';
+import { authorizationCookieName, profilePictureFolder } from '@/lib/utils/constants';
 import prisma from '@/lib/utils/prisma';
+import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
 
 export const POST = asyncNextHandler(async req => {
-    const { id } = getCookieValue(req);
+    const { id } = getCookieValue(
+        req,
+        authorizationCookieName,
+        AuthorizationTokenSchema,
+        AuthorizationTokenSchema.keyof().options
+    );
 
     const data = getFormDataValues(
         await req.formData(),
