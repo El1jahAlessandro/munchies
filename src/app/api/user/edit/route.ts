@@ -5,9 +5,8 @@ import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 import { identity, pickBy } from 'lodash';
 import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
-import { authorizationCookieName, profilePictureFolder } from '@/lib/utils/constants';
+import { profilePictureFolder } from '@/lib/utils/constants';
 import prisma from '@/lib/utils/prisma';
-import { AuthorizationTokenSchema } from '@/lib/schemas/common.schema';
 
 export const POST = asyncNextHandler(async req => {
     const { id } = getAuthCookieValue(req);
