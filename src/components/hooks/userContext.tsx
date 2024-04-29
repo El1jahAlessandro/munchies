@@ -3,8 +3,8 @@ import { createContext, ReactNode, useContext, useMemo } from 'react';
 import useSWR, { KeyedMutator } from 'swr';
 import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
-import { getFetcher } from '@/lib/helpers/getFetcher';
 import { APIError } from '@/lib/schemas/common.schema';
+import { getFetcher } from '@/lib/helpers/fetcher';
 
 export type UserMutateType = KeyedMutator<User> | VoidFunction;
 

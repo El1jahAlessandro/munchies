@@ -22,7 +22,7 @@ import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import { useUserContext } from '@/components/hooks/userContext';
 import ProfilePic from '@/components/ProfilePic/ProfilePic';
-import { postFetcher } from '@/lib/helpers/getFetcher';
+import { postFetcher } from '@/lib/helpers/fetcher';
 import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
 

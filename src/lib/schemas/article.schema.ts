@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export type AddCartItemBodyType = z.infer<typeof addCartItemBodySchema>;
+export type CartItemType = z.infer<typeof addCartItemBodySchema>;
 export type GetCartItemsBodyType = z.infer<typeof cartItemsSchema>;
 
 export const createArticleBodySchema = z.object({

@@ -11,8 +11,9 @@ export const api = {
         get: 'api/article/get',
     },
     cart: {
-        add: 'api/cart/add',
+        put: 'api/cart/put',
         get: 'api/cart/get',
+        remove: 'api/cart/remove',
     },
 };
 

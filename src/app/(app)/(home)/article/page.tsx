@@ -3,14 +3,13 @@ import { useSearchParams } from 'next/navigation';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import { useArticlesContext } from '@/components/hooks/articlesContext';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { AddCartItemBodyType } from '@/lib/schemas/article.schema';
+import { CartItemType } from '@/lib/schemas/article.schema';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
-import React, { useEffect, useState } from 'react';
-import { Button, CircularProgress, Fab, Stack, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import RemoveIcon from '@mui/icons-material/Remove';
+import React, { useState } from 'react';
+import { Button, CircularProgress, Typography } from '@mui/material';
 import { useCartContext } from '@/components/hooks/cartContext';
+import { AmountHandler } from '@/components/FormInputs/AmountHandler';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -18,12 +17,7 @@ export default function LoginPage() {
     const { mutate } = useCartContext();
     const articleId = searchParams.get('id');
     const { articles, error } = useArticlesContext();
-    const { cartArticles } = useCartContext();
     const article = articles?.find(article => article.id === Number(articleId));
-
-    useEffect(() => {
-        console.log(cartArticles);
-    }, [cartArticles]);
 
     const {
         register,
@@ -31,7 +25,7 @@ export default function LoginPage() {
         watch,
         control,
         formState: { isSubmitting },
-    } = useForm<AddCartItemBodyType>({
+    } = useForm<CartItemType>({
         defaultValues: {
             id: Number(articleId),
             amount: 1,
@@ -40,7 +34,7 @@ export default function LoginPage() {
 
     return (
         <Form
-            action={api.cart.add}
+            action={api.cart.put}
             method={'post'}
             control={control}
             {...authenticationForm({
@@ -70,44 +64,18 @@ export default function LoginPage() {
                             name={'amount'}
                             control={control}
                             render={({ field: { value, onChange, ...field } }) => (
-                                <Stack direction="row" spacing={2}>
-                                    <Fab
-                                        {...field}
-                                        color="primary"
-                                        aria-label="remove"
-                                        size={'small'}
-                                        disabled={value === 1}
-                                        onClick={() => {
-                                            setValue('amount', value - 1);
-                                        }}
-                                    >
-                                        <RemoveIcon />
-                                    </Fab>
-                                    <Typography
-                                        component={'span'}
-                                        sx={{
-                                            width: '20px',
-                                            letterSpacing: '2px',
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            alignItems: 'center',
-                                            marginTop: '5px',
-                                        }}
-                                    >
-                                        {value < 10 ? '0' + value : value}
-                                    </Typography>
-                                    <Fab
-                                        {...field}
-                                        color="primary"
-                                        aria-label="add"
-                                        size={'small'}
-                                        onClick={() => {
-                                            setValue('amount', value + 1);
-                                        }}
-                                    >
-                                        <AddIcon />
-                                    </Fab>
-                                </Stack>
+                                <AmountHandler
+                                    minusButtonOnClick={() => {
+                                        setValue('amount', value - 1);
+                                    }}
+                                    plusButtonOnClick={() => {
+                                        setValue('amount', value + 1);
+                                    }}
+                                    minusButtonProps={{ ...field, disabled: value === 1 }}
+                                    plusButtonProps={{ ...field }}
+                                >
+                                    {value < 10 ? '0' + value : value}
+                                </AmountHandler>
                             )}
                         />
                     </div>

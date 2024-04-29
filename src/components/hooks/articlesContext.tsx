@@ -3,7 +3,7 @@ import { createContext, ReactNode, useContext, useMemo } from 'react';
 import useSWR from 'swr';
 import { Article } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
-import { getFetcher } from '@/lib/helpers/getFetcher';
+import { getFetcher } from '@/lib/helpers/fetcher';
 import { APIError } from '@/lib/schemas/common.schema';
 
 type ArticlesContext = { articles: Article[] | undefined; error: APIError | undefined };

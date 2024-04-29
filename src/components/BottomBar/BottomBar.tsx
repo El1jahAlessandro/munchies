@@ -29,7 +29,6 @@ export default function BottomBar() {
                 <>
                     {cartArticles && cartArticles.length > 0 ? (
                         <Badge badgeContent={cartArticles.length} color={'warning'}>
-                            {' '}
                             <ShoppingBagIcon />
                         </Badge>
                     ) : (
