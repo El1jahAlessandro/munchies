@@ -195,8 +195,14 @@ export default function ProfilePage() {
                         >
                             Abbrechen
                         </ButtonComponent>
-                        <ButtonComponent variant={'contained'} color={'primary'} type={'submit'} disabled={!isDirty}>
-                            {isSubmitting ? <CircularProgress /> : 'Speichern'}
+                        <ButtonComponent
+                            isSubmitting={isSubmitting}
+                            variant={'contained'}
+                            color={'primary'}
+                            type={'submit'}
+                            disabled={!isDirty}
+                        >
+                            Speichern
                         </ButtonComponent>
                     </div>
                 </div>
