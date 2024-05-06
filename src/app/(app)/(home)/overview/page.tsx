@@ -8,6 +8,7 @@ import Carousel from 'react-material-ui-carousel';
 import { Card, useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useMemo } from 'react';
+import { FlatIcon } from '@/components/common/FlatIcon';
 
 export default function OverviewPage() {
     const isXS = useMediaQuery('(max-width: 400px) and (min-width: 200px)') ? 1 : 0;
@@ -22,6 +23,8 @@ export default function OverviewPage() {
     return (
         <>
             <h2>Homepage</h2>
+            <span className={'font-bold'}>test</span>
+            <FlatIcon icon={'hamburger'} />
             <Carousel autoPlay={false}>
                 {chunkedArticles.map((articleChunk, i) => (
                     <Grid container spacing={2} key={'chunk-' + i}>

@@ -2,9 +2,11 @@ import React, { ReactNode } from 'react';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { UserProvider } from '@/components/hooks/userContext';
 import { ArticlesProvider } from '@/components/hooks/articlesContext';
-import { ThemeProvider } from '@mui/material';
+import { CssBaseline, ThemeProvider } from '@mui/material';
 import theme from '@/theme';
 import { CartProvider } from '@/components/hooks/cartContext';
+import '../css/global.css';
+import { StyledEngineProvider } from '@mui/styled-engine';
 
 export const metadata = {
     title: 'Next.js',
@@ -14,17 +16,20 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="de">
-            <body style={{ margin: '20px' }}>
-                <AppRouterCacheProvider>
+            <AppRouterCacheProvider>
+                <StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme}>
                         <UserProvider>
                             <ArticlesProvider>
-                                <CartProvider>{children}</CartProvider>
+                                <CartProvider>
+                                    <body style={{ margin: '20px' }}>{children}</body>
+                                </CartProvider>
+                                <CssBaseline />
                             </ArticlesProvider>
                         </UserProvider>
                     </ThemeProvider>
-                </AppRouterCacheProvider>
-            </body>
+                </StyledEngineProvider>
+            </AppRouterCacheProvider>
         </html>
     );
 }

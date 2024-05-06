@@ -35,6 +35,7 @@
     "eslint-config-prettier": "^9.1.0",
     "prettier": "3.2.5",
     "prisma": "^5.13.0",
+    "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
@@ -42,6 +43,7 @@
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
+    "@flaticon/flaticon-uicons": "^3.2.1",
     "@hookform/resolvers": "^3.3.4",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
