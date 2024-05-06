@@ -86,7 +86,7 @@ export default function OverviewPage() {
                         </div>
                     ))}
             </div>
-            <Carousel autoPlay={false}>
+            <Carousel autoPlay={false} animation={'slide'} swipe={true}>
                 {chunkedArticles.map((articleChunk, i) => (
                     <Grid container spacing={2} key={'chunk-' + i}>
                         {articleChunk &&
