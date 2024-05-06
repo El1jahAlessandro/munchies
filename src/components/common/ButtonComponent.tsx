@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ButtonProps, CircularProgress, styled } from '@mui/material';
+import { ButtonProps, CircularProgress, Palette, styled } from '@mui/material';
 
 const sizes = {
     small: { x: 4, y: 1 },
@@ -13,7 +13,7 @@ type ButtonPropsType = {
     icon?: ReactNode;
     size?: 'small' | 'medium' | 'large';
     positionFixed?: boolean;
-} & ButtonProps;
+} & ButtonProps & { color?: keyof Palette };
 
 const FixedButtonContainer = styled('div')(() => ({
     margin: 'auto',

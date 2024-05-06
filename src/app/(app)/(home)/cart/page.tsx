@@ -2,28 +2,58 @@
 
 import { useCartContext } from '@/components/hooks/cartContext';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
-import { useEffect, useMemo, useState } from 'react';
-import { IconButton, Stack, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    Radio,
+    RadioGroup,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableRow,
+    Typography,
+} from '@mui/material';
 import { Controller, ControllerRenderProps, Form, useForm } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import { api } from '@/lib/utils/routes';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { postFetcher } from '@/lib/helpers/fetcher';
-import { pick } from 'lodash';
+import { map, pick } from 'lodash';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
 import { CartItemType } from '@/lib/schemas/article.schema';
 import { CldImage } from 'next-cloudinary';
 import { truncateString } from '@/lib/helpers/truncateString';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
+import { orderSchema, OrderType } from '@/lib/schemas/order.schema';
+import { $Enums } from '@prisma/client';
+import { toPascalCase } from '@/lib/helpers/toPascalCase';
 
 export default function CartPage() {
     const { cartArticles, mutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, setValue, reset } = useForm<{ cartItems: CartItemType[] }>({
+    const { control, trigger, reset } = useForm<OrderType>({
         defaultValues: {
-            cartItems: useMemo(() => cartArticles, [cartArticles]),
+            articleOrders: useMemo(() => map(cartArticles, article => pick(article, ['id', 'amount'])), [cartArticles]),
         },
     });
+
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+    const handleDialogClickOpen = (status: 'close' | 'open') => {
+        setDialogOpen(status === 'open');
+    };
+
+    const deliveryCosts = 1;
 
     const subtotal = useMemo(
         () =>
@@ -33,8 +63,15 @@ export default function CartPage() {
         [cartArticles]
     );
 
+    const totalPrice = useMemo(() => Number((subtotal + deliveryCosts).toFixed(2)), [subtotal, deliveryCosts]);
+
     useEffect(() => {
-        reset({ cartItems: cartArticles });
+        reset({
+            totalPrice,
+            articleOrders: map(cartArticles, article => {
+                return { articleId: article.id, amount: article.amount };
+            }),
+        });
     }, [cartArticles]);
 
     const list = useMemo(
@@ -42,7 +79,7 @@ export default function CartPage() {
             { label: <Typography component={'span'}>Zwischensumme</Typography>, value: subtotal },
             {
                 label: <Typography component={'span'}>Lieferkosten</Typography>,
-                value: 1,
+                value: deliveryCosts,
             },
             {
                 label: (
@@ -57,10 +94,10 @@ export default function CartPage() {
                         </Typography>
                     </>
                 ),
-                value: subtotal + 1,
+                value: totalPrice,
             },
         ],
-        [subtotal]
+        [subtotal, deliveryCosts, totalPrice]
     );
 
     function RemoveButton({ article }: { article: CartItemType }) {
@@ -121,7 +158,10 @@ export default function CartPage() {
             action={''}
             method={'post'}
             control={control}
-            onSubmit={data => console.log(data)}
+            onSubmit={data => {
+                console.log(orderSchema.parse(data.data));
+                handleDialogClickOpen('close');
+            }}
             // {...authenticationForm({
             //     setErrorMessage,
             //     mutate,
@@ -137,7 +177,7 @@ export default function CartPage() {
                                     width={90}
                                     height={90}
                                     src={article.picture}
-                                    alt={''}
+                                    alt={article.name}
                                 />
                                 <Stack direction={'column'} sx={{ flex: 1 }}>
                                     <div
@@ -182,7 +222,7 @@ export default function CartPage() {
                                             </Typography>
                                         </div>
                                         <Controller
-                                            name={`cartItems.${index}.amount`}
+                                            name={`articleOrders.${index}.amount`}
                                             control={control}
                                             render={({ field: { value, onChange, ...field } }) => (
                                                 <ArticleAmountHandler article={article} field={field} />
@@ -216,9 +256,55 @@ export default function CartPage() {
                     </TableContainer>
                 </>
             )}
-            <ButtonComponent type={'submit'} size={'large'} positionFixed={true}>
+            <ButtonComponent
+                type={'button'}
+                onClick={() => handleDialogClickOpen('open')}
+                size={'large'}
+                positionFixed={true}
+            >
                 CHECKOUT
             </ButtonComponent>
+            <Dialog
+                open={dialogOpen}
+                PaperProps={{
+                    component: 'form',
+                    onSubmit: async (event: FormEvent<HTMLFormElement>) => {
+                        event.preventDefault();
+                        await trigger();
+                    },
+                }}
+            >
+                <DialogTitle>Bezahlmethode auswählen</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>Bitte gebe deine bevorzugte Bezahlmethode ein</DialogContentText>
+                    <Controller
+                        rules={{ required: true }}
+                        control={control}
+                        name="paymentMethod"
+                        render={({ field }) => (
+                            <RadioGroup {...field}>
+                                <Grid>
+                                    {Object.values($Enums.PaymentMethods).map(type => (
+                                        <FormControlLabel
+                                            value={type}
+                                            key={type}
+                                            control={<Radio />}
+                                            label={toPascalCase(type)}
+                                        />
+                                    ))}
+                                </Grid>
+                            </RadioGroup>
+                        )}
+                    />
+                    <DialogContentText>
+                        <Typography>Gesamtkosten: {currencyFormatter(totalPrice)}</Typography>
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => handleDialogClickOpen('close')}>Abbrechen</Button>
+                    <Button type="submit">Kauf abschließen</Button>
+                </DialogActions>
+            </Dialog>
         </Form>
     );
 }

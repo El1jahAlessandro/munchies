@@ -11,8 +11,8 @@ export const POST = asyncNextHandler(async req => {
     const test = await prisma.orders.create({
         data: {
             ...data,
-            ordersArticles: {
-                create: data.ordersArticles,
+            articleOrders: {
+                create: data.articleOrders,
             },
         },
     });
