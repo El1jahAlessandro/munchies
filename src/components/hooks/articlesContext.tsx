@@ -1,14 +1,28 @@
 'use client';
 import { createContext, ReactNode, useContext, useMemo } from 'react';
 import useSWR from 'swr';
-import { Article } from '@prisma/client';
+import { Article, ArticleCategories, Categories, User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
 import { getFetcher } from '@/lib/helpers/fetcher';
 import { APIError } from '@/lib/schemas/common.schema';
+import { uniqBy } from 'lodash';
 
-type ArticlesContext = { articles: Article[] | undefined; error: APIError | undefined };
+export type ArticleWithCategoryType = Article & {
+    ArticleCategories: (ArticleCategories & { category: Categories })[];
+    user: User;
+};
 
-const ArticlesContext = createContext<ArticlesContext>({ articles: undefined, error: undefined });
+type ArticlesContext = {
+    articles: ArticleWithCategoryType[] | undefined;
+    categories: Categories[] | undefined;
+    error: APIError | undefined;
+};
+
+const ArticlesContext = createContext<ArticlesContext>({
+    articles: undefined,
+    categories: undefined,
+    error: undefined,
+});
 
 export function useArticlesContext() {
     const articlesContext = useContext(ArticlesContext);
@@ -19,9 +33,22 @@ export function useArticlesContext() {
 }
 
 export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
-    const { data: articles, error, isLoading } = useSWR<Article[], APIError>(api.article.get, getFetcher);
+    const {
+        data: articles,
+        error,
+        isLoading,
+    } = useSWR<ArticleWithCategoryType[], APIError>(api.article.get, getFetcher);
 
-    const value = useMemo(() => ({ articles, error }), [articles, error]);
+    const categories = useMemo(() => {
+        return uniqBy(
+            articles?.flatMap(article =>
+                article.ArticleCategories.flatMap(articleCategory => articleCategory.category)
+            ),
+            'id'
+        );
+    }, [articles]);
+
+    const value = useMemo(() => ({ articles, categories, error }), [articles, categories, error]);
 
     return <ArticlesContext.Provider value={value}>{children}</ArticlesContext.Provider>;
 };
