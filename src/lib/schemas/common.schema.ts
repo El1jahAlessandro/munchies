@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { AccountType } from '@prisma/client';
+import { AccountType, OrderStatus, PaymentMethods } from '@prisma/client';
 import { AxiosError } from 'axios';
 import { ControllerRenderProps, FieldErrors, FieldValues, Path } from 'react-hook-form';
 import { TextFieldProps } from '@mui/material/TextField/TextField';
@@ -7,6 +7,8 @@ import { TextFieldProps } from '@mui/material/TextField/TextField';
 export type APIError = AxiosError<{ error: string }>;
 
 export const accountTypeSchema = z.nativeEnum(AccountType);
+export const paymentMethodSchema = z.nativeEnum(PaymentMethods);
+export const orderStatusSchema = z.nativeEnum(OrderStatus);
 
 export const AuthorizationTokenSchema = z.object({
     id: z.number(),

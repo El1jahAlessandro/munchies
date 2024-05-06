@@ -1,5 +1,5 @@
 import { FabTypeMap } from '@mui/material/Fab/Fab';
-import { Fab, Stack, Typography } from '@mui/material';
+import { Fab, Stack, styled } from '@mui/material';
 import RemoveIcon from '@mui/icons-material/Remove';
 import AddIcon from '@mui/icons-material/Add';
 import React, { ReactNode } from 'react';
@@ -12,6 +12,17 @@ type AmountHandlerProps = {
     children: ReactNode;
 };
 
+const AmountHandlerText = styled('span')(({ theme }) => ({
+    width: '20px',
+    letterSpacing: '1px',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: '5px',
+    fontWeight: 'bold',
+    fontFamily: theme.typography.fontFamily,
+}));
+
 export function AmountHandler(props: AmountHandlerProps) {
     const { minusButtonProps, minusButtonOnClick, plusButtonOnClick, plusButtonProps, children } = props;
     return (
@@ -19,19 +30,7 @@ export function AmountHandler(props: AmountHandlerProps) {
             <Fab {...minusButtonProps} color="primary" aria-label="remove" size={'small'} onClick={minusButtonOnClick}>
                 <RemoveIcon />
             </Fab>
-            <Typography
-                component={'span'}
-                sx={{
-                    width: '20px',
-                    letterSpacing: '2px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: '5px',
-                }}
-            >
-                {children}
-            </Typography>
+            <AmountHandlerText>{children}</AmountHandlerText>
             <Fab {...plusButtonProps} color="primary" aria-label="add" size={'small'} onClick={plusButtonOnClick}>
                 <AddIcon />
             </Fab>

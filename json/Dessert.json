@@ -1,0 +1,72 @@
+[
+  {
+    "name": "Baklava",
+    "description": "Ein köstliches orientalisches Dessert aus Blätterteig, Nüssen und Sirup.",
+    "ingredients": [
+      "Blätterteig",
+      "Nüsse",
+      "Sirup"
+    ],
+    "picture": "munchies/Article Pictures/il_570xN.4488464104_gpb2_rmv7br",
+    "price": 5.50
+  },
+  {
+    "name": "Tiramisu",
+    "description": "Ein klassisches italienisches Dessert aus Mascarpone, Löffelbiskuits und Kaffee.",
+    "ingredients": [
+      "Mascarpone",
+      "Löffelbiskuits",
+      "Kaffee"
+    ],
+    "picture": "munchies/Article Pictures/tiramisu-aus-dem-thermomix_jeavln",
+    "price": 6.75
+  },
+  {
+    "name": "Apfelstrudel",
+    "description": "Ein traditionelles österreichisches Dessert aus dünnem Teig gefüllt mit Äpfeln, Rosinen und Zimt.",
+    "ingredients": [
+      "Teig",
+      "Äpfel",
+      "Rosinen",
+      "Zimt"
+    ],
+    "picture": "munchies/Article Pictures/images_begmua",
+    "price": 4.90
+  },
+  {
+    "name": "Vanilleeis",
+    "description": "Ein cremiges Dessert aus Vanille, perfekt als Begleitung zu anderen Süßspeisen oder solo.",
+    "ingredients": [
+      "Milch",
+      "Sahne",
+      "Zucker",
+      "Vanille"
+    ],
+    "picture": "munchies/Article Pictures/grundrezept-vanille-eis-default_fmvszb",
+    "price": 3.0
+  },
+  {
+    "name": "Käsekuchen",
+    "description": "Ein köstlicher Kuchen aus cremigem Frischkäse auf einem knusprigen Keksboden.",
+    "ingredients": [
+      "Frischkäse",
+      "Eier",
+      "Zucker",
+      "Kekse"
+    ],
+    "picture": "munchies/Article Pictures/kaesekuchen-aus-bayern_xoqker",
+    "price": 4.20
+  },
+  {
+    "name": "Crème Brûlée",
+    "description": "Ein französisches Dessert bestehend aus cremiger Vanillecreme, gekrönt mit einer knackigen Karamellkruste.",
+    "ingredients": [
+      "Eigelb",
+      "Sahne",
+      "Zucker",
+      "Vanille"
+    ],
+    "picture": "munchies/Article Pictures/creme-brlee-default_rsckm1",
+    "price": 7.20
+  }
+]

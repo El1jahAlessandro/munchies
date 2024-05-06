@@ -22,22 +22,21 @@ model User {
 }
 
 model Article {
-  id                  Int               @id @default(autoincrement())
-  name                String
-  price               Float             @db.DoublePrecision
-  picture             String
-  description         String
-  ingredients         String
-  userId              Int
-  articleCategoriesId Int
-  user                User?             @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  category            ArticleCategories @relation(fields: [articleCategoriesId], references: [id], onUpdate: Cascade)
-  articleOrders       ArticleOrders[]
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
+  id                Int                 @id @default(autoincrement())
+  name              String
+  price             Float               @db.DoublePrecision
+  picture           String
+  description       String
+  ingredients       String
+  userId            Int
+  user              User                @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  articleOrders     OrdersArticles[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  ArticleCategories ArticleCategories[]
 }
 
-model ArticleOrders {
+model OrdersArticles {
   id        Int      @id @default(autoincrement())
   amount    Int
   articleId Int
@@ -49,22 +48,31 @@ model ArticleOrders {
 }
 
 model Orders {
-  id            Int             @id @default(autoincrement())
-  paymentMethod PaymentMethods
-  status        OrderStatus
-  userId        Int?
-  articleOrders ArticleOrders[]
-  user          User?           @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  id             Int              @id @default(autoincrement())
+  paymentMethod  PaymentMethods
+  totalPrice     Int
+  status         OrderStatus      @default(inPreparation)
+  userId         Int?
+  ordersArticles OrdersArticles[]
+  user           User?            @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model ArticleCategories {
+  id         Int        @id @default(autoincrement())
+  articleId  Int
+  categoryId Int
+  article    Article    @relation(fields: [articleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  category   Categories @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Categories {
   // dessert, drinks, pizza, indian, pasta, burger, salad, asian
-  id      Int       @id @default(autoincrement())
-  name    String    @unique
-  icon    String
-  article Article[]
+  id                Int                 @id @default(autoincrement())
+  name              String              @unique
+  icon              String
+  ArticleCategories ArticleCategories[]
 }
 
 enum OrderStatus {

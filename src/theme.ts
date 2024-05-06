@@ -23,6 +23,18 @@ const theme = createTheme({
             main: '#d32f2f',
         },
     },
+    components: {
+        MuiFab: {
+            styleOverrides: {
+                root: {
+                    width: '30px',
+                    height: '30px',
+                    minHeight: '30px',
+                    zIndex: 0,
+                },
+            },
+        },
+    },
 });
 
 export default theme;
