@@ -15,7 +15,7 @@ type ButtonPropsType = {
     positionFixed?: boolean;
 } & ButtonProps;
 
-const FixedButtonContainer = styled('div')(({ theme }) => ({
+const FixedButtonContainer = styled('div')(() => ({
     margin: 'auto',
     left: 0,
     right: 0,
