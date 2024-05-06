@@ -7,7 +7,7 @@
       "Gemüse",
       "Hühnchen / Rindfleisch / Garnelen"
     ],
-    "price": "8.50€",
+    "price": 8.50,
     "picture": "munchies/Article Pictures/gebratener-reis_rks5td"
   },
   {
@@ -18,7 +18,7 @@
       "Curry-Sauce",
       "Reis"
     ],
-    "price": "14.50€",
+    "price": 14.50,
     "picture": "munchies/Article Pictures/profile_original_oenq2c"
   },
   {
@@ -29,7 +29,7 @@
       "Hühnchen / Garnelen",
       "Teig"
     ],
-    "price": "6.00€",
+    "price": 6.00,
     "picture": "munchies/Article Pictures/ds00bj1vbap2ufxarvwz"
   },
   {
@@ -41,7 +41,7 @@
       "Reis",
       "Noriblätter"
     ],
-    "price": "18.00€",
+    "price": 18.00,
     "picture": "munchies/Article Pictures/sushi-sorten_duykqy"
   },
   {
@@ -52,7 +52,7 @@
       "Gemüse",
       "Hühnchen / Rindfleisch / Garnelen"
     ],
-    "price": "9.50€",
+    "price": 9.50,
     "picture": "munchies/Article Pictures/images_tqkovg"
   },
   {
@@ -64,7 +64,7 @@
       "Gemüse",
       "Fleisch / Tofu"
     ],
-    "price": "10.00€",
+    "price": 10.00,
     "picture": "munchies/Article Pictures/images_xehy3z"
   },
   {
@@ -77,7 +77,7 @@
       "Ananas",
       "Gemüse"
     ],
-    "price": "11.00€",
+    "price": 11.00,
     "picture": "munchies/Article Pictures/Haehnchen-suess-sauer-mit-Reis37_dpttvp"
   }
 ]
