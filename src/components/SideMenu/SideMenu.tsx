@@ -25,6 +25,7 @@ import ProfilePic from '@/components/ProfilePic/ProfilePic';
 import { postFetcher } from '@/lib/helpers/fetcher';
 import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
+import { useCartContext } from '@/components/hooks/cartContext';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -75,9 +76,15 @@ export function MenuButton({ toggleDrawer }: { toggleDrawer: ToggleDrawerType })
 }
 
 function LogOutButton({}) {
+    const { mutate: userMutate } = useUserContext();
+    const { mutate: cartMutate } = useCartContext();
     const { push } = useRouter();
     const handleClick = async () => {
-        postFetcher(api.user.logout).then(() => push(pages.login));
+        postFetcher(api.user.logout).then(() => {
+            userMutate();
+            cartMutate();
+            push(pages.login);
+        });
     };
 
     return (
