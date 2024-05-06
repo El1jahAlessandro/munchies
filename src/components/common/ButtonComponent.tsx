@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { ButtonProps, styled } from '@mui/material';
+import { ButtonProps, CircularProgress, styled } from '@mui/material';
 
 const sizes = {
     small: { x: 4, y: 1 },
@@ -9,13 +9,24 @@ const sizes = {
 
 type ButtonPropsType = {
     children: ReactNode;
+    isSubmitting?: boolean;
     icon?: ReactNode;
-    size: 'small' | 'medium' | 'large';
+    size?: 'small' | 'medium' | 'large';
+    positionFixed?: boolean;
 } & ButtonProps;
 
-const StyledButton = styled('button')<ButtonPropsType>(({ theme, size }) => ({
+const FixedButtonContainer = styled('div')(({ theme }) => ({
+    margin: 'auto',
+    left: 0,
+    right: 0,
+    bottom: 90,
+    position: 'fixed',
+    textAlign: 'center',
+}));
+
+const StyledButton = styled('button')<Omit<ButtonPropsType, 'isSubmitting'>>(({ theme, size }) => ({
     height: '57px',
-    padding: `${theme.spacing(sizes[size].y)} ${theme.spacing(sizes[size].x)}`,
+    padding: `${theme.spacing(sizes[size ?? 'small'].y)} ${theme.spacing(sizes[size ?? 'small'].x)}`,
     backgroundColor: theme.palette.primary.main,
     fontFamily: theme.typography.fontFamily,
     color: 'white',
@@ -35,6 +46,21 @@ const StyledButton = styled('button')<ButtonPropsType>(({ theme, size }) => ({
         'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;',
 }));
 
-export function ButtonComponent({ children, icon, ...props }: ButtonPropsType) {
-    return <StyledButton {...props}>{children}</StyledButton>;
+export function ButtonComponent({
+    children,
+    isSubmitting,
+    icon,
+    size = 'small',
+    positionFixed,
+    ...props
+}: ButtonPropsType) {
+    const buttonContent = (
+        <StyledButton size={size} {...props}>
+            {isSubmitting ? <CircularProgress color={'inherit'} /> : children}
+        </StyledButton>
+    );
+    if (positionFixed) {
+        return <FixedButtonContainer>{buttonContent}</FixedButtonContainer>;
+    }
+    return buttonContent;
 }

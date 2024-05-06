@@ -216,11 +216,9 @@ export default function CartPage() {
                     </TableContainer>
                 </>
             )}
-            <div style={{ margin: 'auto', left: 0, right: 0, bottom: 90, position: 'fixed', textAlign: 'center' }}>
-                <ButtonComponent type={'submit'} size={'large'}>
-                    CHECKOUT
-                </ButtonComponent>
-            </div>
+            <ButtonComponent type={'submit'} size={'large'} positionFixed={true}>
+                CHECKOUT
+            </ButtonComponent>
         </Form>
     );
 }

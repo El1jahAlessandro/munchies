@@ -7,9 +7,11 @@ import { CartItemType } from '@/lib/schemas/article.schema';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import React, { useState } from 'react';
-import { Button, CircularProgress, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
+import { CldImage } from 'next-cloudinary';
+import { ButtonComponent } from '@/components/common/ButtonComponent';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -45,17 +47,37 @@ export default function LoginPage() {
             <input type="hidden" {...register(`id`)} value={Number(articleId)} />
             {article && (
                 <>
-                    <h1>{article.name}</h1>
-                    <p>{article.description}</p>
-                    <p>{article.ingredients}</p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <CldImage
+                            alt={article.name}
+                            width="720"
+                            height="405"
+                            src={article.picture}
+                            sizes={'(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+                            crop={'thumb'}
+                            aspectRatio={3 / 2}
+                            gravity={'center'}
+                            style={{ borderRadius: '15px' }}
+                        />
+                    </div>
+                    <Typography component={'div'} variant={'h4'} sx={{ fontWeight: 600 }} mt={2.5}>
+                        {article.name}
+                    </Typography>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
                         <Typography
                             sx={{
-                                fontWeight: 'bold',
+                                fontWeight: 'bolder',
                                 display: 'flex',
                                 justifyContent: 'center',
                                 alignItems: 'center',
+                                color: 'primary.main',
                             }}
+                            variant={'h5'}
                             component={'span'}
                         >
                             {currencyFormatter(article.price * watch('amount'))}
@@ -79,12 +101,25 @@ export default function LoginPage() {
                             )}
                         />
                     </div>
+                    <Typography variant={'subtitle1'} component={'p'} mt={2.5}>
+                        {article.description}
+                    </Typography>
+                    <Typography variant={'subtitle1'} component={'p'} mt={2.5}>
+                        <b>Zutaten:</b> {article.ingredients}
+                    </Typography>
                 </>
             )}
 
-            <Button variant={'contained'} color={'primary'} type={'submit'}>
-                {isSubmitting ? <CircularProgress /> : 'Zum Warenkorb hinzufügen'}
-            </Button>
+            <ButtonComponent
+                isSubmitting={isSubmitting}
+                size={'small'}
+                variant={'contained'}
+                color={'primary'}
+                type={'submit'}
+                positionFixed={true}
+            >
+                ZUM WARENKORB HINZUFÜGEN
+            </ButtonComponent>
             {error && <span>{error?.response?.data?.error}</span>}
         </Form>
     );
