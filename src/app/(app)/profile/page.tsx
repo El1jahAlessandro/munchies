@@ -1,7 +1,7 @@
 'use client';
 
 import ProfilePic from '@/components/ProfilePic/ProfilePic';
-import { Badge, Button, CircularProgress, Container, IconButton, Stack } from '@mui/material';
+import { Badge, Button, Container, IconButton, Stack } from '@mui/material';
 import { CameraAlt } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { Controller, Form, useForm } from 'react-hook-form';
