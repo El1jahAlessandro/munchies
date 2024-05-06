@@ -15,6 +15,7 @@ import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
+import { ButtonComponent } from '@/components/common/ButtonComponent';
 
 export default function ProfilePage() {
     const [previewPicture, setPreviewPicture] = useState<string>();
@@ -183,7 +184,7 @@ export default function ProfilePage() {
                             gap: '40px',
                         }}
                     >
-                        <Button
+                        <ButtonComponent
                             variant={'contained'}
                             color={'error'}
                             onClick={() => {
@@ -193,10 +194,10 @@ export default function ProfilePage() {
                             }}
                         >
                             Abbrechen
-                        </Button>
-                        <Button variant={'contained'} color={'primary'} type={'submit'} disabled={!isDirty}>
+                        </ButtonComponent>
+                        <ButtonComponent variant={'contained'} color={'primary'} type={'submit'} disabled={!isDirty}>
                             {isSubmitting ? <CircularProgress /> : 'Speichern'}
-                        </Button>
+                        </ButtonComponent>
                     </div>
                 </div>
             )}
