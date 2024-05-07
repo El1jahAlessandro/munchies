@@ -63,6 +63,7 @@
     "react-material-ui-carousel": "^3.4.2",
     "string-to-color": "^2.2.2",
     "swr": "^2.2.5",
-    "zod": "^3.23.4"
+    "zod": "^3.23.4",
+    "zod-form-data": "^2.0.2"
   }
 }

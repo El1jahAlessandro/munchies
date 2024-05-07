@@ -1,18 +1,19 @@
 import { asyncNextHandler } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
-import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 import { cartCookieName } from '@/lib/utils/constants';
-import { orderSchema } from '@/lib/schemas/order.schema';
+import { orderFormDataSchema } from '@/lib/schemas/order.schema';
 import prisma from '@/lib/utils/prisma';
 
 export const POST = asyncNextHandler(async req => {
-    const data = getFormDataValues(await req.formData(), orderSchema, orderSchema.keyof().options);
-
+    const data = orderFormDataSchema.parse(await req.formData());
+    console.log(data.ordersArticles);
     const test = await prisma.orders.create({
         data: {
             ...data,
-            articleOrders: {
-                create: data.articleOrders,
+            ordersArticles: {
+                createMany: {
+                    data: data.ordersArticles,
+                },
             },
         },
     });

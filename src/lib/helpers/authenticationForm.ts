@@ -4,7 +4,7 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { pages } from '@/lib/utils/routes';
 import { FieldValues, UseFormReset } from 'react-hook-form';
 
-type ErrorType = { response: Response; error?: undefined } | { response?: undefined; error: unknown };
+export type ErrorType = { response: Response; error?: undefined } | { response?: undefined; error: unknown };
 
 type FormFunctionType<TFieldValues extends FieldValues> = {
     setErrorMessage: Dispatch<SetStateAction<{ error: unknown } | undefined>>;

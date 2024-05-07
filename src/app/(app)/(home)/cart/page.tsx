@@ -4,12 +4,16 @@ import { useCartContext } from '@/components/hooks/cartContext';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import {
+    Backdrop,
     Button,
+    ButtonProps,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
+    Fab,
     FormControlLabel,
     Grid,
     IconButton,
@@ -25,6 +29,7 @@ import {
 } from '@mui/material';
 import { Controller, ControllerRenderProps, Form, useForm } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
 import { api } from '@/lib/utils/routes';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { postFetcher } from '@/lib/helpers/fetcher';
@@ -37,20 +42,41 @@ import { ButtonComponent } from '@/components/common/ButtonComponent';
 import { orderSchema, OrderType } from '@/lib/schemas/order.schema';
 import { $Enums } from '@prisma/client';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
+import ClearIcon from '@mui/icons-material/Clear';
+import { ErrorType } from '@/lib/helpers/authenticationForm';
 
 export default function CartPage() {
     const { cartArticles, mutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, trigger, reset } = useForm<OrderType>({
+    const { control, trigger, watch, reset, register } = useForm<OrderType>({
         defaultValues: {
-            articleOrders: useMemo(() => map(cartArticles, article => pick(article, ['id', 'amount'])), [cartArticles]),
+            ordersArticles: useMemo(
+                () =>
+                    map(cartArticles, article => {
+                        return { articleId: article.id, amount: article.amount };
+                    }),
+                [cartArticles]
+            ),
         },
     });
 
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [backdropOpen, setBackdropOpen] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleDialogClickOpen = (status: 'close' | 'open') => {
         setDialogOpen(status === 'open');
+    };
+
+    const buttonSx: (type: 'primary' | 'error') => ButtonProps['sx'] = type => {
+        return {
+            bgcolor: `${type}.main`,
+            '&:hover': {
+                bgcolor: `${type}.main`,
+            },
+        };
     };
 
     const deliveryCosts = 1;
@@ -63,12 +89,16 @@ export default function CartPage() {
         [cartArticles]
     );
 
+    useEffect(() => {
+        console.log(watch('ordersArticles'));
+    }, [watch('ordersArticles')]);
+
     const totalPrice = useMemo(() => Number((subtotal + deliveryCosts).toFixed(2)), [subtotal, deliveryCosts]);
 
     useEffect(() => {
         reset({
             totalPrice,
-            articleOrders: map(cartArticles, article => {
+            ordersArticles: map(cartArticles, article => {
                 return { articleId: article.id, amount: article.amount };
             }),
         });
@@ -155,18 +185,30 @@ export default function CartPage() {
 
     return (
         <Form
-            action={''}
+            action={api.order.create}
             method={'post'}
             control={control}
             onSubmit={data => {
                 console.log(orderSchema.parse(data.data));
                 handleDialogClickOpen('close');
+                setBackdropOpen(true);
+                setLoading(true);
             }}
-            // {...authenticationForm({
-            //     setErrorMessage,
-            //     mutate,
-            // })}
+            onSuccess={async () => {
+                setSuccess(true);
+                setLoading(false);
+                setTimeout(() => setBackdropOpen(false), 2000);
+                mutate && (await mutate());
+                //  push && push(pages.home);
+                reset && reset();
+            }}
+            onError={async (error: ErrorType) => {
+                setError(true);
+                setLoading(false);
+                setTimeout(() => setBackdropOpen(false), 2000);
+            }}
         >
+            <input {...register('totalPrice')} value={totalPrice} hidden />
             {cartArticles && cartArticles.length > 0 && (
                 <>
                     {cartArticles.map((article, index) => (
@@ -222,7 +264,7 @@ export default function CartPage() {
                                             </Typography>
                                         </div>
                                         <Controller
-                                            name={`articleOrders.${index}.amount`}
+                                            name={`ordersArticles.${index}.amount`}
                                             control={control}
                                             render={({ field: { value, onChange, ...field } }) => (
                                                 <ArticleAmountHandler article={article} field={field} />
@@ -305,6 +347,28 @@ export default function CartPage() {
                     <Button type="submit">Kauf abschließen</Button>
                 </DialogActions>
             </Dialog>
+            <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={backdropOpen}>
+                {success && (
+                    <Fab color="primary" sx={buttonSx('primary')} size={'large'}>
+                        {success && <CheckIcon />}
+                    </Fab>
+                )}
+                {error && (
+                    <Fab color="error" sx={buttonSx('error')} size={'large'}>
+                        {error && <ClearIcon />}
+                    </Fab>
+                )}
+                {loading && (
+                    <CircularProgress
+                        size={32}
+                        sx={{
+                            color: 'inherit',
+                            position: 'absolute',
+                            margin: 'auto',
+                        }}
+                    />
+                )}
+            </Backdrop>
         </Form>
     );
 }

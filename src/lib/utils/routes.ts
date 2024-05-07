@@ -15,6 +15,9 @@ export const api = {
         get: 'api/cart/get',
         remove: 'api/cart/remove',
     },
+    order: {
+        create: 'api/order/create',
+    },
 };
 
 export const pages = {
