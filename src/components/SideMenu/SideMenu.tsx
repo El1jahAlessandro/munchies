@@ -26,6 +26,7 @@ import { postFetcher } from '@/lib/helpers/fetcher';
 import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
 import { useCartContext } from '@/components/hooks/cartContext';
+import { ButtonComponent } from '@/components/common/ButtonComponent';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -88,9 +89,16 @@ function LogOutButton({}) {
     };
 
     return (
-        <Button onClick={handleClick} variant={'contained'} color={'primary'} startIcon={<PowerSettingsNewIcon />}>
+        <ButtonComponent
+            sx={{ position: 'absolute', marginLeft: theme => theme.spacing(2), bottom: theme => theme.spacing(3) }}
+            size={'small'}
+            onClick={handleClick}
+            variant={'contained'}
+            color={'primary'}
+            startIcon={<PowerSettingsNewIcon />}
+        >
             Logout
-        </Button>
+        </ButtonComponent>
     );
 }
 
@@ -99,17 +107,23 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
     return (
         <Drawer open={open} onClose={toggleDrawer(false)}>
             <div>
-                <ProfilePic width={100} height={100} sx={{ marginLeft: '16px', marginTop: '20px' }} />
+                <ProfilePic
+                    width={100}
+                    height={100}
+                    sx={{ marginLeft: theme => theme.spacing(2), marginTop: '20px' }}
+                />
                 <Typography
                     variant="subtitle1"
                     component="div"
-                    fontWeight={'bold'}
-                    paddingLeft={'16px'}
-                    paddingTop={'20px'}
+                    sx={{ fontWeight: 'bold', paddingLeft: theme => theme.spacing(2), paddingTop: '20px' }}
                 >
                     {user?.name}
                 </Typography>
-                <Typography variant="caption" component="div" paddingLeft={'16px'} sx={{ color: 'secondary.main' }}>
+                <Typography
+                    variant="caption"
+                    component="div"
+                    sx={{ paddingLeft: theme => theme.spacing(2), color: 'secondary.main' }}
+                >
                     {user?.email}
                 </Typography>
             </div>

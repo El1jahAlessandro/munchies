@@ -12,6 +12,7 @@ import { useCartContext } from '@/components/hooks/cartContext';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
 import { CldImage } from 'next-cloudinary';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -112,13 +113,14 @@ export default function LoginPage() {
 
             <ButtonComponent
                 isSubmitting={isSubmitting}
-                size={'small'}
+                size={'medium'}
                 variant={'contained'}
                 color={'primary'}
                 type={'submit'}
                 positionFixed={true}
+                startIcon={<ShoppingBagIcon />}
             >
-                ZUM WARENKORB HINZUFÜGEN
+                HINZUFÜGEN
             </ButtonComponent>
             {error && <span>{error?.response?.data?.error}</span>}
         </Form>

@@ -33,7 +33,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import { api, pages } from '@/lib/utils/routes';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { postFetcher } from '@/lib/helpers/fetcher';
-import { map, pick } from 'lodash';
+import { pick } from 'lodash';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
 import { CartItemType } from '@/lib/schemas/article.schema';
 import { CldImage } from 'next-cloudinary';
@@ -50,18 +50,16 @@ export default function CartPage() {
     const { push } = useRouter();
     const { cartArticles, mutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, trigger, register } = useForm<OrderType>({
+    const { control, trigger, reset, register } = useForm<OrderType>({
         defaultValues: {
             ordersArticles: useMemo(
                 () =>
-                    map(cartArticles, article => {
-                        return {
-                            articleId: article.id,
-                            amount: article.amount,
-                            companyId: article.userId,
-                            price: article.amount * article.price,
-                        };
-                    }),
+                    cartArticles.map(({ amount, id, price, userId }) => ({
+                        articleId: id,
+                        amount,
+                        price: price * amount,
+                        companyId: userId,
+                    })),
                 [cartArticles]
             ),
         },
