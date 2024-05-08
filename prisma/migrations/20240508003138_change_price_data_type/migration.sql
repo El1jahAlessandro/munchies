@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Orders"
+    ALTER COLUMN "totalPrice" SET DATA TYPE DOUBLE PRECISION;
+
+-- AlterTable
+ALTER TABLE "OrdersArticles"
+    ALTER COLUMN "price" SET DATA TYPE DOUBLE PRECISION;

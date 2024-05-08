@@ -2,7 +2,7 @@
 
 import { useCartContext } from '@/components/hooks/cartContext';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import {
     Backdrop,
     Button,
@@ -30,7 +30,7 @@ import {
 import { Controller, ControllerRenderProps, Form, useForm } from 'react-hook-form';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-import { api } from '@/lib/utils/routes';
+import { api, pages } from '@/lib/utils/routes';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { postFetcher } from '@/lib/helpers/fetcher';
 import { map, pick } from 'lodash';
@@ -44,8 +44,10 @@ import { $Enums } from '@prisma/client';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ErrorType } from '@/lib/helpers/authenticationForm';
+import { useRouter } from 'next/navigation';
 
 export default function CartPage() {
+    const { push } = useRouter();
     const { cartArticles, mutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const { control, trigger, watch, reset, register } = useForm<OrderType>({
@@ -53,7 +55,12 @@ export default function CartPage() {
             ordersArticles: useMemo(
                 () =>
                     map(cartArticles, article => {
-                        return { articleId: article.id, amount: article.amount };
+                        return {
+                            articleId: article.id,
+                            amount: article.amount,
+                            companyId: article.userId,
+                            price: article.amount * article.price,
+                        };
                     }),
                 [cartArticles]
             ),
@@ -89,20 +96,7 @@ export default function CartPage() {
         [cartArticles]
     );
 
-    useEffect(() => {
-        console.log(watch('ordersArticles'));
-    }, [watch('ordersArticles')]);
-
     const totalPrice = useMemo(() => Number((subtotal + deliveryCosts).toFixed(2)), [subtotal, deliveryCosts]);
-
-    useEffect(() => {
-        reset({
-            totalPrice,
-            ordersArticles: map(cartArticles, article => {
-                return { articleId: article.id, amount: article.amount };
-            }),
-        });
-    }, [cartArticles]);
 
     const list = useMemo(
         () => [
@@ -197,10 +191,11 @@ export default function CartPage() {
             onSuccess={async () => {
                 setSuccess(true);
                 setLoading(false);
-                setTimeout(() => setBackdropOpen(false), 2000);
-                mutate && (await mutate());
-                //  push && push(pages.home);
-                reset && reset();
+                setTimeout(async () => {
+                    setBackdropOpen(false);
+                    await mutate();
+                    push(pages.home);
+                }, 2000);
             }}
             onError={async (error: ErrorType) => {
                 setError(true);
@@ -208,11 +203,17 @@ export default function CartPage() {
                 setTimeout(() => setBackdropOpen(false), 2000);
             }}
         >
-            <input {...register('totalPrice')} value={totalPrice} hidden />
             {cartArticles && cartArticles.length > 0 && (
                 <>
                     {cartArticles.map((article, index) => (
                         <div style={{ marginTop: '25px' }} key={article.id}>
+                            <input {...register(`ordersArticles.${index}.articleId`)} value={article.id} hidden />
+                            <input {...register(`ordersArticles.${index}.companyId`)} value={article.userId} hidden />
+                            <input
+                                {...register(`ordersArticles.${index}.price`)}
+                                value={article.amount * article.price}
+                                hidden
+                            />
                             <div style={{ display: 'flex', gap: '20px' }}>
                                 <CldImage
                                     style={{ flex: '0 0 90px', borderRadius: '20px' }}

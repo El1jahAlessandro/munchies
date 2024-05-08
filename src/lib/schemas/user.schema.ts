@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { accountTypeSchema } from '@/lib/schemas/common.schema';
+import prisma from '@/lib/utils/prisma';
 
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
@@ -41,3 +42,54 @@ export const createUserInputSchema = createUserBodySchema
         message: 'Passwords do not match',
         path: ['confirmPassword'],
     });
+
+const orderSelectArgs = {
+    select: {
+        id: true,
+        paymentMethod: true,
+        totalPrice: true,
+        status: true,
+        updatedAt: true,
+        ordersArticles: {
+            select: {
+                article: {
+                    select: {
+                        id: true,
+                        name: true,
+                        picture: true,
+                    },
+                },
+            },
+        },
+        company: {
+            select: {
+                name: true,
+                profilePic: true,
+            },
+        },
+    },
+};
+
+export const getUserInputArgs = {
+    select: {
+        id: true,
+        email: true,
+        name: true,
+        profilePic: true,
+        accountType: true,
+        buyedArticles: orderSelectArgs,
+        saledArticles: orderSelectArgs,
+    },
+};
+
+export type UserResponseType = Awaited<
+    ReturnType<
+        typeof prisma.user.findUnique<
+            typeof getUserInputArgs & {
+                where: {
+                    id: number;
+                };
+            }
+        >
+    >
+>;

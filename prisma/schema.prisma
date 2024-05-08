@@ -9,16 +9,17 @@ datasource db {
 }
 
 model User {
-  id          Int         @id @default(autoincrement())
-  email       String      @unique
-  name        String
-  password    String
-  profilePic  String?
-  accountType AccountType
-  article     Article[]
-  orders      Orders[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id            Int         @id @default(autoincrement())
+  email         String      @unique
+  name          String
+  password      String
+  profilePic    String?
+  accountType   AccountType
+  article       Article[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  buyedArticles Orders[]    @relation("buyedArticles")
+  saledArticles Orders[]    @relation("saledArticles")
 }
 
 model Article {
@@ -39,8 +40,9 @@ model Article {
 model OrdersArticles {
   id        Int      @id @default(autoincrement())
   amount    Int
-  articleId Int
+  price     Float
   orderId   Int
+  articleId Int
   article   Article  @relation(fields: [articleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   order     Orders   @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -50,11 +52,13 @@ model OrdersArticles {
 model Orders {
   id             Int              @id @default(autoincrement())
   paymentMethod  PaymentMethods
-  totalPrice     Int
+  totalPrice     Float
   status         OrderStatus      @default(inPreparation)
-  userId         Int?
+  userId         Int
+  companyId      Int
   ordersArticles OrdersArticles[]
-  user           User?            @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  buyer          User             @relation("buyedArticles", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  company        User             @relation("saledArticles", fields: [companyId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
 }

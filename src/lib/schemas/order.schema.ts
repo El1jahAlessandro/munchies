@@ -5,14 +5,14 @@ import { orderStatusSchema, paymentMethodSchema } from '@/lib/schemas/common.sch
 export type OrderType = z.infer<typeof orderSchema>;
 
 export const ordersArticlesSchema = z.object({
-    // articleId: z.coerce.number(),
+    articleId: z.coerce.number(),
     amount: z.coerce.number(),
-    articleId: z.any().optional(),
+    price: z.coerce.number(),
+    companyId: z.coerce.number(),
 });
 
 export const orderSchema = z.object({
     paymentMethod: paymentMethodSchema,
-    totalPrice: z.coerce.number(),
     status: orderStatusSchema.optional().default('inPreparation'),
     ordersArticles: z.array(ordersArticlesSchema),
 });

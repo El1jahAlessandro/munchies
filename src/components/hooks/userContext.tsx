@@ -5,6 +5,7 @@ import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
 import { APIError } from '@/lib/schemas/common.schema';
 import { getFetcher } from '@/lib/helpers/fetcher';
+import { UserResponseType } from '@/lib/schemas/user.schema';
 
 export type UserMutateType = KeyedMutator<User> | VoidFunction;
 
@@ -28,7 +29,13 @@ export function useUserContext() {
 }
 
 function getUserData() {
-    const { data: user, error, isLoading, mutate, isValidating } = useSWR<User, APIError>(api.user.get, getFetcher);
+    const {
+        data: user,
+        error,
+        isLoading,
+        mutate,
+        isValidating,
+    } = useSWR<UserResponseType, APIError>(api.user.get, getFetcher);
     return { user, error, isLoading, mutate, isValidating };
 }
 

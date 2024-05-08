@@ -16,7 +16,7 @@ export class StatusError extends Error {
     }
 }
 
-type ResponseType<T> = NextResponse<T> | NextResponse<{ error: string } | unknown>;
+type ResponseType<T> = NextResponse<T> | NextResponse<{ error: string }>;
 
 export function asyncNextHandler<ResBody = unknown>(
     fn: (request: NextRequest, response: NextResponse<ResBody>) => Promise<ResponseType<ResBody>>
