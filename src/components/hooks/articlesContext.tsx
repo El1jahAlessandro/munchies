@@ -33,11 +33,7 @@ export function useArticlesContext() {
 }
 
 export const ArticlesProvider = ({ children }: { children: ReactNode }) => {
-    const {
-        data: articles,
-        error,
-        isLoading,
-    } = useSWR<ArticleWithCategoryType[], APIError>(api.article.get, getFetcher);
+    const { data: articles, error } = useSWR<ArticleWithCategoryType[], APIError>(api.article.get, getFetcher);
 
     const categories = useMemo(() => {
         return uniqBy(

@@ -73,6 +73,7 @@ export default function OverviewPage() {
                     categories.length > 0 &&
                     sortCategories(categoryFilters ?? []).map(category => (
                         <div
+                            key={category.id}
                             style={{
                                 border: '1px solid black',
                                 borderRadius: '20%',

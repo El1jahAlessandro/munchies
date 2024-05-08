@@ -8,7 +8,6 @@ import { Controller, Form, useForm } from 'react-hook-form';
 import { useUserContext } from '@/components/hooks/userContext';
 import { editUserFormSchema, EditUserFormType } from '@/lib/schemas/user.schema';
 import { pick } from 'lodash';
-import { User } from '@prisma/client';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
@@ -22,14 +21,14 @@ export default function ProfilePage() {
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const [inEditMode, setInEditMode] = useState<boolean>(false);
     const { user, mutate } = useUserContext();
-    const userDefaultValues = pick(user as User, editUserFormSchema.omit({ profilePic: true }).keyof().options);
+    const userDefaultValues = pick(user, editUserFormSchema.omit({ profilePic: true }).keyof().options);
     const {
         watch,
         reset,
         control,
         formState: { errors, isDirty, isSubmitting, isSubmitted },
     } = useForm<EditUserFormType>({
-        defaultValues: useMemo(() => userDefaultValues, [user]),
+        defaultValues: useMemo(() => userDefaultValues, [userDefaultValues]),
         resolver: zodResolver(editUserFormSchema),
     });
 
@@ -60,7 +59,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         reset({ ...userDefaultValues, profilePic: user?.profilePic });
-    }, [user]);
+    }, [reset, user, userDefaultValues]);
 
     return (
         <Form

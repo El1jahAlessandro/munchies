@@ -67,7 +67,7 @@ export default function LoginPage() {
                     )}
                     <div>
                         <Typography component={'span'}>
-                            Don't have an account? <Link href={pages.register}>Register here</Link>
+                            {"Don't have an account?"} <Link href={pages.register}>Register here</Link>
                         </Typography>
                     </div>
                 </Stack>

@@ -35,6 +35,7 @@ function getUserData() {
         isLoading,
         mutate,
         isValidating,
+        // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useSWR<UserResponseType, APIError>(api.user.get, getFetcher);
     return { user, error, isLoading, mutate, isValidating };
 }

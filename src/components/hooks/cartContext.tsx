@@ -37,7 +37,9 @@ function getCartData() {
         isLoading,
         mutate,
         isValidating,
+        // eslint-disable-next-line react-hooks/rules-of-hooks
     } = useSWR<GetCartItemsBodyType, APIError>(api.cart.get, getFetcher);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { articles } = useArticlesContext();
     const cartArticles = compact(
         cartItems?.map(item => {

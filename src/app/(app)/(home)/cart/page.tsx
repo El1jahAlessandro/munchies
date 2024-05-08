@@ -50,7 +50,7 @@ export default function CartPage() {
     const { push } = useRouter();
     const { cartArticles, mutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, trigger, watch, reset, register } = useForm<OrderType>({
+    const { control, trigger, register } = useForm<OrderType>({
         defaultValues: {
             ordersArticles: useMemo(
                 () =>
@@ -121,7 +121,7 @@ export default function CartPage() {
                 value: totalPrice,
             },
         ],
-        [subtotal, deliveryCosts, totalPrice]
+        [subtotal, cartArticles.length, totalPrice]
     );
 
     function RemoveButton({ article }: { article: CartItemType }) {
@@ -198,6 +198,7 @@ export default function CartPage() {
                 }, 2000);
             }}
             onError={async (error: ErrorType) => {
+                setErrorMessage(await error.response?.json());
                 setError(true);
                 setLoading(false);
                 setTimeout(() => setBackdropOpen(false), 2000);
