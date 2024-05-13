@@ -27,4 +27,5 @@ export const pages = {
     register: '/register',
     article: '/article',
     profile: '/profile',
+    orders: '/orders',
 };

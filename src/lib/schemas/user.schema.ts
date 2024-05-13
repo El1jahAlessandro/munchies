@@ -52,11 +52,12 @@ const orderSelectArgs = {
         updatedAt: true,
         ordersArticles: {
             select: {
+                id: true,
+                amount: true,
+                price: true,
                 article: {
                     select: {
-                        id: true,
                         name: true,
-                        picture: true,
                     },
                 },
             },
@@ -65,6 +66,11 @@ const orderSelectArgs = {
             select: {
                 name: true,
                 profilePic: true,
+            },
+        },
+        buyer: {
+            select: {
+                name: true,
             },
         },
     },

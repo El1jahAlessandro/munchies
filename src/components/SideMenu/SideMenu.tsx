@@ -34,7 +34,7 @@ const menuList = [
     {
         icon: <TextSnippetIcon />,
         label: 'My Orders',
-        href: pages.home,
+        href: pages.orders,
     },
     {
         icon: <PersonIcon />,
