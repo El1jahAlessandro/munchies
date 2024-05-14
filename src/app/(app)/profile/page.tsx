@@ -184,6 +184,7 @@ export default function ProfilePage() {
                         }}
                     >
                         <ButtonComponent
+                            size={'medium'}
                             variant={'contained'}
                             color={'error'}
                             onClick={() => {
@@ -195,6 +196,7 @@ export default function ProfilePage() {
                             Abbrechen
                         </ButtonComponent>
                         <ButtonComponent
+                            size={'medium'}
                             isSubmitting={isSubmitting}
                             variant={'contained'}
                             color={'primary'}
