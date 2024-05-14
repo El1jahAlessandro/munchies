@@ -28,7 +28,7 @@ export default function ProfilePage() {
         control,
         formState: { errors, isDirty, isSubmitting, isSubmitted },
     } = useForm<EditUserFormType>({
-        defaultValues: useMemo(() => userDefaultValues, [userDefaultValues]),
+        defaultValues: useMemo(() => userDefaultValues, [user]),
         resolver: zodResolver(editUserFormSchema),
     });
 
@@ -59,7 +59,7 @@ export default function ProfilePage() {
 
     useEffect(() => {
         reset({ ...userDefaultValues, profilePic: user?.profilePic });
-    }, [reset, user, userDefaultValues]);
+    }, [user]);
 
     return (
         <Form
