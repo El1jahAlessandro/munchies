@@ -122,7 +122,7 @@ export default function OrderPage() {
                 orderEntries.map(([orderCategory, orders]) => (
                     <div key={orderCategory}>
                         {orderCategory as OrderCategory}
-                        <OrderChunks orders={orders} />
+                        <OrderChunks orders={orders.reverse()} />
                     </div>
                 ))}
         </>
