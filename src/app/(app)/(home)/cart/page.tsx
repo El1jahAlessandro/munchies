@@ -39,16 +39,18 @@ import { CartItemType } from '@/lib/schemas/article.schema';
 import { CldImage } from 'next-cloudinary';
 import { truncateString } from '@/lib/helpers/truncateString';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
-import { orderSchema, OrderType } from '@/lib/schemas/order.schema';
+import { CreateOrderType, OrderType } from '@/lib/schemas/order.schema';
 import { $Enums } from '@prisma/client';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ErrorType } from '@/lib/helpers/authenticationForm';
 import { useRouter } from 'next/navigation';
+import { useUserContext } from '@/components/hooks/userContext';
 
 export default function CartPage() {
     const { push } = useRouter();
-    const { cartArticles, mutate } = useCartContext();
+    const { user, mutate: userMutate } = useUserContext();
+    const { cartArticles, mutate: cartMutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const { control, trigger, reset, register } = useForm<OrderType>({
         defaultValues: {
@@ -130,7 +132,7 @@ export default function CartPage() {
                 aria-label="remove"
                 onClick={async () => {
                     await postFetcher(api.cart.remove, createFormData(pick(article, ['id', 'amount'])));
-                    await mutate();
+                    await cartMutate();
                 }}
             >
                 <CloseIcon />
@@ -155,7 +157,7 @@ export default function CartPage() {
                             amount: -1,
                         })
                     );
-                    await mutate();
+                    await cartMutate();
                 }}
                 plusButtonOnClick={async () => {
                     await postFetcher(
@@ -165,7 +167,7 @@ export default function CartPage() {
                             amount: 1,
                         })
                     );
-                    await mutate();
+                    await cartMutate();
                 }}
                 minusButtonProps={{ ...field, disabled: article.amount === 1 }}
                 plusButtonProps={{ ...field }}
@@ -180,19 +182,25 @@ export default function CartPage() {
             action={api.order.create}
             method={'post'}
             control={control}
-            onSubmit={data => {
-                console.log(orderSchema.parse(data.data));
+            onSubmit={() => {
                 handleDialogClickOpen('close');
                 setBackdropOpen(true);
                 setLoading(true);
             }}
-            onSuccess={async () => {
+            onSuccess={async ({ response: { body } }) => {
+                const newData = await new Response(body).json().then((res: CreateOrderType) => res);
                 setSuccess(true);
                 setLoading(false);
                 setTimeout(async () => {
                     setBackdropOpen(false);
-                    await mutate();
-                    push(pages.home);
+                    await cartMutate([]);
+                    if (user) {
+                        await userMutate({
+                            ...user,
+                            buyedArticles: [...user.buyedArticles, ...newData],
+                        });
+                    }
+                    push(pages.orders);
                 }, 2000);
             }}
             onError={async (error: ErrorType) => {

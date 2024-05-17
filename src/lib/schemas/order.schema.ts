@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { orderStatusSchema, paymentMethodSchema } from '@/lib/schemas/common.schema';
 import prisma from '@/lib/utils/prisma';
-import { getUserInputArgs } from '@/lib/schemas/user.schema';
+import { getUserInputArgs, orderSelectArgs } from '@/lib/schemas/user.schema';
 
 export type OrderType = z.infer<typeof orderSchema>;
 
@@ -25,6 +25,18 @@ export type OrderResponseType = Awaited<
     ReturnType<
         typeof prisma.orders.findUnique<
             typeof getUserInputArgs.select.buyedArticles & {
+                where: {
+                    id: number;
+                };
+            }
+        >
+    >
+>;
+
+export type CreateOrderType = Awaited<
+    ReturnType<
+        typeof prisma.orders.findMany<
+            typeof orderSelectArgs & {
                 where: {
                     id: number;
                 };

@@ -43,7 +43,7 @@ export const createUserInputSchema = createUserBodySchema
         path: ['confirmPassword'],
     });
 
-const orderSelectArgs = {
+export const orderSelectArgs = {
     select: {
         id: true,
         paymentMethod: true,
