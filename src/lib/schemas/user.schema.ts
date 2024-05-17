@@ -50,6 +50,7 @@ const orderSelectArgs = {
         totalPrice: true,
         status: true,
         updatedAt: true,
+        createdAt: true,
         ordersArticles: {
             select: {
                 id: true,

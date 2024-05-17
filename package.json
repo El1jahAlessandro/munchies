@@ -17,8 +17,11 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:reset": "prisma migrate reset",
     "start:migrate:dev": "prisma migrate dev && npm run dev",
-    "start:migrate:dev:ln": "prisma migrate dev && npm run dev -- -H 192.168.0.55",
-    "start:migrate:prod": "prisma migrate deploy && npm run start"
+    "start:migrate:dev:ln": "prisma migrate dev && npm run dev -- -H 192.168.0.151",
+    "start:migrate:prod": "prisma migrate deploy && npm run start",
+    "prettier:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
+    "prettier:write": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
+    "typescript:check": "tsc --noEmit"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
@@ -35,7 +38,7 @@
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",
     "prettier": "3.2.5",
-    "prisma": "^5.13.0",
+    "prisma": "^5.14.0",
     "tailwindcss": "^3.4.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
@@ -49,7 +52,7 @@
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
     "@mui/material-nextjs": "^5.15.11",
-    "@prisma/client": "^5.13.0",
+    "@prisma/client": "^5.14.0",
     "axios": "^1.6.8",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.1.0",
