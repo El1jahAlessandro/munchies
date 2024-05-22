@@ -13,7 +13,6 @@ export const api = {
     cart: {
         put: 'api/cart/put',
         get: 'api/cart/get',
-        remove: 'api/cart/remove',
     },
     order: {
         create: 'api/order/create',

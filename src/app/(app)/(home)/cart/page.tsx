@@ -2,7 +2,7 @@
 
 import { useCartContext } from '@/components/hooks/cartContext';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useMemo, useState } from 'react';
 import {
     Backdrop,
     Button,
@@ -33,9 +33,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import { api, pages } from '@/lib/utils/routes';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { postFetcher } from '@/lib/helpers/fetcher';
-import { pick } from 'lodash';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
-import { CartItemType } from '@/lib/schemas/article.schema';
+import { CartItemType, GetCartItemsBodyType } from '@/lib/schemas/article.schema';
 import { CldImage } from 'next-cloudinary';
 import { truncateString } from '@/lib/helpers/truncateString';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
@@ -46,6 +45,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { ErrorType } from '@/lib/helpers/authenticationForm';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/components/hooks/userContext';
+import getFormFetcherResponse from '@/lib/helpers/getFormFetcherResponse';
+import { pick } from 'lodash';
 
 export default function CartPage() {
     const { push } = useRouter();
@@ -56,10 +57,9 @@ export default function CartPage() {
         defaultValues: {
             ordersArticles: useMemo(
                 () =>
-                    cartArticles.map(({ amount, id, price, userId }) => ({
+                    cartArticles.map(({ id, userId, ...article }) => ({
+                        ...pick(article, ['amount', 'price']),
                         articleId: id,
-                        amount,
-                        price: price * amount,
                         companyId: userId,
                     })),
                 [cartArticles]
@@ -124,16 +124,28 @@ export default function CartPage() {
         [subtotal, cartArticles.length, totalPrice]
     );
 
+    const handleItemClick = useCallback(
+        async (id: number, amount: Number, remove?: boolean) => {
+            const newData = await postFetcher<GetCartItemsBodyType>(
+                api.cart.put,
+                createFormData({
+                    id,
+                    amount,
+                    remove,
+                })
+            );
+            await cartMutate(newData);
+        },
+        [cartMutate]
+    );
+
     function RemoveButton({ article }: { article: CartItemType }) {
         return (
             <IconButton
                 style={{ padding: 0, height: 'fit-content' }}
                 sx={{ color: 'primary.main' }}
                 aria-label="remove"
-                onClick={async () => {
-                    await postFetcher(api.cart.remove, createFormData(pick(article, ['id', 'amount'])));
-                    await cartMutate();
-                }}
+                onClick={() => handleItemClick(article.id, article.amount, true)}
             >
                 <CloseIcon />
             </IconButton>
@@ -149,26 +161,8 @@ export default function CartPage() {
     }) {
         return (
             <AmountHandler
-                minusButtonOnClick={async () => {
-                    await postFetcher(
-                        api.cart.put,
-                        createFormData({
-                            id: article.id,
-                            amount: -1,
-                        })
-                    );
-                    await cartMutate();
-                }}
-                plusButtonOnClick={async () => {
-                    await postFetcher(
-                        api.cart.put,
-                        createFormData({
-                            id: article.id,
-                            amount: 1,
-                        })
-                    );
-                    await cartMutate();
-                }}
+                minusButtonOnClick={() => handleItemClick(article.id, -1)}
+                plusButtonOnClick={() => handleItemClick(article.id, 1)}
                 minusButtonProps={{ ...field, disabled: article.amount === 1 }}
                 plusButtonProps={{ ...field }}
             >
@@ -187,8 +181,8 @@ export default function CartPage() {
                 setBackdropOpen(true);
                 setLoading(true);
             }}
-            onSuccess={async ({ response: { body } }) => {
-                const newData = await new Response(body).json().then((res: CreateOrderType) => res);
+            onSuccess={async ({ response }) => {
+                const newData = await getFormFetcherResponse<CreateOrderType>(response);
                 setSuccess(true);
                 setLoading(false);
                 setTimeout(async () => {
@@ -210,17 +204,13 @@ export default function CartPage() {
                 setTimeout(() => setBackdropOpen(false), 2000);
             }}
         >
-            {cartArticles && cartArticles.length > 0 && (
+            {cartArticles && cartArticles.length > 0 ? (
                 <>
                     {cartArticles.map((article, index) => (
                         <div style={{ marginTop: '25px' }} key={article.id}>
                             <input {...register(`ordersArticles.${index}.articleId`)} value={article.id} hidden />
                             <input {...register(`ordersArticles.${index}.companyId`)} value={article.userId} hidden />
-                            <input
-                                {...register(`ordersArticles.${index}.price`)}
-                                value={article.amount * article.price}
-                                hidden
-                            />
+                            <input {...register(`ordersArticles.${index}.price`)} value={article.price} hidden />
                             <div style={{ display: 'flex', gap: '20px' }}>
                                 <CldImage
                                     style={{ flex: '0 0 90px', borderRadius: '20px' }}
@@ -304,16 +294,22 @@ export default function CartPage() {
                             </TableBody>
                         </Table>
                     </TableContainer>
+                    <ButtonComponent
+                        type={'button'}
+                        onClick={() => handleDialogClickOpen('open')}
+                        size={'large'}
+                        positionFixed={true}
+                    >
+                        {'Checkout'.toUpperCase()}
+                    </ButtonComponent>
+                </>
+            ) : (
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+                        <Typography component={'h2'}>Dein Warenkorb ist leer</Typography>
+                    </div>
                 </>
             )}
-            <ButtonComponent
-                type={'button'}
-                onClick={() => handleDialogClickOpen('open')}
-                size={'large'}
-                positionFixed={true}
-            >
-                CHECKOUT
-            </ButtonComponent>
             <Dialog
                 open={dialogOpen}
                 PaperProps={{

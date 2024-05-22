@@ -6,7 +6,7 @@ import { CameraAlt } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { Controller, Form, useForm } from 'react-hook-form';
 import { useUserContext } from '@/components/hooks/userContext';
-import { editUserFormSchema, EditUserFormType } from '@/lib/schemas/user.schema';
+import { editUserFormSchema, EditUserFormType, userSchema } from '@/lib/schemas/user.schema';
 import { pick } from 'lodash';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
@@ -21,7 +21,7 @@ export default function ProfilePage() {
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const [inEditMode, setInEditMode] = useState<boolean>(false);
     const { user, mutate } = useUserContext();
-    const userDefaultValues = pick(user, editUserFormSchema.omit({ profilePic: true }).keyof().options);
+    const userDefaultValues = pick(user, userSchema.omit({ profilePic: true, password: true }).keyof().options);
     const {
         watch,
         reset,

@@ -5,11 +5,10 @@ import { NextResponse } from 'next/server';
 import { authUserBodySchema } from '@/lib/schemas/user.schema';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { authorizationCookieName } from '@/lib/utils/constants';
-import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 
 export const POST = asyncNextHandler(async req => {
     // extract login data from request body
-    const data = getFormDataValues(await req.formData(), authUserBodySchema, authUserBodySchema.keyof().options);
+    const data = authUserBodySchema.parse(await req.formData());
     const { email, password } = data;
 
     // get user from the database based on email

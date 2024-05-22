@@ -3,16 +3,18 @@ import { useSearchParams } from 'next/navigation';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import { useArticlesContext } from '@/components/hooks/articlesContext';
 import { Controller, Form, useForm } from 'react-hook-form';
-import { CartItemType } from '@/lib/schemas/article.schema';
+import { CartItemType, GetCartItemsBodyType } from '@/lib/schemas/article.schema';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Typography } from '@mui/material';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { AmountHandler } from '@/components/FormInputs/AmountHandler';
 import { CldImage } from 'next-cloudinary';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import getFormFetcherResponse from '@/lib/helpers/getFormFetcherResponse';
+import { omit } from 'lodash';
 
 export default function LoginPage() {
     const searchParams = useSearchParams();
@@ -35,15 +37,26 @@ export default function LoginPage() {
         },
     });
 
+    const onSuccess = useCallback(
+        async ({ response }: { response: Response }) => {
+            const newData = await getFormFetcherResponse<GetCartItemsBodyType>(response);
+            await mutate(newData);
+        },
+        [mutate]
+    );
+
     return (
         <Form
             action={api.cart.put}
             method={'post'}
             control={control}
-            {...authenticationForm({
-                setErrorMessage,
-                mutate,
-            })}
+            {...omit(
+                authenticationForm({
+                    setErrorMessage,
+                }),
+                'onSuccess'
+            )}
+            onSuccess={onSuccess}
         >
             <input type="hidden" {...register(`id`)} value={Number(articleId)} />
             {article && (
