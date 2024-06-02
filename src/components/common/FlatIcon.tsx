@@ -4,5 +4,14 @@ type FlatIconProps = {
 };
 
 export function FlatIcon({ style = 'rs', icon }: FlatIconProps) {
-    return <i className={`fi fi-${style}-${icon} w-[50px]`}></i>;
+    return (
+        <i
+            className={`fi fi-${style}-${icon}`}
+            style={{
+                display: 'block',
+                height: '50px',
+                fontSize: '50px',
+            }}
+        ></i>
+    );
 }
