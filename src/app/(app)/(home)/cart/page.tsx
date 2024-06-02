@@ -218,6 +218,10 @@ export default function CartPage() {
                                     height={90}
                                     src={article.picture}
                                     alt={article.name}
+                                    sizes={'90px'}
+                                    crop={'thumb'}
+                                    aspectRatio={1}
+                                    gravity={'center'}
                                 />
                                 <Stack direction={'column'} sx={{ flex: 1 }}>
                                     <div
