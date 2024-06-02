@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { ArticleWithCategoryType, useArticlesContext } from '@/components/hooks/articlesContext';
 import { chunk } from 'lodash';
 import Carousel from 'react-material-ui-carousel';
-import { Card, useMediaQuery } from '@mui/material';
+import { Card, Typography, useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useMemo, useState } from 'react';
 import { FlatIcon } from '@/components/common/FlatIcon';
 import { Categories } from '@prisma/client';
-import { toPascalCase } from '@/lib/helpers/toPascalCase';
+import { CldImage } from 'next-cloudinary';
 
 type CategoryFiltersType = {
     isFiltered: boolean;
@@ -24,6 +24,7 @@ export default function OverviewPage() {
     const articlesColumns = useMemo(() => isXS + isSM + isMD + isLA, [isXS, isSM, isMD, isLA]);
     const { articles, categories, error } = useArticlesContext();
     const [filteredCategories, setFilteredCategories] = useState<number[]>([]);
+    const [carouselIndex, setCarouselIndex] = useState(0);
 
     const categoryFilters: CategoryFiltersType[] | undefined = useMemo(
         () =>
@@ -37,6 +38,7 @@ export default function OverviewPage() {
     );
 
     const handleFilterChange = (category: CategoryFiltersType) => {
+        setCarouselIndex(0);
         if (category.isFiltered) {
             setFilteredCategories(prevFilter => prevFilter.filter(filter => filter !== category.id));
         } else {
@@ -65,9 +67,9 @@ export default function OverviewPage() {
 
     return (
         <>
-            <h2>Homepage</h2>
-            <span className={'font-bold'}>test</span>
-            <FlatIcon icon={'hamburger'} />
+            <Typography component={'h2'} typography={'h4'} style={{ fontWeight: 'bold' }}>
+                Was möchtest du bestellen?
+            </Typography>
             <div style={{ display: 'flex' }}>
                 {categories &&
                     categories.length > 0 &&
@@ -87,7 +89,15 @@ export default function OverviewPage() {
                         </div>
                     ))}
             </div>
-            <Carousel autoPlay={false} animation={'slide'} swipe={true}>
+            <Carousel
+                autoPlay={false}
+                animation={'slide'}
+                swipe={true}
+                sx={{ marginTop: '20px' }}
+                strictIndexing={true}
+                index={carouselIndex}
+                onChange={now => setCarouselIndex(now ?? 0)}
+            >
                 {chunkedArticles.map((articleChunk, i) => (
                     <Grid container spacing={2} key={'chunk-' + i}>
                         {articleChunk &&
@@ -100,13 +110,57 @@ export default function OverviewPage() {
                                             color: 'black',
                                         }}
                                     >
-                                        <Card style={{ padding: '20px' }}>
-                                            <span style={{ fontWeight: 'bold' }}>{article.name}</span>
-                                            <p>{article.description}</p>
-                                            <p style={{ fontWeight: 'bold' }}>{currencyFormatter(article.price)}</p>
-                                            <span style={{ fontWeight: 'bold' }}>
-                                                {toPascalCase(article.ArticleCategories[0].category.name)}
-                                            </span>
+                                        <Card sx={{ borderRadius: '15px' }}>
+                                            <CldImage
+                                                alt={article.name}
+                                                src={article.picture}
+                                                width={266}
+                                                height={136}
+                                                sizes={'(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+                                                crop={'thumb'}
+                                                aspectRatio={3 / 2}
+                                                gravity={'center'}
+                                                style={{ borderTopRightRadius: '15px', borderTopLeftRadius: '15px' }}
+                                            />
+                                            <div style={{ padding: '10px' }}>
+                                                <div>
+                                                    <Typography
+                                                        component={'span'}
+                                                        typography={'body1'}
+                                                        style={{ fontWeight: 'bold' }}
+                                                    >
+                                                        {article.name}
+                                                    </Typography>
+                                                </div>
+                                                <div>
+                                                    <Typography
+                                                        component={'span'}
+                                                        typography={'subtitle2'}
+                                                        color={theme => theme.palette.secondary.main}
+                                                    >
+                                                        {currencyFormatter(article.price)}
+                                                    </Typography>
+                                                </div>
+                                                <div style={{ display: 'flex', marginTop: '5px' }}>
+                                                    {article.ArticleCategories.map(category => (
+                                                        <div
+                                                            style={{
+                                                                borderRadius: '2px',
+                                                                backgroundColor: '#F6F6F6',
+                                                                padding: '0 5px',
+                                                            }}
+                                                        >
+                                                            <Typography
+                                                                component={'span'}
+                                                                typography={'overline'}
+                                                                color={theme => theme.palette.secondary.main}
+                                                            >
+                                                                {category.category.name}
+                                                            </Typography>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
                                         </Card>
                                     </Link>
                                 </Grid>
