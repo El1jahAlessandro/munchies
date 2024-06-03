@@ -4,18 +4,13 @@ import { editUserFormSchema } from '@/lib/schemas/user.schema';
 import { getImagePublicId } from '@/lib/helpers/imageUpload';
 import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 import { identity, pickBy } from 'lodash';
-import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 import { profilePictureFolder } from '@/lib/utils/constants';
 import prisma from '@/lib/utils/prisma';
 
 export const POST = asyncNextHandler(async req => {
     const { id } = getAuthCookieValue(req);
 
-    const data = getFormDataValues(
-        await req.formData(),
-        editUserFormSchema.partial(),
-        editUserFormSchema.keyof().options
-    );
+    const data = editUserFormSchema.parse(await req.formData());
 
     const { profilePic, email } = data;
 

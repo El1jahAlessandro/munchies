@@ -3,6 +3,18 @@ type FlatIconProps = {
     icon: string;
 };
 
+const iconSIze = '40px';
+
 export function FlatIcon({ style = 'rs', icon }: FlatIconProps) {
-    return <i className={`fi fi-${style}-${icon} w-[50px]`}></i>;
+    return (
+        <i
+            className={`fi fi-${style}-${icon}`}
+            style={{
+                display: 'block',
+                height: iconSIze,
+                width: iconSIze,
+                fontSize: iconSIze,
+            }}
+        ></i>
+    );
 }

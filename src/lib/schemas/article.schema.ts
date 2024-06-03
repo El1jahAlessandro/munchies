@@ -1,6 +1,7 @@
 import { z } from 'zod';
+import { zfd } from 'zod-form-data';
 
-export type CartItemType = z.infer<typeof addCartItemBodySchema>;
+export type CartItemType = z.infer<typeof CartItemSchema>;
 export type GetCartItemsBodyType = z.infer<typeof cartItemsSchema>;
 
 export const createArticleBodySchema = z.object({
@@ -12,12 +13,20 @@ export const createArticleBodySchema = z.object({
     articleCategoriesId: z.number(),
 });
 
-export const addCartItemBodySchema = z.object({
+export const CartItemSchema = z.object({
     id: z.coerce.number(),
     amount: z.coerce.number(),
 });
 
-const cartItemsSchema = z.array(addCartItemBodySchema);
+export const CrudCartItemSchema = zfd.formData(
+    CartItemSchema.merge(
+        z.object({
+            remove: z.coerce.boolean().optional(),
+        })
+    )
+);
+
+const cartItemsSchema = z.array(CartItemSchema);
 
 export const CartCookieTokenSchema = z.object({
     cartItems: cartItemsSchema,

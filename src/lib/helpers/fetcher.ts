@@ -5,7 +5,7 @@ export async function getFetcher(url: string) {
     return response.data;
 }
 
-export async function postFetcher(url: string, data?: Record<string, object> | FormData) {
-    const response = await axios.post(url, data);
+export async function postFetcher<T>(url: string, data?: Record<string, object> | FormData): Promise<T> {
+    const response = await axios.post<T>(url, data);
     return response.data;
 }

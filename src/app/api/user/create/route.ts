@@ -4,12 +4,11 @@ import { getHashedPassword } from '@/lib/helpers/getHashedPassword';
 import { cookieOptions, createAuthorizationToken } from '@/lib/utils/jwt';
 import { createUserBodySchema } from '@/lib/schemas/user.schema';
 import { authorizationCookieName } from '@/lib/utils/constants';
-import { getFormDataValues } from '@/lib/helpers/getFormDataValues';
 import prisma from '@/lib/utils/prisma';
 
 export const POST = asyncNextHandler(async req => {
     // extract register data from request body
-    const data = getFormDataValues(await req.formData(), createUserBodySchema, createUserBodySchema.keyof().options);
+    const data = createUserBodySchema.parse(await req.formData());
 
     const { email, password } = data;
 

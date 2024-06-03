@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { accountTypeSchema } from '@/lib/schemas/common.schema';
 import prisma from '@/lib/utils/prisma';
+import { zfd } from 'zod-form-data';
 
 export type AuthUserBodyType = z.infer<typeof authUserBodySchema>;
 export type CreateUserBodyType = z.infer<typeof createUserInputSchema>;
@@ -13,26 +14,21 @@ const emailSchema = z
         message: 'Ä, Ö, Ü sind nicht erlaubt',
     });
 
-export const authUserBodySchema = z.object({
+export const userSchema = z.object({
     email: emailSchema,
     password: z.string(),
-});
-
-export const otherUserInfoSchema = z.object({
-    email: emailSchema,
     accountType: accountTypeSchema,
     name: z.string(),
+    profilePic: z.instanceof(File).or(z.string()).nullish(),
 });
 
-export const editUserFormSchema = otherUserInfoSchema.merge(
-    z.object({
-        profilePic: z.instanceof(File).or(z.string()).nullish(),
-    })
-);
+export const authUserBodySchema = zfd.formData(userSchema.pick({ email: true, password: true }));
 
-export const createUserBodySchema = authUserBodySchema.merge(otherUserInfoSchema);
+export const editUserFormSchema = zfd.formData(userSchema.omit({ password: true }));
 
-export const createUserInputSchema = createUserBodySchema
+export const createUserBodySchema = zfd.formData(userSchema.omit({ profilePic: true }));
+
+export const createUserInputSchema = userSchema
     .merge(
         z.object({
             confirmPassword: z.string(),
@@ -43,7 +39,7 @@ export const createUserInputSchema = createUserBodySchema
         path: ['confirmPassword'],
     });
 
-const orderSelectArgs = {
+export const orderSelectArgs = {
     select: {
         id: true,
         paymentMethod: true,
