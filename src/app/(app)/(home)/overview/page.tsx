@@ -11,6 +11,8 @@ import { useMemo, useState } from 'react';
 import { FlatIcon } from '@/components/common/FlatIcon';
 import { Categories } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
+import theme from '@/theme';
+import { toPascalCase } from '@/lib/helpers/toPascalCase';
 
 type CategoryFiltersType = {
     isFiltered: boolean;
@@ -70,22 +72,68 @@ export default function OverviewPage() {
             <Typography component={'h2'} typography={'h4'} style={{ fontWeight: 'bold' }}>
                 Was möchtest du bestellen?
             </Typography>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', marginTop: '20px', overflowX: 'scroll' }}>
                 {categories &&
                     categories.length > 0 &&
                     sortCategories(categoryFilters ?? []).map(category => (
                         <div
                             key={category.id}
                             style={{
-                                border: '1px solid black',
-                                borderRadius: '20%',
                                 marginRight: '20px',
-                                ...(category.isFiltered ? { fontWeight: 'bold' } : {}),
+                                padding: '10px 0',
                             }}
                             onClick={() => handleFilterChange(category)}
                         >
-                            <FlatIcon icon={category.icon} />
-                            <div>{category.name}</div>
+                            <div
+                                style={{
+                                    width: '70px',
+                                    padding: '5px',
+                                    borderTopRightRadius: '50%',
+                                    borderTopLeftRadius: '50%',
+                                    position: 'relative',
+                                    zIndex: 5,
+                                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px -2px 3px',
+                                    ...(category.isFiltered ? { backgroundColor: theme.palette.primary.main } : {}),
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        height: '60px',
+                                        width: '60px',
+                                        borderRadius: '50%',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignContent: 'center',
+                                        backgroundColor: 'white',
+                                        padding: '5px',
+                                    }}
+                                >
+                                    <FlatIcon icon={category.icon} />
+                                </div>
+                            </div>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: '70px',
+                                    height: '70px',
+                                    marginTop: '-20px',
+                                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
+                                    borderBottomRightRadius: '50%',
+                                    borderBottomLeftRadius: '50%',
+                                    ...(category.isFiltered
+                                        ? {
+                                              backgroundColor: theme.palette.primary.main,
+                                              color: 'white',
+                                          }
+                                        : {}),
+                                }}
+                            >
+                                <Typography component={'span'} typography={'caption'}>
+                                    {toPascalCase(category.name)}
+                                </Typography>
+                            </div>
                         </div>
                     ))}
             </div>
@@ -144,8 +192,9 @@ export default function OverviewPage() {
                                                 <div style={{ display: 'flex', marginTop: '5px' }}>
                                                     {article.ArticleCategories.map(category => (
                                                         <div
+                                                            key={category.id}
                                                             style={{
-                                                                borderRadius: '2px',
+                                                                borderRadius: '5px',
                                                                 backgroundColor: '#F6F6F6',
                                                                 padding: '0 5px',
                                                             }}
