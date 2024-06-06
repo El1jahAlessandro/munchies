@@ -54,7 +54,7 @@ function LogOutButton() {
             color={'primary'}
             startIcon={<PowerSettingsNewIcon />}
         >
-            Logout
+            Abmelden
         </ButtonComponent>
     );
 }
