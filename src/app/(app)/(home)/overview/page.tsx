@@ -3,30 +3,24 @@ import { pages } from '@/lib/utils/routes';
 import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import Link from 'next/link';
 import { ArticleWithCategoryType, useArticlesContext } from '@/components/hooks/articlesContext';
-import { chunk } from 'lodash';
-import Carousel from 'react-material-ui-carousel';
-import { Card, Typography, useMediaQuery } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useMemo, useState } from 'react';
+import { Card, Typography } from '@mui/material';
+import { useMemo, useRef, useState } from 'react';
 import { FlatIcon } from '@/components/common/FlatIcon';
 import { Categories } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
 import theme from '@/theme';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
+import { ScrollableContainer } from '@/components/common/ScrollableContainer';
 
 type CategoryFiltersType = {
     isFiltered: boolean;
 } & Categories;
 
 export default function OverviewPage() {
-    const isXS = useMediaQuery('(max-width: 400px) and (min-width: 200px)') ? 1 : 0;
-    const isSM = useMediaQuery('(max-width: 600px) and (min-width: 400px)') ? 2 : 0;
-    const isMD = useMediaQuery('(max-width: 800px) and (min-width: 600px)') ? 3 : 0;
-    const isLA = useMediaQuery('(min-width: 800px)') ? 5 : 0;
-    const articlesColumns = useMemo(() => isXS + isSM + isMD + isLA, [isXS, isSM, isMD, isLA]);
     const { articles, categories, error } = useArticlesContext();
     const [filteredCategories, setFilteredCategories] = useState<number[]>([]);
-    const [carouselIndex, setCarouselIndex] = useState(0);
+    const categoriesBoxRef = useRef<HTMLDivElement>(null);
+    const articlesBoxRef = useRef<HTMLDivElement>(null);
 
     const categoryFilters: CategoryFiltersType[] | undefined = useMemo(
         () =>
@@ -40,7 +34,8 @@ export default function OverviewPage() {
     );
 
     const handleFilterChange = (category: CategoryFiltersType) => {
-        setCarouselIndex(0);
+        categoriesBoxRef && categoriesBoxRef.current ? (categoriesBoxRef.current.scrollLeft = 0) : null;
+        articlesBoxRef && articlesBoxRef.current ? (articlesBoxRef.current.scrollLeft = 0) : null;
         if (category.isFiltered) {
             setFilteredCategories(prevFilter => prevFilter.filter(filter => filter !== category.id));
         } else {
@@ -65,21 +60,18 @@ export default function OverviewPage() {
         });
     }
 
-    const chunkedArticles = chunk(filterArticles(articles), articlesColumns);
-
     return (
         <>
             <Typography component={'h2'} typography={'h4'} style={{ fontWeight: 'bold' }}>
                 Was möchtest du bestellen?
             </Typography>
-            <div style={{ display: 'flex', marginTop: '20px', overflowX: 'scroll' }}>
+            <ScrollableContainer gap={20} ref={categoriesBoxRef}>
                 {categories &&
                     categories.length > 0 &&
                     sortCategories(categoryFilters ?? []).map(category => (
                         <div
                             key={category.id}
                             style={{
-                                marginRight: '20px',
                                 padding: '10px 0',
                             }}
                             onClick={() => handleFilterChange(category)}
@@ -136,87 +128,89 @@ export default function OverviewPage() {
                             </div>
                         </div>
                     ))}
-            </div>
-            <Carousel
-                autoPlay={false}
-                animation={'slide'}
-                swipe={true}
-                sx={{ marginTop: '20px' }}
-                strictIndexing={true}
-                index={carouselIndex}
-                onChange={now => setCarouselIndex(now ?? 0)}
-            >
-                {chunkedArticles.map((articleChunk, i) => (
-                    <Grid container spacing={2} key={'chunk-' + i}>
-                        {articleChunk &&
-                            articleChunk.map(article => (
-                                <Grid xs={12 / articlesColumns} key={article.id}>
-                                    <Link
-                                        href={pages.article + '?id=' + article.id}
-                                        style={{
-                                            textDecoration: 'none',
-                                            color: 'black',
-                                        }}
-                                    >
-                                        <Card sx={{ borderRadius: '15px' }}>
-                                            <CldImage
-                                                alt={article.name}
-                                                src={article.picture}
-                                                width={266}
-                                                height={136}
-                                                sizes={'(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
-                                                crop={'thumb'}
-                                                aspectRatio={3 / 2}
-                                                gravity={'center'}
-                                                style={{ borderTopRightRadius: '15px', borderTopLeftRadius: '15px' }}
-                                            />
-                                            <div style={{ padding: '10px' }}>
-                                                <div>
+            </ScrollableContainer>
+            <ScrollableContainer gap={15} ref={articlesBoxRef}>
+                {articles &&
+                    filterArticles(articles)?.map(article => (
+                        <div key={article.id} style={{ minWidth: '266px', marginBottom: '10px' }}>
+                            <Link
+                                href={pages.article + '?id=' + article.id}
+                                style={{
+                                    textDecoration: 'none',
+                                    color: 'black',
+                                }}
+                            >
+                                <Card sx={{ borderRadius: '15px' }}>
+                                    <CldImage
+                                        alt={article.name}
+                                        src={article.picture}
+                                        width={266}
+                                        height={136}
+                                        sizes={'(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'}
+                                        crop={'thumb'}
+                                        aspectRatio={3 / 2}
+                                        gravity={'center'}
+                                        style={{ borderTopRightRadius: '15px', borderTopLeftRadius: '15px' }}
+                                    />
+                                    <div style={{ padding: '10px' }}>
+                                        <div>
+                                            <Typography
+                                                component={'span'}
+                                                typography={'body1'}
+                                                style={{ fontWeight: 'bold' }}
+                                            >
+                                                {article.name}
+                                            </Typography>
+                                        </div>
+                                        <div>
+                                            <Typography
+                                                component={'span'}
+                                                typography={'body2'}
+                                                color={theme => theme.palette.secondary.main}
+                                            >
+                                                {article.user.name}
+                                            </Typography>
+                                        </div>
+                                        <div>
+                                            <Typography
+                                                component={'span'}
+                                                typography={'subtitle2'}
+                                                color={theme => theme.palette.secondary.main}
+                                            >
+                                                {currencyFormatter(article.price)}
+                                            </Typography>
+                                        </div>
+                                        <div style={{ display: 'flex', marginTop: '5px' }}>
+                                            {article.ArticleCategories.map((category, index) => (
+                                                <div
+                                                    key={category.id}
+                                                    style={{
+                                                        borderRadius: '5px',
+                                                        backgroundColor: '#F6F6F6',
+                                                        padding: '0 5px',
+                                                        ...(index !== 0
+                                                            ? {
+                                                                  marginLeft: '10px',
+                                                              }
+                                                            : {}),
+                                                    }}
+                                                >
                                                     <Typography
                                                         component={'span'}
-                                                        typography={'body1'}
-                                                        style={{ fontWeight: 'bold' }}
-                                                    >
-                                                        {article.name}
-                                                    </Typography>
-                                                </div>
-                                                <div>
-                                                    <Typography
-                                                        component={'span'}
-                                                        typography={'subtitle2'}
+                                                        typography={'overline'}
                                                         color={theme => theme.palette.secondary.main}
                                                     >
-                                                        {currencyFormatter(article.price)}
+                                                        {category.category.name}
                                                     </Typography>
                                                 </div>
-                                                <div style={{ display: 'flex', marginTop: '5px' }}>
-                                                    {article.ArticleCategories.map(category => (
-                                                        <div
-                                                            key={category.id}
-                                                            style={{
-                                                                borderRadius: '5px',
-                                                                backgroundColor: '#F6F6F6',
-                                                                padding: '0 5px',
-                                                            }}
-                                                        >
-                                                            <Typography
-                                                                component={'span'}
-                                                                typography={'overline'}
-                                                                color={theme => theme.palette.secondary.main}
-                                                            >
-                                                                {category.category.name}
-                                                            </Typography>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </Card>
-                                    </Link>
-                                </Grid>
-                            ))}
-                    </Grid>
-                ))}
-            </Carousel>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </Card>
+                            </Link>
+                        </div>
+                    ))}
+            </ScrollableContainer>
             {error && <span>{error?.response?.data?.error}</span>}
         </>
     );
