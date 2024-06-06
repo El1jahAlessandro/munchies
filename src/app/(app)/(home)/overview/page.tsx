@@ -10,6 +10,7 @@ import { Categories } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
 import theme from '@/theme';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
+import { ScrollableContainer } from '@/components/common/ScrollableContainer';
 
 type CategoryFiltersType = {
     isFiltered: boolean;
@@ -64,10 +65,7 @@ export default function OverviewPage() {
             <Typography component={'h2'} typography={'h4'} style={{ fontWeight: 'bold' }}>
                 Was möchtest du bestellen?
             </Typography>
-            <div
-                style={{ display: 'flex', gap: '20px', marginTop: '20px', overflowX: 'scroll', padding: '0 0 5px 5px' }}
-                ref={categoriesBoxRef}
-            >
+            <ScrollableContainer gap={20} ref={categoriesBoxRef}>
                 {categories &&
                     categories.length > 0 &&
                     sortCategories(categoryFilters ?? []).map(category => (
@@ -130,19 +128,8 @@ export default function OverviewPage() {
                             </div>
                         </div>
                     ))}
-            </div>
-            <div
-                style={{
-                    display: 'flex',
-                    flexWrap: 'nowrap',
-                    gap: '15px',
-                    width: '100%',
-                    overflowX: 'scroll',
-                    marginTop: '20px',
-                    padding: '0 0 5px 5px',
-                }}
-                ref={articlesBoxRef}
-            >
+            </ScrollableContainer>
+            <ScrollableContainer gap={15} ref={articlesBoxRef}>
                 {articles &&
                     filterArticles(articles)?.map(article => (
                         <div key={article.id} style={{ minWidth: '266px', marginBottom: '10px' }}>
@@ -223,7 +210,7 @@ export default function OverviewPage() {
                             </Link>
                         </div>
                     ))}
-            </div>
+            </ScrollableContainer>
             {error && <span>{error?.response?.data?.error}</span>}
         </>
     );
