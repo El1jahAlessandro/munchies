@@ -53,7 +53,7 @@ export default function CartPage() {
     const { user, mutate: userMutate } = useUserContext();
     const { cartArticles, mutate: cartMutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, trigger, reset, register } = useForm<OrderType>({
+    const { control, trigger, register } = useForm<OrderType>({
         defaultValues: {
             ordersArticles: useMemo(
                 () =>
