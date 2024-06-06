@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         <UserProvider>
                             <ArticlesProvider>
                                 <CartProvider>
-                                    <body style={{ margin: '20px' }}>{children}</body>
+                                    <body className={'m-[20px]'}>{children}</body>
                                 </CartProvider>
                                 <CssBaseline />
                             </ArticlesProvider>

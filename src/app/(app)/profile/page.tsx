@@ -72,14 +72,7 @@ export default function ProfilePage() {
                 reset,
             })}
         >
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: '50px',
-                }}
-            >
+            <div className={'flex justify-center items-center mt-[50px]'}>
                 <Controller
                     name="profilePic"
                     control={control}
@@ -99,13 +92,13 @@ export default function ProfilePage() {
                                         }}
                                     />
                                     <label htmlFor="contained-button-file">
-                                        <IconButton component="span" style={{ padding: 0 }}>
+                                        <IconButton component="span" className={'p-0'}>
                                             <Badge
                                                 anchorOrigin={{
                                                     vertical: 'bottom',
                                                     horizontal: 'right',
                                                 }}
-                                                badgeContent={<CameraAlt sx={{ width: '10px' }} />}
+                                                badgeContent={<CameraAlt className={'w-[10px]'} />}
                                                 color={'secondary'}
                                                 overlap="circular"
                                             >
@@ -123,21 +116,14 @@ export default function ProfilePage() {
                     )}
                 />
             </div>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: '5px',
-                }}
-            >
+            <div className={'flex justify-center items-center mt-[5px]'}>
                 {!inEditMode && (
                     <Button onClick={() => setInEditMode(true)} size={'small'}>
                         Edit Profile
                     </Button>
                 )}
             </div>
-            <Container maxWidth="xs" sx={{ marginTop: '50px' }}>
+            <Container maxWidth="xs" className={'mt-[50px]'}>
                 <Stack spacing={6} direction={'column'}>
                     {formInputOptions.map(optionProps => (
                         <Controller
@@ -159,30 +145,16 @@ export default function ProfilePage() {
             </Container>
             {(errorMessage?.error || errors.root?.message) && (
                 <>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: '50px',
-                        }}
-                    >
-                        <span style={{ color: 'red' }}>
+                    <div className={'flex justify-center items-center mt-[50px]'}>
+                        <span className={'text-error-main'}>
                             {(errorMessage?.error as string) ?? errors.root?.message ?? ''}
                         </span>
                     </div>
                 </>
             )}
             {inEditMode && (
-                <div style={{ marginTop: '50px' }}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            gap: '40px',
-                        }}
-                    >
+                <div className={'mt-[50px]'}>
+                    <div className={'flex justify-center items-center gap-[40px]'}>
                         <ButtonComponent
                             size={'medium'}
                             variant={'contained'}

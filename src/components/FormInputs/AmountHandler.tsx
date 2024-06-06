@@ -13,13 +13,6 @@ type AmountHandlerProps = {
 };
 
 const AmountHandlerText = styled('span')(({ theme }) => ({
-    width: '20px',
-    letterSpacing: '1px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '5px',
-    fontWeight: 'bold',
     fontFamily: theme.typography.fontFamily,
 }));
 
@@ -30,7 +23,11 @@ export function AmountHandler(props: AmountHandlerProps) {
             <Fab {...minusButtonProps} color="primary" aria-label="remove" size={'small'} onClick={minusButtonOnClick}>
                 <RemoveIcon />
             </Fab>
-            <AmountHandlerText>{children}</AmountHandlerText>
+            <AmountHandlerText
+                className={'flex w-[20px] tracking-[1px] justify-center items-center mt-[5px] font-bold'}
+            >
+                {children}
+            </AmountHandlerText>
             <Fab {...plusButtonProps} color="primary" aria-label="add" size={'small'} onClick={plusButtonOnClick}>
                 <AddIcon />
             </Fab>

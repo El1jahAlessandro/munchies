@@ -8,7 +8,6 @@ import { useMemo, useRef, useState } from 'react';
 import { FlatIcon } from '@/components/common/FlatIcon';
 import { Categories } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
-import theme from '@/theme';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { ScrollableContainer } from '@/components/common/ScrollableContainer';
 
@@ -62,65 +61,33 @@ export default function OverviewPage() {
 
     return (
         <>
-            <Typography component={'h2'} typography={'h4'} style={{ fontWeight: 'bold' }}>
+            <Typography component={'h2'} typography={'h4'} className={'!font-bold'}>
                 Was möchtest du bestellen?
             </Typography>
             <ScrollableContainer gap={20} ref={categoriesBoxRef}>
                 {categories &&
                     categories.length > 0 &&
                     sortCategories(categoryFilters ?? []).map(category => (
-                        <div
-                            key={category.id}
-                            style={{
-                                padding: '10px 0',
-                            }}
-                            onClick={() => handleFilterChange(category)}
-                        >
+                        <div key={category.id} className={'p-[10px_0]'} onClick={() => handleFilterChange(category)}>
                             <div
-                                style={{
-                                    width: '70px',
-                                    padding: '5px',
-                                    borderTopRightRadius: '50%',
-                                    borderTopLeftRadius: '50%',
-                                    position: 'relative',
-                                    zIndex: 5,
-                                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px -2px 3px',
-                                    ...(category.isFiltered ? { backgroundColor: theme.palette.primary.main } : {}),
-                                }}
+                                className={
+                                    `w-[70px] p-[5px] rounded-t-[50%] relative z-10 shadow-[rgba(0,0,0,0.24)_0px_-2px_3px] ` +
+                                    (category.isFiltered ? 'bg-primary-main' : '')
+                                }
                             >
                                 <div
-                                    style={{
-                                        height: '60px',
-                                        width: '60px',
-                                        borderRadius: '50%',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignContent: 'center',
-                                        backgroundColor: 'white',
-                                        padding: '5px',
-                                    }}
+                                    className={
+                                        'h-[60px] w-[60px] rounded-[50%] flex justify-center content-center p-[5px] bg-white'
+                                    }
                                 >
                                     <FlatIcon icon={category.icon} />
                                 </div>
                             </div>
                             <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    width: '70px',
-                                    height: '70px',
-                                    marginTop: '-20px',
-                                    boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px',
-                                    borderBottomRightRadius: '50%',
-                                    borderBottomLeftRadius: '50%',
-                                    ...(category.isFiltered
-                                        ? {
-                                              backgroundColor: theme.palette.primary.main,
-                                              color: 'white',
-                                          }
-                                        : {}),
-                                }}
+                                className={
+                                    'flex justify-center items-center w-[70px] h-[70px] mt-[-20px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px] rounded-b-[50%] ' +
+                                    (category.isFiltered ? 'bg-primary-main text-white' : '')
+                                }
                             >
                                 <Typography component={'span'} typography={'caption'}>
                                     {toPascalCase(category.name)}
@@ -132,16 +99,11 @@ export default function OverviewPage() {
             <ScrollableContainer gap={15} ref={articlesBoxRef}>
                 {articles &&
                     filterArticles(articles)?.map(article => (
-                        <div key={article.id} style={{ minWidth: '266px', marginBottom: '10px' }}>
-                            <Link
-                                href={pages.article + '?id=' + article.id}
-                                style={{
-                                    textDecoration: 'none',
-                                    color: 'black',
-                                }}
-                            >
-                                <Card sx={{ borderRadius: '15px' }}>
+                        <div key={article.id} className={'min-w-[266px] mb-[10px]'}>
+                            <Link href={pages.article + '?id=' + article.id} className={'text-black no-underline'}>
+                                <Card className={'rounded-[15px]'}>
                                     <CldImage
+                                        className={'rounded-t-[15px]'}
                                         alt={article.name}
                                         src={article.picture}
                                         width={266}
@@ -150,15 +112,10 @@ export default function OverviewPage() {
                                         crop={'thumb'}
                                         aspectRatio={3 / 2}
                                         gravity={'center'}
-                                        style={{ borderTopRightRadius: '15px', borderTopLeftRadius: '15px' }}
                                     />
-                                    <div style={{ padding: '10px' }}>
+                                    <div className={'p-[10px]'}>
                                         <div>
-                                            <Typography
-                                                component={'span'}
-                                                typography={'body1'}
-                                                style={{ fontWeight: 'bold' }}
-                                            >
+                                            <Typography className={'font-bold'} component={'span'} typography={'body1'}>
                                                 {article.name}
                                             </Typography>
                                         </div>
@@ -166,7 +123,7 @@ export default function OverviewPage() {
                                             <Typography
                                                 component={'span'}
                                                 typography={'body2'}
-                                                color={theme => theme.palette.secondary.main}
+                                                className={'text-secondary-main'}
                                             >
                                                 {article.user.name}
                                             </Typography>
@@ -175,30 +132,24 @@ export default function OverviewPage() {
                                             <Typography
                                                 component={'span'}
                                                 typography={'subtitle2'}
-                                                color={theme => theme.palette.secondary.main}
+                                                className={'text-secondary-main'}
                                             >
                                                 {currencyFormatter(article.price)}
                                             </Typography>
                                         </div>
-                                        <div style={{ display: 'flex', marginTop: '5px' }}>
+                                        <div className={'flex mt-[5px]'}>
                                             {article.ArticleCategories.map((category, index) => (
                                                 <div
+                                                    className={
+                                                        'rounded-[5px] bg-traffic-white px-[5px] py-0 ' +
+                                                        (index !== 0 ? 'ml-[10px]' : '')
+                                                    }
                                                     key={category.id}
-                                                    style={{
-                                                        borderRadius: '5px',
-                                                        backgroundColor: '#F6F6F6',
-                                                        padding: '0 5px',
-                                                        ...(index !== 0
-                                                            ? {
-                                                                  marginLeft: '10px',
-                                                              }
-                                                            : {}),
-                                                    }}
                                                 >
                                                     <Typography
                                                         component={'span'}
                                                         typography={'overline'}
-                                                        color={theme => theme.palette.secondary.main}
+                                                        className={'text-secondary-main'}
                                                     >
                                                         {category.category.name}
                                                     </Typography>

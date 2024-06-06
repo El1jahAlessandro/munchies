@@ -53,7 +53,7 @@ export default function CartPage() {
     const { user, mutate: userMutate } = useUserContext();
     const { cartArticles, mutate: cartMutate } = useCartContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
-    const { control, trigger, reset, register } = useForm<OrderType>({
+    const { control, trigger, register } = useForm<OrderType>({
         defaultValues: {
             ordersArticles: useMemo(
                 () =>
@@ -109,11 +109,7 @@ export default function CartPage() {
                 label: (
                     <>
                         <Typography component={'span'}>Gesamtkosten</Typography>
-                        <Typography
-                            component={'span'}
-                            variant={'caption'}
-                            sx={{ color: 'secondary.main', marginLeft: '5px' }}
-                        >
+                        <Typography component={'span'} variant={'caption'} className={'text-secondary-main ml-[5px]'}>
                             ({cartArticles.length} Artikel)
                         </Typography>
                     </>
@@ -142,8 +138,7 @@ export default function CartPage() {
     function RemoveButton({ article }: { article: CartItemType }) {
         return (
             <IconButton
-                style={{ padding: 0, height: 'fit-content' }}
-                sx={{ color: 'primary.main' }}
+                className={'p-0 h-fit text-primary-main'}
                 aria-label="remove"
                 onClick={() => handleItemClick(article.id, article.amount, true)}
             >
@@ -207,13 +202,13 @@ export default function CartPage() {
             {cartArticles && cartArticles.length > 0 ? (
                 <>
                     {cartArticles.map((article, index) => (
-                        <div style={{ marginTop: '25px' }} key={article.id}>
+                        <div className={'mt-[25px]'} key={article.id}>
                             <input {...register(`ordersArticles.${index}.articleId`)} value={article.id} hidden />
                             <input {...register(`ordersArticles.${index}.companyId`)} value={article.userId} hidden />
                             <input {...register(`ordersArticles.${index}.price`)} value={article.price} hidden />
-                            <div style={{ display: 'flex', gap: '20px' }}>
+                            <div className={'flex gap-[20px]'}>
                                 <CldImage
-                                    style={{ flex: '0 0 90px', borderRadius: '20px' }}
+                                    className={'flex-[0_0_90px] rounded-[20px]'}
                                     width={90}
                                     height={90}
                                     src={article.picture}
@@ -223,26 +218,15 @@ export default function CartPage() {
                                     aspectRatio={1}
                                     gravity={'center'}
                                 />
-                                <Stack direction={'column'} sx={{ flex: 1 }}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            gap: '20px',
-                                            width: '100%',
-                                            justifyContent: 'space-between',
-                                        }}
-                                    >
+                                <Stack direction={'column'} className={'flex-1'}>
+                                    <div className={'flex gap-[20px] width-full justify-between'}>
                                         <div>
-                                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
+                                            <Typography component={'span'} className={'font-bold'}>
                                                 {article?.name}
                                             </Typography>
                                             <Typography
                                                 component={'div'}
-                                                sx={{
-                                                    margin: '8px 0 4px 0',
-                                                    color: 'secondary.main',
-                                                    fontSize: '14px',
-                                                }}
+                                                className={'mx-0 mt-[8px] mb-[4px] text-secondary-main text-[14px]'}
                                             >
                                                 {truncateString(article?.description ?? '', 25)}
                                             </Typography>
@@ -251,16 +235,11 @@ export default function CartPage() {
                                             <RemoveButton article={article} />
                                         </div>
                                     </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                    <div className={'flex justify-between'}>
+                                        <div className={'flex justify-center'}>
                                             <Typography
                                                 component={'span'}
-                                                sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    color: 'primary.main',
-                                                    fontWeight: 'bold',
-                                                }}
+                                                className={'flex items-center text-primary-main font-bold'}
                                             >
                                                 {currencyFormatter(article?.price ?? 0)}
                                             </Typography>
@@ -277,19 +256,17 @@ export default function CartPage() {
                             </div>
                         </div>
                     ))}
-                    <TableContainer style={{ marginTop: '20px', marginBottom: '180px' }}>
+                    <TableContainer className={'mt-[20px] mb-[180px]'}>
                         <Table>
                             <TableBody>
                                 {list.map(({ label, value }, index) => (
                                     <TableRow
+                                        className={'[&:last-child_td]:border-0 [&:last-child_th]:border-0'}
                                         key={'listItem - ' + index}
-                                        sx={{
-                                            '&:last-child td, &:last-child th': { border: 0 },
-                                        }}
                                     >
-                                        <TableCell sx={{ paddingX: 0 }}>{label}</TableCell>
-                                        <TableCell align={'right'} sx={{ paddingX: 0 }}>
-                                            <Typography component={'span'} sx={{ fontWeight: 'bold' }}>
+                                        <TableCell className={'px-0'}>{label}</TableCell>
+                                        <TableCell align={'right'} className={'px-0'}>
+                                            <Typography component={'span'} className={'font-bold'}>
                                                 {currencyFormatter(value)}
                                             </Typography>
                                         </TableCell>
@@ -309,7 +286,7 @@ export default function CartPage() {
                 </>
             ) : (
                 <>
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '40px' }}>
+                    <div className={'flex justify-center mt-[40px]'}>
                         <Typography component={'h2'}>Dein Warenkorb ist leer</Typography>
                     </div>
                 </>
@@ -355,7 +332,7 @@ export default function CartPage() {
                     <Button type="submit">Kauf abschließen</Button>
                 </DialogActions>
             </Dialog>
-            <Backdrop sx={{ color: '#fff', zIndex: theme => theme.zIndex.drawer + 1 }} open={backdropOpen}>
+            <Backdrop className={'text-white z-50'} open={backdropOpen}>
                 {success && (
                     <Fab color="primary" sx={buttonSx('primary')} size={'large'}>
                         {success && <CheckIcon />}
@@ -366,16 +343,7 @@ export default function CartPage() {
                         {error && <ClearIcon />}
                     </Fab>
                 )}
-                {loading && (
-                    <CircularProgress
-                        size={32}
-                        sx={{
-                            color: 'inherit',
-                            position: 'absolute',
-                            margin: 'auto',
-                        }}
-                    />
-                )}
+                {loading && <CircularProgress size={32} className={'text-inherit absolute m-auto'} />}
             </Backdrop>
         </Form>
     );

@@ -90,7 +90,7 @@ function LogOutButton({}) {
 
     return (
         <ButtonComponent
-            sx={{ position: 'absolute', marginLeft: theme => theme.spacing(2), bottom: theme => theme.spacing(3) }}
+            className={'absolute ml-4 bottom-6'}
             size={'small'}
             onClick={handleClick}
             variant={'contained'}
@@ -107,33 +107,21 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
     return (
         <Drawer open={open} onClose={toggleDrawer(false)}>
             <div>
-                <ProfilePic
-                    width={100}
-                    height={100}
-                    sx={{ marginLeft: theme => theme.spacing(2), marginTop: '20px' }}
-                />
-                <Typography
-                    variant="subtitle1"
-                    component="div"
-                    sx={{ fontWeight: 'bold', paddingLeft: theme => theme.spacing(2), paddingTop: '20px' }}
-                >
+                <ProfilePic width={100} height={100} className={'ml-2 mt-[20px]'} />
+                <Typography variant="subtitle1" component="div" className={'font-bold pl-2 pt-[20px]'}>
                     {user?.name}
                 </Typography>
-                <Typography
-                    variant="caption"
-                    component="div"
-                    sx={{ paddingLeft: theme => theme.spacing(2), color: 'secondary.main' }}
-                >
+                <Typography variant="caption" component="div" className={'pl-2 text-secondary-main'}>
                     {user?.email}
                 </Typography>
             </div>
-            <Box sx={{ width: 250 }} marginTop={'20px'} role="presentation" onClick={toggleDrawer(false)}>
+            <Box className={'w-[250px] mt-[20px]'} role="presentation" onClick={toggleDrawer(false)}>
                 <List>
                     {menuList.map(({ label, icon, href }) => (
                         <ListItem key={label} disablePadding component={NextLinkComposed} to={href}>
                             <ListItemButton>
                                 <ListItemIcon>{icon}</ListItemIcon>
-                                <ListItemText sx={{ color: 'secondary.main' }} primary={label} />
+                                <ListItemText className={'text-secondary-main'} primary={label} />
                             </ListItemButton>
                         </ListItem>
                     ))}

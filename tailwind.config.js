@@ -1,14 +1,10 @@
-/** @type {import('tailwindcss').Config} */
-const tailwindConfig = {
-    corePlugins: {
-        preflight: false,
-    },
-    content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './components/**/*.{js,ts,jsx,tsx,mdx}'],
-    prefix: '',
+const colors = require('./json/colors.json');
+/** @type {Theme | {readonly default: Theme}} */
+module.exports = {
+    content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
     theme: {
+        colors: colors,
         extend: {},
     },
     plugins: [],
 };
-
-export default tailwindConfig;
