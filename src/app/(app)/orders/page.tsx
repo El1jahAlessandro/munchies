@@ -27,20 +27,16 @@ export default function OrderPage() {
 
     function OrderCard({ order }: { order: OrderResponseType }) {
         return (
-            <Card sx={{ marginTop: '20px', padding: '20px' }}>
-                <div style={{ display: 'flex', gap: '20px' }}>
+            <Card className={'mt-[20px] p-[20px]'}>
+                <div className={'flex gap-[20px]'}>
                     <CldImage
                         alt={order?.company.name ?? ''}
                         src={order?.company.profilePic ?? ''}
                         width={65}
                         height={65}
                     />
-                    <Stack textAlign={'left'} justifyContent={'center'}>
-                        <Typography
-                            variant={'caption'}
-                            component={'div'}
-                            sx={{ display: 'flex', alignItems: 'center' }}
-                        >
+                    <Stack className={'justify-center text-left'}>
+                        <Typography variant={'caption'} component={'div'} className={'flex items-center'}>
                             {order?.status === 'delivered' && (
                                 <>
                                     {new Date(order?.updatedAt)?.toLocaleDateString('de-DE', {
@@ -54,30 +50,17 @@ export default function OrderPage() {
                             )}
                             {order?.ordersArticles.length} Artikel
                         </Typography>
-                        <Typography variant={'body1'} component={'div'} sx={{ fontWeight: 'bold' }}>
+                        <Typography variant={'body1'} component={'div'} className={'font-bold'}>
                             {order?.company.name}
                         </Typography>
                         {order?.status === 'delivered' && (
-                            <Typography
-                                component={'span'}
-                                variant={'caption'}
-                                color={theme => theme.palette.primary.main}
-                            >
+                            <Typography component={'span'} variant={'caption'} className={'text-primary-main'}>
                                 <DotDivider color={'primary'} size={'large'} margin={'0 5px 0 0'} />
                                 {orderStatusText[order.status]}
                             </Typography>
                         )}
                     </Stack>
-                    <Typography
-                        sx={{
-                            marginLeft: 'auto',
-                            fontWeight: 'bolder',
-                            display: 'flex',
-                            alignItems: 'top',
-                            color: 'primary.main',
-                        }}
-                        component={'span'}
-                    >
+                    <Typography className={'ml-auto font-bold flex items-start text-primary-main'} component={'span'}>
                         {currencyFormatter(order?.totalPrice ?? 0)}
                     </Typography>
                 </div>
@@ -103,7 +86,7 @@ export default function OrderPage() {
             <>
                 {visibleOrders?.map(order => <>{order && <OrderCard key={order.id} order={order} />}</>)}
                 {orders?.length !== visibleOrders?.length && (
-                    <div style={{ display: 'flex', justifyContent: 'center', margin: 'auto', marginTop: '60px' }}>
+                    <div className={'flex justify-center margin-auto mt-[60px]'}>
                         <ButtonComponent size={'large'} onClick={() => setIndex(prevIndex => prevIndex + 1)}>
                             showMore
                         </ButtonComponent>

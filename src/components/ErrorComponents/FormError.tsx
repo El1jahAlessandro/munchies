@@ -10,7 +10,7 @@ export function FormError({ errorMessage, errors }: FormErrorProps) {
     return (
         <>
             <div>
-                <Typography component={'span'} sx={{ color: 'error.main' }}>
+                <Typography component={'span'} className={'text-error-main'}>
                     {(errorMessage?.error as string) ?? errors.root?.message ?? ''}
                 </Typography>
             </div>

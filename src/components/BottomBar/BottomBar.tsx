@@ -56,7 +56,7 @@ export default function BottomBar() {
     };
 
     return (
-        <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
+        <Paper className={'fixed bottom-0 left-0 right-0'} elevation={3}>
             <BottomNavigation value={value} onChange={handleChange}>
                 {bottomNavigations.map(nav => (
                     <BottomNavigationAction

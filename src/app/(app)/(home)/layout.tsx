@@ -14,10 +14,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <>
             <SideMenu {...{ open, toggleDrawer }} />
-            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+            <div className={'flex justify-between w-full'}>
                 <MenuButton {...{ toggleDrawer }} />
                 <div>{/* Location Select */}</div>
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <div className={'flex justify-center items-center'}>
                     <ProfilePic />
                 </div>
             </div>

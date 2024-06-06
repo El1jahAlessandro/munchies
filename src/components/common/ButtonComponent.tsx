@@ -15,15 +15,6 @@ type ButtonPropsType = {
     positionFixed?: boolean;
 } & ButtonProps & { color?: keyof Palette };
 
-const FixedButtonContainer = styled('div')(() => ({
-    margin: 'auto',
-    left: 0,
-    right: 0,
-    bottom: 90,
-    position: 'fixed',
-    textAlign: 'center',
-}));
-
 const StyledButton = styled('button')<Omit<ButtonPropsType, 'isSubmitting'>>(
     ({ theme, size, color, disabled, startIcon }) => ({
         height: `${sizes[size ?? 'small'].height}`,
@@ -80,12 +71,7 @@ export function ButtonComponent({
             ) : (
                 <>
                     {startIcon ? (
-                        <div
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
+                        <div className={'flex items-center'}>
                             {startIcon}
                             {children}
                         </div>
@@ -97,7 +83,7 @@ export function ButtonComponent({
         </StyledButton>
     );
     if (positionFixed) {
-        return <FixedButtonContainer>{buttonContent}</FixedButtonContainer>;
+        return <div className={'m-auto left-0 right-0 bottom-[90px] fixed text-center'}>{buttonContent}</div>;
     }
     return buttonContent;
 }

@@ -61,13 +61,9 @@ export default function LoginPage() {
             <input type="hidden" {...register(`id`)} value={Number(articleId)} />
             {article && (
                 <>
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                        }}
-                    >
+                    <div className={'flex justify-center'}>
                         <CldImage
+                            className={'rounded-[15px]'}
                             alt={article.name}
                             width="720"
                             height="405"
@@ -76,21 +72,14 @@ export default function LoginPage() {
                             crop={'thumb'}
                             aspectRatio={3 / 2}
                             gravity={'center'}
-                            style={{ borderRadius: '15px' }}
                         />
                     </div>
-                    <Typography component={'div'} variant={'h4'} sx={{ fontWeight: 600 }} mt={2.5}>
+                    <Typography component={'div'} variant={'h4'} className={'font-[600] mt-5'}>
                         {article.name}
                     </Typography>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+                    <div className={'flex justify-between mt-[20px]'}>
                         <Typography
-                            sx={{
-                                fontWeight: 'bolder',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                color: 'primary.main',
-                            }}
+                            className={'font-bold flex justify-center items-center text-primary-main'}
                             variant={'h5'}
                             component={'span'}
                         >
@@ -115,10 +104,10 @@ export default function LoginPage() {
                             )}
                         />
                     </div>
-                    <Typography variant={'subtitle1'} component={'p'} mt={2.5}>
+                    <Typography variant={'subtitle1'} component={'p'} className={'mt-5'}>
                         {article.description}
                     </Typography>
-                    <Typography variant={'subtitle1'} component={'p'} mt={2.5}>
+                    <Typography variant={'subtitle1'} component={'p'} className={'mt-5'}>
                         <b>Zutaten:</b> {article.ingredients}
                     </Typography>
                 </>

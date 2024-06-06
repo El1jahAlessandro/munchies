@@ -11,11 +11,11 @@ export function ScrollableContainer({
     children: ReactNode;
 } & HTMLAttributes<HTMLDivElement>) {
     const Container = styled('div')({
-        display: 'flex',
         gap: `${gap}px`,
-        marginTop: '20px',
-        overflowX: 'scroll',
-        padding: '0 0 5px 5px',
     });
-    return <Container {...attr}>{children}</Container>;
+    return (
+        <Container className={'flex mt-[20px] overflow-x-scroll pb-[5px] pl-[5px]'} {...attr}>
+            {children}
+        </Container>
+    );
 }
