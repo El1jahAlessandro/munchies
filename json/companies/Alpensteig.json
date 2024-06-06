@@ -67,7 +67,7 @@
       "price": 14.20,
       "picture": "munchies/Article Pictures/onn3xxfk350yb9wyex8o",
       "category": [
-        "austrian"
+        "main_course"
       ]
     },
     {
@@ -89,7 +89,7 @@
       ]
     },
     {
-      "name": "Hirtenmakkaroni, mild oder feurig",
+      "name": "Hirtenmakkaroni",
       "description": "Makkaroni mit würziger Hackfleischsauce, wahlweise mild oder feurig",
       "ingredients": [
         "Makkaroni",
