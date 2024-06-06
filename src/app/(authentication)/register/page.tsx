@@ -4,27 +4,16 @@ import { CreateUserBodyType, createUserInputSchema } from '@/lib/schemas/user.sc
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { api, pages } from '@/lib/utils/routes';
-import {
-    Button,
-    CircularProgress,
-    Container,
-    FormControlLabel,
-    FormLabel,
-    Grid,
-    Radio,
-    RadioGroup,
-    Stack,
-    Typography,
-} from '@mui/material';
+import { Container, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Stack, Typography } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { $Enums } from '@prisma/client';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
-import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { FormError } from '@/components/ErrorComponents/FormError';
+import { ButtonComponent } from '@/components/common/ButtonComponent';
 
 export default function RegisterPage() {
     const { push } = useRouter();
@@ -44,32 +33,37 @@ export default function RegisterPage() {
 
     const formInputOptions: FormInputOptionType<CreateUserBodyType>[] = [
         {
-            label: watch('accountType') === 'user' ? 'Full Name' : 'Company Name',
+            label: watch('accountType') === 'user' ? 'Name' : 'Firmenname',
             name: 'name',
-            autoComplete: 'name',
-            required: watch('accountType') !== 'user',
+            autoComplete: watch('accountType') === 'user' ? 'name' : 'organization',
+            required: watch('accountType') === 'business',
             inputType: 'textInput',
         },
         {
-            label: 'Email Address',
+            label: 'E-Mail-Adresse',
             name: 'email',
             autoComplete: 'email',
             required: true,
             inputType: 'textInput',
         },
         {
-            label: 'Password',
+            label: 'Passwort',
             name: 'password',
             required: true,
             inputType: 'password',
         },
         {
-            label: 'Confirm Password',
+            label: 'Passwort bestätigen',
             name: 'confirmPassword',
             required: true,
             inputType: 'password',
         },
     ];
+
+    const radioOptionLabels = {
+        user: 'Käufer',
+        business: 'Restaurant',
+    };
 
     const RadioLabelId = 'account-type-group';
 
@@ -81,21 +75,24 @@ export default function RegisterPage() {
             {...authenticationForm({ setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
+                <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
+                    Registrierung
+                </Typography>
                 <Stack spacing={2} direction={'column'}>
-                    <FormLabel id={RadioLabelId}>Account Type</FormLabel>
+                    <FormLabel id={RadioLabelId}>Account-Typ</FormLabel>
                     <Controller
                         rules={{ required: true }}
                         control={control}
                         name="accountType"
                         render={({ field }) => (
-                            <RadioGroup {...field}>
+                            <RadioGroup {...field} className={'!m-0'}>
                                 <Grid>
                                     {Object.values($Enums.AccountType).map(type => (
                                         <FormControlLabel
                                             value={type}
                                             key={type}
                                             control={<Radio />}
-                                            label={toPascalCase(type)}
+                                            label={radioOptionLabels[type]}
                                         />
                                     ))}
                                 </Grid>
@@ -110,15 +107,23 @@ export default function RegisterPage() {
                             render={({ field }) => <FormInputController {...field} {...optionProps} />}
                         />
                     ))}
-                    <Button type={'submit'} color={'success'} variant={'contained'}>
-                        {isSubmitting ? <CircularProgress /> : 'Submit'}
-                    </Button>
+                    <ButtonComponent
+                        type={'submit'}
+                        color={'success'}
+                        variant={'contained'}
+                        isSubmitting={isSubmitting}
+                    >
+                        Registrieren
+                    </ButtonComponent>
                     {(errorMessage?.error || errors.root?.message) && (
                         <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
                         <Typography component={'span'}>
-                            Already have an account? <Link href={pages.login}>Log in here</Link>
+                            Sie haben bereits ein Konto?{' '}
+                            <Link className={'text-primary-main'} href={pages.login}>
+                                Hier anmelden
+                            </Link>
                         </Typography>
                     </div>
                 </Stack>
