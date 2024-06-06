@@ -74,6 +74,7 @@ model ArticleCategories {
 model Categories {
   // dessert, drinks, pizza, indian, pasta, burger, salad, asian
   id                Int                 @id @default(autoincrement())
+  ref               String              @unique
   name              String              @unique
   icon              String
   ArticleCategories ArticleCategories[]
