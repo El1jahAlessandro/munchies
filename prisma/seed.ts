@@ -1,114 +1,111 @@
-import { Article, Prisma, PrismaClient } from '@prisma/client';
+import { AccountType, PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import indian from '../json/Indisch.json';
-import dessert from '../json/Dessert.json';
-import asian from '../json/Asia.json';
-import UserCreateInput = Prisma.UserCreateInput;
-
-type CategoryArticlesPropsType = {
-    name: string;
-    description: string;
-    ingredients: string[];
-    picture: string;
-    price: number;
-};
+import alpensteigUser from '../json/companies/Alpensteig.json';
+import asiaPerleUser from '../json/companies/AsiaPerle.json';
+import tajMahalUser from '../json/companies/TajMahal.json';
+import veneziaUser from '../json/companies/Venezia.json';
+import categories from '../json/categories.json';
+import { compact, omit } from 'lodash';
 
 const prisma = new PrismaClient();
 
 async function main() {
-    async function createUser(input: UserCreateInput) {
-        return prisma.user.create({
-            data: {
-                ...input,
-                password: await bcrypt.hash(input.password, await bcrypt.genSalt()),
-            },
-            include: {
-                article: true,
-            },
-        });
-    }
-
-    async function createArticles(categoryArticles: CategoryArticlesPropsType[], userId: number) {
+    async function createCategories(input: typeof categories) {
         return await Promise.all(
-            categoryArticles.map(food => {
-                return prisma.article.create({
-                    data: {
-                        ...food,
-                        ingredients: food.ingredients.join(', '),
-                        userId,
-                    },
+            input.map(category => {
+                return prisma.categories.create({
+                    data: category,
                 });
             })
         );
     }
 
-    async function createCategory(name: string, icon: string, articles: Article[]) {
-        return prisma.categories.create({
+    const articleCategories = await createCategories(categories);
+
+    async function createUser(
+        input: Omit<typeof alpensteigUser, 'articles'> & {
+            accountType?: AccountType;
+            articles?: (typeof alpensteigUser)['articles'] | undefined;
+            profilePic?: string | undefined;
+        }
+    ) {
+        const createdUser = await prisma.user.create({
             data: {
-                name,
-                icon,
-                ArticleCategories: {
-                    createMany: {
-                        data: articles.map(article => {
-                            return {
-                                articleId: article.id,
-                            };
-                        }),
-                    },
-                },
+                ...omit(input, 'articles'),
+                password: await bcrypt.hash('test123', await bcrypt.genSalt()),
+                profilePic: input.profilePic ?? '',
+                accountType: input.accountType ?? 'business',
+                ...(input.articles
+                    ? {
+                          article: {
+                              createMany: {
+                                  data: input.articles.map(article => ({
+                                      ...omit(article, ['category']),
+                                      ingredients: article.ingredients.join(', '),
+                                  })),
+                              },
+                          },
+                      }
+                    : {}),
+            },
+            include: {
+                article: true,
             },
         });
+
+        if (createdUser && createdUser.article) {
+            await Promise.all(
+                createdUser.article.map(async article => {
+                    const categories = compact(
+                        input.articles?.find(inputArticles => inputArticles.name === article.name)?.category
+                    );
+
+                    const data = compact(
+                        categories?.map(category => {
+                            const categoryId = articleCategories.find(
+                                articleCategory => category === articleCategory.ref
+                            )?.id;
+                            const articleId = article.id;
+                            if (categoryId) {
+                                return {
+                                    categoryId,
+                                    articleId,
+                                };
+                            }
+                        })
+                    );
+
+                    if (data.length && categories.length) {
+                        await prisma.articleCategories.createMany({
+                            data: data,
+                        });
+                    }
+                })
+            );
+        }
+
+        return createdUser;
     }
 
     const max = await createUser({
         email: 'max.mustermann@gmail.com',
         name: 'Max Mustermann',
-        password: 'test123',
         accountType: 'user',
+        profilePic: '',
+        articles: [],
     });
 
-    const mcDonalds = await createUser({
-        email: 'ronald.mcdonald@gmail.com',
-        name: 'McDonalds',
-        password: 'test123',
-        profilePic: 'munchies/Profile Pictures/cz7weri7fwvqzr65vxez',
-        accountType: 'business',
-        article: {
-            create: {
-                name: 'Chicken Nuggets',
-                price: 7.99,
-                picture: 'munchies/Article Pictures/walehfagakg9jc38ey40',
-                ingredients: 'Chicken',
-                description: 'Ein Chicken',
-            },
-        },
-    });
-
-    const asienPerle = await createUser({
-        email: 'asien.perle@gmail.com',
-        name: 'Asien Perle',
-        password: 'test123',
-        profilePic: 'munchies/Profile Pictures/Logo_AP-Kempten_web_bg-dark_oarklz',
-        accountType: 'business',
-    });
-
-    const indianFoodCategory = await createCategory('indisch', 'pepper', await createArticles(indian, mcDonalds.id));
-    const asianFoodCategory = await createCategory('asiatisch', 'sushi', await createArticles(asian, asienPerle.id));
-    const dessertFoodCategory = await createCategory(
-        'dessert',
-        'chocolate',
-        await createArticles(dessert, mcDonalds.id)
-    );
-    const fastFoodCategory = await createCategory('fastfood', 'hamburger', mcDonalds.article);
+    const alpensteig = await createUser(alpensteigUser);
+    const asienPerle = await createUser(asiaPerleUser);
+    const tajMahal = await createUser(tajMahalUser);
+    const venezia = await createUser(veneziaUser);
 
     console.log({
         max,
-        mcDonalds,
+        alpensteig,
         asienPerle,
-        indianFoodCategory,
-        asianFoodCategory,
-        dessertFoodCategory,
-        fastFoodCategory,
+        tajMahal,
+        venezia,
     });
 }
 

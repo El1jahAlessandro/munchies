@@ -1,0 +1,62 @@
+[
+  {
+    "ref": "asian",
+    "name": "Asiatisch",
+    "icon": "sushi"
+  },
+  {
+    "ref": "main_course",
+    "name": "Hauptspeisen",
+    "icon": "utensils"
+  },
+  {
+    "ref": "dessert",
+    "name": "Dessert",
+    "icon": "custard"
+  },
+  {
+    "ref": "cake",
+    "name": "Kuchen",
+    "icon": "cake-slice"
+  },
+  {
+    "ref": "indian",
+    "name": "Indisch",
+    "icon": "pepper"
+  },
+  {
+    "ref": "ice_cream",
+    "name": "Eis",
+    "icon": "ice-cream"
+  },
+  {
+    "ref": "turkish",
+    "name": "Türkisch",
+    "icon": "shish-kebab"
+  },
+  {
+    "ref": "pizza",
+    "name": "Pizza",
+    "icon": "pizza-slice"
+  },
+  {
+    "ref": "burger",
+    "name": "Burger",
+    "icon": "cheeseburger"
+  },
+  {
+    "ref": "pasta",
+    "name": "Pasta",
+    "icon": "bowl-chopsticks-noodles"
+  },
+  {
+    "ref": "vegan",
+    "name": "Vegan",
+    "icon": "leaf"
+  },
+  {
+    "ref": "fish",
+    "name": "Fisch",
+    "icon": "fish"
+  }
+]
