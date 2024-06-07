@@ -64,7 +64,7 @@ export function ButtonComponent({
     const buttonContent = (
         <StyledButton size={size} {...props}>
             {isSubmitting ? (
-                <CircularProgress color={'inherit'} />
+                <CircularProgress color={'inherit'} {...(size === 'small' ? { size: 30 } : {})} />
             ) : (
                 <>
                     {startIcon ? (

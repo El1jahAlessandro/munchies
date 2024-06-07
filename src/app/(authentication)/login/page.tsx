@@ -4,7 +4,7 @@ import { authUserBodySchema, AuthUserBodyType } from '@/lib/schemas/user.schema'
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { api, pages } from '@/lib/utils/routes';
-import { Button, CircularProgress, Container, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
@@ -12,6 +12,7 @@ import { authenticationForm } from '@/lib/helpers/authenticationForm';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { FormError } from '@/components/ErrorComponents/FormError';
+import { ButtonComponent } from '@/components/common/ButtonComponent';
 
 export default function LoginPage() {
     const { push } = useRouter();
@@ -28,14 +29,14 @@ export default function LoginPage() {
     const formInputOptions: FormInputOptionType<AuthUserBodyType>[] = [
         {
             name: 'email',
-            label: 'Email address',
+            label: 'E-Mail-Adresse',
             required: true,
             autoComplete: 'email',
             inputType: 'textInput',
         },
         {
             name: 'password',
-            label: 'Password',
+            label: 'Passwort',
             required: true,
             autoComplete: 'password',
             inputType: 'password',
@@ -50,6 +51,9 @@ export default function LoginPage() {
             {...authenticationForm({ setErrorMessage, push, mutate })}
         >
             <Container maxWidth="sm">
+                <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
+                    Log-in
+                </Typography>
                 <Stack spacing={2} direction={'column'}>
                     {formInputOptions.map(optionProps => (
                         <Controller
@@ -59,15 +63,23 @@ export default function LoginPage() {
                             render={({ field }) => <FormInputController {...field} {...optionProps} />}
                         />
                     ))}
-                    <Button type={'submit'} color={'success'} variant={'contained'}>
-                        {isSubmitting ? <CircularProgress /> : 'Submit'}
-                    </Button>
+                    <ButtonComponent
+                        type={'submit'}
+                        color={'success'}
+                        variant={'contained'}
+                        isSubmitting={isSubmitting}
+                    >
+                        Anmelden
+                    </ButtonComponent>
                     {(errorMessage?.error || errors.root?.message) && (
                         <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
                         <Typography component={'span'}>
-                            {"Don't have an account?"} <Link href={pages.register}>Register here</Link>
+                            {'Sie haben noch kein Konto?'}{' '}
+                            <Link className={'text-primary-main'} href={pages.register}>
+                                Hier registrieren
+                            </Link>
                         </Typography>
                     </div>
                 </Stack>
