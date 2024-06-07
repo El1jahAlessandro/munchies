@@ -80,7 +80,7 @@ export function ButtonComponent({
         </StyledButton>
     );
     if (positionFixed) {
-        return <div className={'m-auto left-0 right-0 bottom-[90px] fixed text-center'}>{buttonContent}</div>;
+        return <div className={'m-auto left-0 right-0 bottom-[120px] fixed text-center'}>{buttonContent}</div>;
     }
     return buttonContent;
 }
