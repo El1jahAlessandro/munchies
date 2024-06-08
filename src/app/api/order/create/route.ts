@@ -1,7 +1,7 @@
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
 import { cartCookieName } from '@/lib/utils/constants';
-import { CreateOrderType, orderFormDataSchema } from '@/lib/schemas/order.schema';
+import { CreateOrderType, createOrderFormDataSchema } from '@/lib/schemas/order.schema';
 import prisma from '@/lib/utils/prisma';
 import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 import { groupBy, map, omit } from 'lodash';
@@ -9,7 +9,7 @@ import { orderSelectArgs } from '@/lib/schemas/user.schema';
 
 export const POST = asyncNextHandler<CreateOrderType>(async req => {
     const { id } = getAuthCookieValue(req);
-    const { ordersArticles, status, paymentMethod } = orderFormDataSchema.parse(await req.formData());
+    const { ordersArticles, status, paymentMethod } = createOrderFormDataSchema.parse(await req.formData());
 
     if (!id) {
         throw new StatusError(401, 'You are not authorized to order');

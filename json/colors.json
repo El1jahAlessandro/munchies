@@ -8,6 +8,12 @@
   "error": {
     "main": "#d32f2f"
   },
+  "warning": {
+    "main": "#ed6c02"
+  },
+  "info": {
+    "main": "#FFC529"
+  },
   "white": "#ffffff",
   "black": "#000000",
   "traffic-white": "#F6F6F6"

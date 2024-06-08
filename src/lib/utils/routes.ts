@@ -16,6 +16,7 @@ export const api = {
     },
     order: {
         create: 'api/order/create',
+        edit: 'api/order/edit',
     },
 };
 
