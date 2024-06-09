@@ -15,11 +15,17 @@ export const ordersArticlesSchema = z.object({
 
 export const orderSchema = z.object({
     paymentMethod: paymentMethodSchema,
-    status: orderStatusSchema.optional().default('inPreparation'),
+    status: orderStatusSchema.optional().default('orderReceived'),
     ordersArticles: z.array(ordersArticlesSchema),
 });
 
-export const orderFormDataSchema = zfd.formData(orderSchema);
+const editOrderSchema = z.object({
+    id: z.coerce.number(),
+    status: orderStatusSchema,
+});
+
+export const createOrderFormDataSchema = zfd.formData(orderSchema);
+export const editOrderFormDataSchema = zfd.formData(editOrderSchema);
 
 export type OrderResponseType = Awaited<
     ReturnType<
@@ -42,5 +48,15 @@ export type CreateOrderType = Awaited<
                 };
             }
         >
+    >
+>;
+
+export type EditOrderType = Awaited<
+    ReturnType<
+        typeof prisma.orders.findUnique<{
+            where: {
+                id: number;
+            };
+        }>
     >
 >;

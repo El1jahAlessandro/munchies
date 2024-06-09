@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { Property } from 'csstype';
 
 type DotDividerProps = {
-    color: 'primary' | 'secondary' | 'error';
+    color: 'primary' | 'secondary' | 'error' | 'warning' | 'info';
     size: 'small' | 'large';
     margin: Property.Margin;
 };

@@ -53,7 +53,7 @@ model Orders {
   id             Int              @id @default(autoincrement())
   paymentMethod  PaymentMethods
   totalPrice     Float
-  status         OrderStatus      @default(inPreparation)
+  status         OrderStatus      @default(orderReceived)
   userId         Int
   companyId      Int
   ordersArticles OrdersArticles[]
@@ -81,6 +81,7 @@ model Categories {
 }
 
 enum OrderStatus {
+  orderReceived
   inPreparation
   isBeingDelivered
   delivered
