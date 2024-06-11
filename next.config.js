@@ -8,9 +8,6 @@ const nextConfig = {
         CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
         LOGO_URL: process.env.NEXT_PUBLIC_LOGO_URL,
     },
-    corePlugins: {
-        preflight: false,
-    },
 };
 
 module.exports = nextConfig;
