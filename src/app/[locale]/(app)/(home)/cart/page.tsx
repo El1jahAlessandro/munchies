@@ -47,8 +47,10 @@ import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/components/hooks/userContext';
 import getFormFetcherResponse from '@/lib/helpers/getFormFetcherResponse';
 import { pick } from 'lodash';
+import { PageParams } from '@/lib/schemas/locale.schema';
+import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
 
-export default function CartPage() {
+export default function CartPage(pageProps: PageParams) {
     const { push } = useRouter();
     const { user, mutate: userMutate } = useUserContext();
     const { cartArticles, mutate: cartMutate } = useCartContext();
@@ -189,7 +191,7 @@ export default function CartPage() {
                             buyedArticles: [...user.buyedArticles, ...newData],
                         });
                     }
-                    push(pages.orders);
+                    pushWithLocale(pages.orders, push, pageProps);
                 }, 2000);
             }}
             onError={async (error: ErrorType) => {
@@ -241,7 +243,7 @@ export default function CartPage() {
                                                 component={'span'}
                                                 className={'flex items-center text-primary-main font-bold'}
                                             >
-                                                {currencyFormatter(article?.price ?? 0)}
+                                                {currencyFormatter(article?.price ?? 0, pageProps.params.locale)}
                                             </Typography>
                                         </div>
                                         <Controller
@@ -267,7 +269,7 @@ export default function CartPage() {
                                         <TableCell className={'px-0'}>{label}</TableCell>
                                         <TableCell align={'right'} className={'px-0'}>
                                             <Typography component={'span'} className={'font-bold'}>
-                                                {currencyFormatter(value)}
+                                                {currencyFormatter(value, pageProps.params.locale)}
                                             </Typography>
                                         </TableCell>
                                     </TableRow>
@@ -324,7 +326,7 @@ export default function CartPage() {
                         )}
                     />
                     <DialogContentText>
-                        <Typography>Gesamtkosten: {currencyFormatter(totalPrice)}</Typography>
+                        <Typography>Gesamtkosten: {currencyFormatter(totalPrice, pageProps.params.locale)}</Typography>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

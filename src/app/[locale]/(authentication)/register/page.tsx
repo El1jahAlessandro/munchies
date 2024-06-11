@@ -14,8 +14,9 @@ import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { FormError } from '@/components/ErrorComponents/FormError';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
+import { PageParams } from '@/lib/schemas/locale.schema';
 
-export default function RegisterPage() {
+export default function RegisterPage(pageProps: PageParams) {
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
@@ -72,7 +73,7 @@ export default function RegisterPage() {
             action={api.user.create}
             method={'post'}
             control={control}
-            {...authenticationForm({ setErrorMessage, push, mutate })}
+            {...authenticationForm({ setErrorMessage, push, pageProps, mutate })}
         >
             <Container maxWidth="sm">
                 <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
@@ -121,7 +122,7 @@ export default function RegisterPage() {
                     <div>
                         <Typography component={'span'}>
                             Sie haben bereits ein Konto?{' '}
-                            <Link className={'text-primary-main'} href={pages.login}>
+                            <Link className={'text-primary-main'} href={pages.login} locale={pageProps.params.locale}>
                                 Hier anmelden
                             </Link>
                         </Typography>

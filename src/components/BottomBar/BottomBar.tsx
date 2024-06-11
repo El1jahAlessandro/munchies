@@ -8,14 +8,23 @@ import { pages } from '@/lib/utils/routes';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { CldImage } from 'next-cloudinary';
 import { usePathname } from 'next/navigation';
+import { PageParams } from '@/lib/schemas/locale.schema';
+import { useI18n } from '@/locales/client';
 
-export default function BottomBar() {
+export default function BottomBar({
+    pageProps: {
+        params: { locale },
+    },
+}: {
+    pageProps: PageParams;
+}) {
+    const t = useI18n();
     const { cartArticles } = useCartContext();
     const pathname = usePathname();
     const bottomNavigations = [
         {
             value: 'explore',
-            label: 'Startseite',
+            label: t('homepage'),
             icon: <ExploreIcon />,
             to: pages.home,
         },
@@ -31,7 +40,7 @@ export default function BottomBar() {
         },
         {
             value: 'cart',
-            label: 'Warenkorb',
+            label: t('cart'),
             icon: (
                 <>
                     {cartArticles && cartArticles.length > 0 ? (
@@ -65,7 +74,7 @@ export default function BottomBar() {
     useEffect(() => {
         bottomNavigations.forEach(nav => {
             if (pathname === nav.to) {
-                setValue(pathname === nav.to ? nav.value : 'explore');
+                setValue(nav.value);
             }
         });
     }, [pathname]);
@@ -76,7 +85,7 @@ export default function BottomBar() {
                 {bottomNavigations.map(nav => {
                     if (nav.value === 'logo' && typeof nav.icon === 'string') {
                         return (
-                            <div className={'mx-10 flex items-center justify-center'}>
+                            <div key={nav.value} className={'mx-10 flex items-center justify-center'}>
                                 <CldImage
                                     className={'w-16 h-16'}
                                     width={65}
@@ -95,7 +104,7 @@ export default function BottomBar() {
                             key={nav.value}
                             value={nav.value}
                             component={NextLinkComposed}
-                            to={nav.to}
+                            to={`/${locale}` + nav.to}
                             label={nav.label}
                             icon={nav.icon}
                         />

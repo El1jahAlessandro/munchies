@@ -15,8 +15,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
+import { useI18n } from '@/locales/client';
+import { AccountType } from '@prisma/client';
 
 export default function ProfilePage() {
+    const t = useI18n();
     const [previewPicture, setPreviewPicture] = useState<string>();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const [inEditMode, setInEditMode] = useState<boolean>(false);
@@ -34,17 +37,17 @@ export default function ProfilePage() {
 
     const formInputOptions: FormInputOptionType<EditUserFormType>[] = [
         {
-            label: watch('accountType') === 'user' ? 'Full Name' : 'Company Name',
+            label: t(`account_name.${watch('accountType')}`),
             name: 'name',
             inputType: 'textInput',
         },
         {
-            label: 'Email',
+            label: t('email'),
             name: 'email',
             inputType: 'textInput',
         },
         {
-            label: 'Account Type',
+            label: t('account_type'),
             name: 'accountType',
             inputType: 'textInput',
             disabled: true,
@@ -119,7 +122,7 @@ export default function ProfilePage() {
             <div className={'flex justify-center items-center mt-[5px]'}>
                 {!inEditMode && (
                     <Button onClick={() => setInEditMode(true)} size={'small'}>
-                        Edit Profile
+                        {t('edit_profile')}
                     </Button>
                 )}
             </div>
@@ -133,7 +136,11 @@ export default function ProfilePage() {
                             render={({ field: { value, ...field } }) => (
                                 <FormInputController
                                     InputLabelProps={{ shrink: true }}
-                                    value={optionProps.name === 'accountType' ? toPascalCase(value as string) : value}
+                                    value={
+                                        optionProps.name === 'accountType' && value
+                                            ? t(`account_type_labels.${value as AccountType}`)
+                                            : value
+                                    }
                                     inputProps={{ readOnly: !inEditMode || optionProps.name === 'accountType' }}
                                     {...field}
                                     {...optionProps}
@@ -165,7 +172,7 @@ export default function ProfilePage() {
                                 setInEditMode(false);
                             }}
                         >
-                            Abbrechen
+                            {t('cancel')}
                         </ButtonComponent>
                         <ButtonComponent
                             size={'medium'}
@@ -175,7 +182,7 @@ export default function ProfilePage() {
                             type={'submit'}
                             disabled={!isDirty}
                         >
-                            Speichern
+                            {t('save')}
                         </ButtonComponent>
                     </div>
                 </div>

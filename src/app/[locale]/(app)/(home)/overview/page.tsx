@@ -10,12 +10,15 @@ import { Categories } from '@prisma/client';
 import { CldImage } from 'next-cloudinary';
 import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { ScrollableContainer } from '@/components/common/ScrollableContainer';
+import { PageParams } from '@/lib/schemas/locale.schema';
+import { useI18n } from '@/locales/client';
 
 type CategoryFiltersType = {
     isFiltered: boolean;
 } & Categories;
 
-export default function OverviewPage() {
+export default function OverviewPage({ params: { locale } }: PageParams) {
+    const t = useI18n();
     const { articles, categories, error } = useArticlesContext();
     const [filteredCategories, setFilteredCategories] = useState<number[]>([]);
     const categoriesBoxRef = useRef<HTMLDivElement>(null);
@@ -62,7 +65,7 @@ export default function OverviewPage() {
     return (
         <>
             <Typography component={'h2'} typography={'h4'} className={'!font-bold'}>
-                Was möchtest du bestellen?
+                {t('homepage_top_text')}
             </Typography>
             <ScrollableContainer gap={20} ref={categoriesBoxRef}>
                 {categories &&
@@ -100,7 +103,11 @@ export default function OverviewPage() {
                 {articles &&
                     filterArticles(articles)?.map(article => (
                         <div key={article.id} className={'min-w-[266px] mb-[10px]'}>
-                            <Link href={pages.article + '?id=' + article.id} className={'text-black no-underline'}>
+                            <Link
+                                href={pages.article + '?id=' + article.id}
+                                locale={locale}
+                                className={'text-black no-underline'}
+                            >
                                 <Card className={'rounded-[15px]'}>
                                     <CldImage
                                         className={'rounded-t-[15px]'}
@@ -134,7 +141,7 @@ export default function OverviewPage() {
                                                 typography={'subtitle2'}
                                                 className={'text-secondary-main'}
                                             >
-                                                {currencyFormatter(article.price)}
+                                                {currencyFormatter(article.price, locale)}
                                             </Typography>
                                         </div>
                                         <div className={'flex mt-[5px]'}>

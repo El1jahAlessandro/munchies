@@ -15,8 +15,11 @@ import { ButtonComponent } from '@/components/common/ButtonComponent';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import getFormFetcherResponse from '@/lib/helpers/getFormFetcherResponse';
 import { omit } from 'lodash';
+import { useI18n } from '@/locales/client';
+import { PageParams } from '@/lib/schemas/locale.schema';
 
-export default function LoginPage() {
+export default function ArticlePage({ params: { locale } }: PageParams) {
+    const t = useI18n();
     const searchParams = useSearchParams();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const { mutate } = useCartContext();
@@ -83,7 +86,7 @@ export default function LoginPage() {
                             variant={'h5'}
                             component={'span'}
                         >
-                            {currencyFormatter(article.price * watch('amount'))}
+                            {currencyFormatter(article.price * watch('amount'), locale)}
                         </Typography>
                         <Controller
                             name={'amount'}
@@ -108,7 +111,7 @@ export default function LoginPage() {
                         {article.description}
                     </Typography>
                     <Typography variant={'subtitle1'} component={'p'} className={'mt-5'}>
-                        <b>Zutaten:</b> {article.ingredients}
+                        <b>{t('ingredients')}:</b> {article.ingredients}
                     </Typography>
                 </>
             )}
@@ -122,7 +125,7 @@ export default function LoginPage() {
                 positionFixed={true}
                 startIcon={<ShoppingBagIcon />}
             >
-                HINZUFÜGEN
+                {t('add_to_cart').toUpperCase()}
             </ButtonComponent>
             {error && <span>{error?.response?.data?.error}</span>}
         </Form>

@@ -29,20 +29,8 @@ import { currencyFormatter } from '@/lib/helpers/currencyFormatter';
 import { postFetcher } from '@/lib/helpers/fetcher';
 import { createFormData } from '@/lib/helpers/getFormData';
 import { api } from '@/lib/utils/routes';
-
-const orderStatusText: { [key in $Enums.OrderStatus]: string } = {
-    orderReceived: 'Bestellung ist eingegangen',
-    inPreparation: 'Wird zubereitet',
-    isBeingDelivered: 'Wird geliefert',
-    delivered: 'Bestellung geliefert',
-};
-
-const orderStatusButtonText: { [key in $Enums.OrderStatus]: string } = {
-    orderReceived: 'mit Zubereitung beginnen',
-    inPreparation: 'Liefern',
-    isBeingDelivered: 'Als geliefert markieren',
-    delivered: '',
-};
+import { useI18n, useScopedI18n } from '@/locales/client';
+import { PageParams } from '@/lib/schemas/locale.schema';
 
 const orderStatusColor: {
     [key in $Enums.OrderStatus]: { color: 'primary' | 'secondary' | 'error' | 'warning' | 'info'; className: string };
@@ -69,7 +57,10 @@ type OrderCategory = 'latestOrders' | 'upcoming';
 
 type ExpansionDetail = 'detail' | 'status';
 
-export default function OrderPage() {
+export default function OrderPage({ params: { locale } }: PageParams) {
+    const t = useI18n();
+    const orderStatusText = useScopedI18n('orderStatusText');
+    const orderStatusButtonText = useScopedI18n('orderStatusButtonText');
     const { user, mutate } = useUserContext();
     const { accountType, buyedArticles, saledArticles } = pick(user, ['accountType', 'buyedArticles', 'saledArticles']);
 
@@ -135,9 +126,11 @@ export default function OrderPage() {
                         <Table className={'table-auto'}>
                             <TableHead>
                                 <TableRow className={'font-bold'}>
-                                    <TableCell className={'w-[250px] text-left'}>Artikel</TableCell>
-                                    <TableCell className={'text-center'}>Menge</TableCell>
-                                    <TableCell className={'text-right'}>Preis</TableCell>
+                                    <TableCell className={'w-[250px] text-left'}>
+                                        {t('article', { count: 1 })}
+                                    </TableCell>
+                                    <TableCell className={'text-center'}>{t('amount')}</TableCell>
+                                    <TableCell className={'text-right'}>{t('price')}</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
@@ -146,7 +139,7 @@ export default function OrderPage() {
                                         <TableCell>{article.article.name}</TableCell>
                                         <TableCell className={'text-center'}>{article.amount}</TableCell>
                                         <TableCell className={'text-right'}>
-                                            {currencyFormatter(article.price)}
+                                            {currencyFormatter(article.price, locale)}
                                         </TableCell>
                                     </TableRow>
                                 ))}
@@ -206,7 +199,7 @@ export default function OrderPage() {
 
                                     return (
                                         <Step key={status} {...stepProps}>
-                                            <StepLabel>{orderStatusText[status]}</StepLabel>
+                                            <StepLabel>{orderStatusText(status)}</StepLabel>
                                         </Step>
                                     );
                                 })}
@@ -218,7 +211,7 @@ export default function OrderPage() {
                                             onClick={() => handleNext()}
                                             className={'!h-8 px-1 py-1 w-[250px] mt-2.5 text-[0.7rem]'}
                                         >
-                                            {orderStatusButtonText[activeStep]}
+                                            {orderStatusButtonText(activeStep)}
                                         </ButtonComponent>
                                     </Box>
                                 </>
@@ -242,14 +235,15 @@ export default function OrderPage() {
                                             component={'div'}
                                             className={'flex items-center'}
                                         >
-                                            {new Date(order.updatedAt)?.toLocaleDateString('de-DE', {
+                                            {new Date(order.updatedAt)?.toLocaleDateString(locale, {
                                                 day: '2-digit',
                                                 month: 'short',
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                             })}
                                             <DotDivider color={'secondary'} size={'small'} margin={'0 10px'} />
-                                            {order.ordersArticles.length} Artikel
+                                            {order.ordersArticles.length}{' '}
+                                            {t('article', { count: order.ordersArticles.length })}
                                         </Typography>
                                         <Typography variant={'caption'} component={'div'} className={'font-bold'}>
                                             {order.buyer.name}
@@ -264,21 +258,21 @@ export default function OrderPage() {
                                                 size={'large'}
                                                 margin={'0 5px 0 0'}
                                             />
-                                            {orderStatusText[order.status]}
+                                            {orderStatusText(order.status)}
                                         </Typography>
                                         <div className={'flex gap-5'}>
                                             <ButtonComponent
                                                 onClick={() => handleAccordionExpansion('detail')}
                                                 className={'!h-8 px-1 py-1 w-[100px] mt-2.5 text-[0.7rem]'}
                                             >
-                                                Details
+                                                {t('details')}
                                             </ButtonComponent>
                                             {order.status !== 'delivered' && user?.accountType === 'business' && (
                                                 <ButtonComponent
                                                     onClick={() => handleAccordionExpansion('status')}
                                                     className={'!h-8 px-1 py-1 w-[150px] mt-2.5 text-[0.7rem]'}
                                                 >
-                                                    Status verändern
+                                                    {t('change_status')}
                                                 </ButtonComponent>
                                             )}
                                         </div>
@@ -289,7 +283,7 @@ export default function OrderPage() {
                                         }
                                         component={'span'}
                                     >
-                                        {currencyFormatter(order.totalPrice)}
+                                        {currencyFormatter(order.totalPrice, locale)}
                                     </Typography>
                                 </div>
                             </AccordionWrapper>
@@ -320,14 +314,15 @@ export default function OrderPage() {
                                             component={'div'}
                                             className={'flex items-center'}
                                         >
-                                            {new Date(order.updatedAt)?.toLocaleDateString('de-DE', {
+                                            {new Date(order.updatedAt)?.toLocaleDateString(locale, {
                                                 day: '2-digit',
                                                 month: 'short',
                                                 hour: 'numeric',
                                                 minute: 'numeric',
                                             })}
                                             <DotDivider color={'secondary'} size={'small'} margin={'0 10px'} />
-                                            {order.ordersArticles.length} Artikel
+                                            {order.ordersArticles.length}{' '}
+                                            {t('article', { count: order.ordersArticles.length })}
                                         </Typography>
                                         <Typography variant={'body1'} component={'div'} className={'font-bold'}>
                                             {order.company.name}
@@ -342,21 +337,21 @@ export default function OrderPage() {
                                                 size={'large'}
                                                 margin={'0 5px 0 0'}
                                             />
-                                            {orderStatusText[order.status]}
+                                            {orderStatusText(order.status)}
                                         </Typography>
                                     </Stack>
                                     <Typography
                                         className={'ml-auto font-bold flex items-start text-primary-main'}
                                         component={'span'}
                                     >
-                                        {currencyFormatter(order.totalPrice)}
+                                        {currencyFormatter(order.totalPrice, locale)}
                                     </Typography>
                                 </div>
                                 <ButtonComponent
                                     onClick={() => handleAccordionExpansion('detail')}
                                     className={'!h-8 px-1 py-1 w-[100px] mt-2.5 text-[0.7rem]'}
                                 >
-                                    Details
+                                    {t('details')}
                                 </ButtonComponent>
                             </AccordionWrapper>
                         </Card>
@@ -383,7 +378,7 @@ export default function OrderPage() {
                 {orders?.length !== visibleOrders?.length && (
                     <div className={'flex justify-center margin-auto mt-[3.75rem]'}>
                         <ButtonComponent size={'large'} onClick={() => setIndex(prevIndex => prevIndex + 1)}>
-                            Lade weitere
+                            {t('load_more')}
                         </ButtonComponent>
                     </div>
                 )}
@@ -402,21 +397,19 @@ export default function OrderPage() {
         <>
             {noIncomingOrders && (user?.accountType === 'user' ? !!orders.length : true) && (
                 <Typography component={'h4'} typography={'body1'} className={'my-[3.75rem]'}>
-                    {user?.accountType === 'user'
-                        ? 'Sie haben keine aktuellen Bestellungen'
-                        : 'Sie haben aktuell keine eingehenden Bestellungen'}
+                    {t(`no_current_orders.${user?.accountType ?? 'user'}`)}
                 </Typography>
             )}
             {!orders?.length && user?.accountType === 'user' && (
                 <Typography component={'h4'} typography={'body1'} className={'my-[3.75rem]'}>
-                    Sie haben aktuell noch keine Bestellung getätigt
+                    {t('no_orders_placed')}
                 </Typography>
             )}
             {orderEntries &&
                 orderEntries.map(([orderCategory, orders], index) => (
                     <div key={orderCategory} className={index === 1 ? 'mt-[3.75rem]' : ''}>
                         <Typography component={'h4'} typography={'h6'}>
-                            {(orderCategory as OrderCategory) === 'latestOrders' && 'Vergangene Bestellungen'}
+                            {(orderCategory as OrderCategory) === 'latestOrders' && t('past_orders')}
                         </Typography>
                         <OrderChunks orders={orders.reverse()} />
                     </div>
