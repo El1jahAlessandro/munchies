@@ -14,8 +14,10 @@ import { FormInputController } from '@/components/FormInputs/FormInputController
 import { FormError } from '@/components/ErrorComponents/FormError';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
 import { PageParams } from '@/lib/schemas/locale.schema';
+import { useI18n } from '@/locales/client';
 
 export default function LoginPage(pageProps: PageParams) {
+    const t = useI18n();
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
@@ -30,14 +32,14 @@ export default function LoginPage(pageProps: PageParams) {
     const formInputOptions: FormInputOptionType<AuthUserBodyType>[] = [
         {
             name: 'email',
-            label: 'E-Mail-Adresse',
+            label: t('email'),
             required: true,
             autoComplete: 'email',
             inputType: 'textInput',
         },
         {
             name: 'password',
-            label: 'Passwort',
+            label: t('password'),
             required: true,
             autoComplete: 'password',
             inputType: 'password',
@@ -53,7 +55,7 @@ export default function LoginPage(pageProps: PageParams) {
         >
             <Container maxWidth="sm">
                 <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
-                    Log-in
+                    {t('login_header')}
                 </Typography>
                 <Stack spacing={2} direction={'column'}>
                     {formInputOptions.map(optionProps => (
@@ -70,20 +72,16 @@ export default function LoginPage(pageProps: PageParams) {
                         variant={'contained'}
                         isSubmitting={isSubmitting}
                     >
-                        Anmelden
+                        {t('login')}
                     </ButtonComponent>
                     {(errorMessage?.error || errors.root?.message) && (
                         <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
                         <Typography component={'span'}>
-                            {'Sie haben noch kein Konto?'}{' '}
-                            <Link
-                                className={'text-primary-main'}
-                                href={pages.register}
-                                locale={pageProps.params.locale}
-                            >
-                                Hier registrieren
+                            {t('login_footer_text')}{' '}
+                            <Link className={'text-primary-main'} href={`/${pageProps.params.locale}` + pages.register}>
+                                {t('login_footer_link')}
                             </Link>
                         </Typography>
                     </div>

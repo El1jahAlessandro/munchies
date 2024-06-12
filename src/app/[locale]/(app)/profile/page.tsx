@@ -10,7 +10,6 @@ import { editUserFormSchema, EditUserFormType, userSchema } from '@/lib/schemas/
 import { pick } from 'lodash';
 import { api } from '@/lib/utils/routes';
 import { authenticationForm } from '@/lib/helpers/authenticationForm';
-import { toPascalCase } from '@/lib/helpers/toPascalCase';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
@@ -37,7 +36,7 @@ export default function ProfilePage() {
 
     const formInputOptions: FormInputOptionType<EditUserFormType>[] = [
         {
-            label: t(`account_name.${watch('accountType')}`),
+            label: t(`account_name.${watch('accountType') ?? 'user'}`),
             name: 'name',
             inputType: 'textInput',
         },

@@ -15,8 +15,10 @@ import { FormInputController } from '@/components/FormInputs/FormInputController
 import { FormError } from '@/components/ErrorComponents/FormError';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
 import { PageParams } from '@/lib/schemas/locale.schema';
+import { useI18n } from '@/locales/client';
 
 export default function RegisterPage(pageProps: PageParams) {
+    const t = useI18n();
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
@@ -34,37 +36,32 @@ export default function RegisterPage(pageProps: PageParams) {
 
     const formInputOptions: FormInputOptionType<CreateUserBodyType>[] = [
         {
-            label: watch('accountType') === 'user' ? 'Name' : 'Firmenname',
+            label: t(`account_name.${watch('accountType')}`),
             name: 'name',
             autoComplete: watch('accountType') === 'user' ? 'name' : 'organization',
             required: watch('accountType') === 'business',
             inputType: 'textInput',
         },
         {
-            label: 'E-Mail-Adresse',
+            label: t(`email`),
             name: 'email',
             autoComplete: 'email',
             required: true,
             inputType: 'textInput',
         },
         {
-            label: 'Passwort',
+            label: t(`password`),
             name: 'password',
             required: true,
             inputType: 'password',
         },
         {
-            label: 'Passwort bestätigen',
+            label: t(`confirm_password`),
             name: 'confirmPassword',
             required: true,
             inputType: 'password',
         },
     ];
-
-    const radioOptionLabels = {
-        user: 'Käufer',
-        business: 'Restaurant',
-    };
 
     const RadioLabelId = 'account-type-group';
 
@@ -77,10 +74,10 @@ export default function RegisterPage(pageProps: PageParams) {
         >
             <Container maxWidth="sm">
                 <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
-                    Registrierung
+                    {t('register_header')}
                 </Typography>
                 <Stack spacing={2} direction={'column'}>
-                    <FormLabel id={RadioLabelId}>Account-Typ</FormLabel>
+                    <FormLabel id={RadioLabelId}>{t('account_type')}</FormLabel>
                     <Controller
                         rules={{ required: true }}
                         control={control}
@@ -93,7 +90,7 @@ export default function RegisterPage(pageProps: PageParams) {
                                             value={type}
                                             key={type}
                                             control={<Radio />}
-                                            label={radioOptionLabels[type]}
+                                            label={t(`account_type_labels.${type}`)}
                                         />
                                     ))}
                                 </Grid>
@@ -114,16 +111,16 @@ export default function RegisterPage(pageProps: PageParams) {
                         variant={'contained'}
                         isSubmitting={isSubmitting}
                     >
-                        Registrieren
+                        {t('register')}
                     </ButtonComponent>
                     {(errorMessage?.error || errors.root?.message) && (
                         <FormError errors={errors} errorMessage={errorMessage} />
                     )}
                     <div>
                         <Typography component={'span'}>
-                            Sie haben bereits ein Konto?{' '}
-                            <Link className={'text-primary-main'} href={pages.login} locale={pageProps.params.locale}>
-                                Hier anmelden
+                            {t('register_footer_text')}{' '}
+                            <Link className={'text-primary-main'} href={`/${pageProps.params.locale}` + pages.login}>
+                                {t('register_footer_link')}
                             </Link>
                         </Typography>
                     </div>

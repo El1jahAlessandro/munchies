@@ -104,8 +104,7 @@ export default function OverviewPage({ params: { locale } }: PageParams) {
                     filterArticles(articles)?.map(article => (
                         <div key={article.id} className={'min-w-[266px] mb-[10px]'}>
                             <Link
-                                href={pages.article + '?id=' + article.id}
-                                locale={locale}
+                                href={{ pathname: `/${locale}` + pages.article, query: { id: article.id } }}
                                 className={'text-black no-underline'}
                             >
                                 <Card className={'rounded-[15px]'}>
