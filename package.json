@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "prisma:studio": "prisma studio",
     "prisma:db:pull": "prisma db pull",
     "prisma:db:push": "prisma db push",
     "prisma:db:seed": "prisma db seed",
