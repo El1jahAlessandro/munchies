@@ -3,6 +3,8 @@ import { UserMutateType } from '@/components/hooks/userContext';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { pages } from '@/lib/utils/routes';
 import { FieldValues, UseFormReset } from 'react-hook-form';
+import { PageParams } from '@/lib/schemas/locale.schema';
+import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
 
 export type ErrorType = { response: Response; error?: undefined } | { response?: undefined; error: unknown };
 
@@ -11,6 +13,7 @@ type FormFunctionType<TFieldValues extends FieldValues> = {
     mutate?: UserMutateType;
     push?: AppRouterInstance['push'];
     reset?: UseFormReset<TFieldValues>;
+    pageProps?: PageParams;
 };
 
 export const authenticationForm = <TFieldValues extends FieldValues>({
@@ -18,13 +21,14 @@ export const authenticationForm = <TFieldValues extends FieldValues>({
     push,
     reset,
     mutate,
+    pageProps,
 }: FormFunctionType<TFieldValues>) => {
     const onSubmit = () => {
         setErrorMessage(undefined);
     };
     const onSuccess = async () => {
         mutate && (await mutate());
-        push && push(pages.home);
+        push && pageProps && pushWithLocale(pages.home, push, pageProps);
         reset && reset();
     };
     const onError = async (error: ErrorType) => {

@@ -22,6 +22,9 @@ import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
+import { PageParams } from '@/lib/schemas/locale.schema';
+import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
+import { useI18n } from '@/locales/client';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -33,7 +36,8 @@ export function MenuButton({ toggleDrawer }: { toggleDrawer: ToggleDrawerType })
     );
 }
 
-function LogOutButton() {
+function LogOutButton({ pageProps }: { pageProps: PageParams }) {
+    const t = useI18n();
     const { mutate: userMutate } = useUserContext();
     const { mutate: cartMutate } = useCartContext();
     const { push } = useRouter();
@@ -41,7 +45,7 @@ function LogOutButton() {
         postFetcher(api.user.logout).then(() => {
             userMutate();
             cartMutate();
-            push(pages.login);
+            pushWithLocale(pages.login, push, pageProps);
         });
     };
 
@@ -54,23 +58,32 @@ function LogOutButton() {
             color={'primary'}
             startIcon={<PowerSettingsNewIcon />}
         >
-            Abmelden
+            {t('logout')}
         </ButtonComponent>
     );
 }
 
-export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggleDrawer: ToggleDrawerType }) {
+export default function SideMenu({
+    open,
+    toggleDrawer,
+    pageProps,
+}: {
+    open: boolean;
+    toggleDrawer: ToggleDrawerType;
+    pageProps: PageParams;
+}) {
+    const t = useI18n();
     const { user } = useUserContext();
 
     const menuList = [
         {
             icon: <TextSnippetIcon />,
-            label: user?.accountType === 'user' ? 'Meine Bestellungen' : 'Eingehende Bestellungen',
+            label: user?.accountType === 'user' ? t('my_order') : t('incoming_order'),
             href: pages.orders,
         },
         {
             icon: <PersonIcon />,
-            label: 'Mein Profil',
+            label: t('my_profile'),
             href: pages.profile,
         },
         /*{
@@ -114,7 +127,12 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
             <Box className={'w-[250px] mt-5'} role="presentation" onClick={toggleDrawer(false)}>
                 <List>
                     {menuList.map(({ label, icon, href }) => (
-                        <ListItem key={label} disablePadding component={NextLinkComposed} to={href}>
+                        <ListItem
+                            key={label}
+                            disablePadding
+                            component={NextLinkComposed}
+                            to={`/${pageProps.params.locale}` + href}
+                        >
                             <ListItemButton>
                                 <ListItemIcon className={'min-w-10'}>{icon}</ListItemIcon>
                                 <ListItemText className={'text-secondary-main'} primary={label} />
@@ -122,7 +140,7 @@ export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggle
                         </ListItem>
                     ))}
                 </List>
-                <LogOutButton />
+                <LogOutButton pageProps={pageProps} />
             </Box>
         </Drawer>
     );

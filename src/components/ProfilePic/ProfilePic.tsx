@@ -74,7 +74,6 @@ export default function ProfilePic({ width = 50, height = 50, previewPicture, ..
                 pictureUrl,
                 hasPB,
                 previewPicture,
-                ...user,
                 ...avatarProps,
             })}
         />
