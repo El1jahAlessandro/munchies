@@ -8,16 +8,10 @@ import { pages } from '@/lib/utils/routes';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { CldImage } from 'next-cloudinary';
 import { usePathname } from 'next/navigation';
-import { PageParams } from '@/lib/schemas/locale.schema';
-import { useI18n } from '@/locales/client';
+import { useCurrentLocale, useI18n } from '@/locales/client';
 
-export default function BottomBar({
-    pageProps: {
-        params: { locale },
-    },
-}: {
-    pageProps: PageParams;
-}) {
+export default function BottomBar() {
+    const locale = useCurrentLocale();
     const t = useI18n();
     const { cartArticles } = useCartContext();
     const pathname = usePathname();

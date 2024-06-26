@@ -8,16 +8,18 @@ import { Container, Stack, Typography } from '@mui/material';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useUserContext } from '@/components/hooks/userContext';
-import { authenticationForm } from '@/lib/helpers/authenticationForm';
+import { ErrorType } from '@/lib/helpers/authenticationForm';
 import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { FormError } from '@/components/ErrorComponents/FormError';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
-import { PageParams } from '@/lib/schemas/locale.schema';
-import { useI18n } from '@/locales/client';
+import { useCurrentLocale, useI18n } from '@/locales/client';
+import SocialLoginButtons from '@/components/FormInputs/SocialLoginButtons';
+import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
 
-export default function LoginPage(pageProps: PageParams) {
+export default function LoginPage() {
     const t = useI18n();
+    const locale = useCurrentLocale();
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
@@ -51,7 +53,12 @@ export default function LoginPage(pageProps: PageParams) {
             action={api.user.auth}
             method={'post'}
             control={control}
-            {...authenticationForm({ setErrorMessage, push, pageProps, mutate })}
+            onSubmit={() => setErrorMessage(undefined)}
+            onSuccess={async () => {
+                await mutate();
+                pushWithLocale(pages.home, push, locale);
+            }}
+            onError={async (error: ErrorType) => setErrorMessage(await error.response?.json())}
         >
             <Container maxWidth="sm">
                 <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
@@ -77,10 +84,11 @@ export default function LoginPage(pageProps: PageParams) {
                     {(errorMessage?.error || errors.root?.message) && (
                         <FormError errors={errors} errorMessage={errorMessage} />
                     )}
+                    <SocialLoginButtons />
                     <div>
                         <Typography component={'span'}>
                             {t('login_footer_text')}{' '}
-                            <Link className={'text-primary-main'} href={`/${pageProps.params.locale}` + pages.register}>
+                            <Link className={'text-primary-main'} href={`/${locale}` + pages.register}>
                                 {t('login_footer_link')}
                             </Link>
                         </Typography>

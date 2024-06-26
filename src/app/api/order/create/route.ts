@@ -1,7 +1,7 @@
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
 import { NextResponse } from 'next/server';
 import { cartCookieName } from '@/lib/utils/constants';
-import { CreateOrderType, createOrderFormDataSchema } from '@/lib/schemas/order.schema';
+import { createOrderFormDataSchema, CreateOrderType } from '@/lib/schemas/order.schema';
 import prisma from '@/lib/utils/prisma';
 import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
 import { groupBy, map, omit } from 'lodash';
@@ -32,7 +32,7 @@ export const POST = asyncNextHandler<CreateOrderType>(async req => {
                 },
                 company: {
                     connect: {
-                        id: Number(company),
+                        id: company,
                     },
                 },
                 ordersArticles: {

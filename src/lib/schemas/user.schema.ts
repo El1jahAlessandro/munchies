@@ -90,7 +90,7 @@ export type UserResponseType = Awaited<
         typeof prisma.user.findUnique<
             typeof getUserInputArgs & {
                 where: {
-                    id: number;
+                    id: string;
                 };
             }
         >

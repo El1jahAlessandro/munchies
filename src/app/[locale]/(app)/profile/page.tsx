@@ -1,6 +1,6 @@
 'use client';
 
-import ProfilePic from '@/components/ProfilePic/ProfilePic';
+import ProfilePic from '@/components/common/ProfilePic';
 import { Badge, Button, Container, IconButton, Stack } from '@mui/material';
 import { CameraAlt } from '@mui/icons-material';
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';

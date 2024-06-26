@@ -15,17 +15,17 @@ import { ButtonComponent } from '@/components/common/ButtonComponent';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import getFormFetcherResponse from '@/lib/helpers/getFormFetcherResponse';
 import { omit } from 'lodash';
-import { useI18n } from '@/locales/client';
-import { PageParams } from '@/lib/schemas/locale.schema';
+import { useCurrentLocale, useI18n } from '@/locales/client';
 
-export default function ArticlePage({ params: { locale } }: PageParams) {
+export default function ArticlePage() {
     const t = useI18n();
+    const locale = useCurrentLocale();
     const searchParams = useSearchParams();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
     const { mutate } = useCartContext();
     const articleId = searchParams.get('id');
     const { articles, error } = useArticlesContext();
-    const article = articles?.find(article => article.id === Number(articleId));
+    const article = articles?.find(article => article.id === articleId);
 
     const {
         register,
@@ -35,7 +35,7 @@ export default function ArticlePage({ params: { locale } }: PageParams) {
         formState: { isSubmitting },
     } = useForm<CartItemType>({
         defaultValues: {
-            id: Number(articleId),
+            id: articleId ?? '',
             amount: 1,
         },
     });

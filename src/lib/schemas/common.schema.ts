@@ -11,7 +11,7 @@ export const paymentMethodSchema = z.nativeEnum(PaymentMethods);
 export const orderStatusSchema = z.nativeEnum(OrderStatus);
 
 export const AuthorizationTokenSchema = z.object({
-    id: z.number(),
+    id: z.string().cuid(),
     email: z.string(),
     accountType: accountTypeSchema,
 });

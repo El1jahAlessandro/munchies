@@ -7,10 +7,10 @@ import { getUserInputArgs, orderSelectArgs } from '@/lib/schemas/user.schema';
 export type OrderType = z.infer<typeof orderSchema>;
 
 export const ordersArticlesSchema = z.object({
-    articleId: z.coerce.number(),
+    articleId: z.string().cuid(),
     amount: z.coerce.number(),
     price: z.coerce.number(),
-    companyId: z.coerce.number(),
+    companyId: z.string().cuid(),
 });
 
 export const orderSchema = z.object({
@@ -20,7 +20,7 @@ export const orderSchema = z.object({
 });
 
 const editOrderSchema = z.object({
-    id: z.coerce.number(),
+    id: z.string().cuid(),
     status: orderStatusSchema,
 });
 
@@ -32,7 +32,7 @@ export type OrderResponseType = Awaited<
         typeof prisma.orders.findUnique<
             typeof getUserInputArgs.select.buyedArticles & {
                 where: {
-                    id: number;
+                    id: string;
                 };
             }
         >
@@ -44,7 +44,7 @@ export type CreateOrderType = Awaited<
         typeof prisma.orders.findMany<
             typeof orderSelectArgs & {
                 where: {
-                    id: number;
+                    id: string;
                 };
             }
         >
@@ -55,7 +55,7 @@ export type EditOrderType = Awaited<
     ReturnType<
         typeof prisma.orders.findUnique<{
             where: {
-                id: number;
+                id: string;
             };
         }>
     >

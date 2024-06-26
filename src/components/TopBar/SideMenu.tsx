@@ -15,16 +15,15 @@ import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import PersonIcon from '@mui/icons-material/Person';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
-import { useUserContext } from '@/components/hooks/userContext';
-import ProfilePic from '@/components/ProfilePic/ProfilePic';
-import { postFetcher } from '@/lib/helpers/fetcher';
+import ProfilePic from '@/components/common/ProfilePic';
 import { api, pages } from '@/lib/utils/routes';
 import { useRouter } from 'next/navigation';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
-import { PageParams } from '@/lib/schemas/locale.schema';
+import { useCurrentLocale, useI18n } from '@/locales/client';
+import { postFetcher } from '@/lib/helpers/fetcher';
 import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
-import { useI18n } from '@/locales/client';
+import { useUserContext } from '@/components/hooks/userContext';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -36,7 +35,8 @@ export function MenuButton({ toggleDrawer }: { toggleDrawer: ToggleDrawerType })
     );
 }
 
-function LogOutButton({ pageProps }: { pageProps: PageParams }) {
+function LogOutButton() {
+    const locale = useCurrentLocale();
     const t = useI18n();
     const { mutate: userMutate } = useUserContext();
     const { mutate: cartMutate } = useCartContext();
@@ -45,7 +45,7 @@ function LogOutButton({ pageProps }: { pageProps: PageParams }) {
         postFetcher(api.user.logout).then(() => {
             userMutate();
             cartMutate();
-            pushWithLocale(pages.login, push, pageProps);
+            pushWithLocale(pages.login, push, locale);
         });
     };
 
@@ -63,15 +63,8 @@ function LogOutButton({ pageProps }: { pageProps: PageParams }) {
     );
 }
 
-export default function SideMenu({
-    open,
-    toggleDrawer,
-    pageProps,
-}: {
-    open: boolean;
-    toggleDrawer: ToggleDrawerType;
-    pageProps: PageParams;
-}) {
+export default function SideMenu({ open, toggleDrawer }: { open: boolean; toggleDrawer: ToggleDrawerType }) {
+    const locale = useCurrentLocale();
     const t = useI18n();
     const { user } = useUserContext();
 
@@ -127,12 +120,7 @@ export default function SideMenu({
             <Box className={'w-[250px] mt-5'} role="presentation" onClick={toggleDrawer(false)}>
                 <List>
                     {menuList.map(({ label, icon, href }) => (
-                        <ListItem
-                            key={label}
-                            disablePadding
-                            component={NextLinkComposed}
-                            to={`/${pageProps.params.locale}` + href}
-                        >
+                        <ListItem key={label} disablePadding component={NextLinkComposed} to={`/${locale}` + href}>
                             <ListItemButton>
                                 <ListItemIcon className={'min-w-10'}>{icon}</ListItemIcon>
                                 <ListItemText className={'text-secondary-main'} primary={label} />
@@ -140,7 +128,7 @@ export default function SideMenu({
                         </ListItem>
                     ))}
                 </List>
-                <LogOutButton pageProps={pageProps} />
+                <LogOutButton />
             </Box>
         </Drawer>
     );

@@ -9,12 +9,12 @@ datasource db {
 }
 
 model User {
-  id            Int         @id @default(autoincrement())
+  id            String      @id @default(cuid())
   email         String      @unique
   name          String
-  password      String
-  profilePic    String?
-  accountType   AccountType
+  password      String?
+  profilePic    String?     @map("profile_pic")
+  accountType   AccountType @default(user) @map("account_type")
   article       Article[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
@@ -23,13 +23,13 @@ model User {
 }
 
 model Article {
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid())
   name              String
   price             Float               @db.DoublePrecision
   picture           String
   description       String
   ingredients       String
-  userId            Int
+  userId            String
   user              User                @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   articleOrders     OrdersArticles[]
   createdAt         DateTime            @default(now())
@@ -38,11 +38,11 @@ model Article {
 }
 
 model OrdersArticles {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   amount    Int
   price     Float
-  orderId   Int
-  articleId Int
+  orderId   String
+  articleId String
   article   Article  @relation(fields: [articleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   order     Orders   @relation(fields: [orderId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   createdAt DateTime @default(now())
@@ -50,12 +50,12 @@ model OrdersArticles {
 }
 
 model Orders {
-  id             Int              @id @default(autoincrement())
+  id             String           @id @default(cuid())
   paymentMethod  PaymentMethods
   totalPrice     Float
   status         OrderStatus      @default(orderReceived)
-  userId         Int
-  companyId      Int
+  userId         String
+  companyId      String
   ordersArticles OrdersArticles[]
   buyer          User             @relation("buyedArticles", fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   company        User             @relation("saledArticles", fields: [companyId], references: [id], onUpdate: Cascade, onDelete: Cascade)
@@ -64,16 +64,16 @@ model Orders {
 }
 
 model ArticleCategories {
-  id         Int        @id @default(autoincrement())
-  articleId  Int
-  categoryId Int
+  id         String     @id @default(cuid())
+  articleId  String
+  categoryId String
   article    Article    @relation(fields: [articleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
   category   Categories @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
 }
 
 model Categories {
   // dessert, drinks, pizza, indian, pasta, burger, salad, asian
-  id                Int                 @id @default(autoincrement())
+  id                String              @id @default(cuid())
   ref               String              @unique
   name              String              @unique
   icon              String

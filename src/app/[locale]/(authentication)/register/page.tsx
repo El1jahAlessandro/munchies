@@ -14,11 +14,11 @@ import { FormInputOptionType } from '@/lib/schemas/common.schema';
 import { FormInputController } from '@/components/FormInputs/FormInputController';
 import { FormError } from '@/components/ErrorComponents/FormError';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
-import { PageParams } from '@/lib/schemas/locale.schema';
-import { useI18n } from '@/locales/client';
+import { useCurrentLocale, useI18n } from '@/locales/client';
 
-export default function RegisterPage(pageProps: PageParams) {
+export default function RegisterPage() {
     const t = useI18n();
+    const locale = useCurrentLocale();
     const { push } = useRouter();
     const { mutate } = useUserContext();
     const [errorMessage, setErrorMessage] = useState<{ error: unknown }>();
@@ -70,7 +70,7 @@ export default function RegisterPage(pageProps: PageParams) {
             action={api.user.create}
             method={'post'}
             control={control}
-            {...authenticationForm({ setErrorMessage, push, pageProps, mutate })}
+            {...authenticationForm({ setErrorMessage, push, locale, mutate })}
         >
             <Container maxWidth="sm">
                 <Typography component={'h2'} typography={'h4'} className={'!font-bold !mb-5'}>
@@ -119,7 +119,7 @@ export default function RegisterPage(pageProps: PageParams) {
                     <div>
                         <Typography component={'span'}>
                             {t('register_footer_text')}{' '}
-                            <Link className={'text-primary-main'} href={`/${pageProps.params.locale}` + pages.login}>
+                            <Link className={'text-primary-main'} href={`/${locale}` + pages.login}>
                                 {t('register_footer_link')}
                             </Link>
                         </Typography>

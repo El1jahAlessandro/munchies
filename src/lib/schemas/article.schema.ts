@@ -14,7 +14,7 @@ export const createArticleBodySchema = z.object({
 });
 
 export const CartItemSchema = z.object({
-    id: z.coerce.number(),
+    id: z.string().cuid(),
     amount: z.coerce.number(),
 });
 

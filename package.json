@@ -18,7 +18,7 @@
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:migrate:reset": "prisma migrate reset",
     "start:migrate:dev": "prisma migrate dev && npm run dev",
-    "start:migrate:dev:ln": "prisma migrate dev && npm run dev -- -H 192.168.0.133",
+    "start:migrate:dev:ln": "prisma migrate dev && npm run dev -- -H 192.168.0.120",
     "start:migrate:prod": "prisma migrate deploy && npm run start",
     "prettier:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx}\"",
     "prettier:write": "prettier --write \"src/**/*.{ts,tsx,js,jsx}\"",
