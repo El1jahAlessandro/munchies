@@ -1,23 +1,16 @@
 import { NextResponse } from 'next/server';
 import { asyncNextHandler, StatusError } from '@/lib/helpers/asyncNextHandler';
-import prisma from '@/lib/utils/prisma';
-import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
-import { getUserInputArgs, UserResponseType } from '@/lib/schemas/user.schema';
+import { UserResponseType } from '@/lib/schemas/user.schema';
+import { auth } from '@clerk/nextjs/server';
+import { getUserByClerkId } from '@/lib/helpers/getUserData';
 
-export const GET = asyncNextHandler<UserResponseType>(async req => {
-    const { id } = getAuthCookieValue(req);
+export const GET = asyncNextHandler<UserResponseType>(async () => {
+    const clerkId = auth().userId!;
 
-    if (!id) {
-        throw new StatusError(401, 'You are not authorized to order');
-    }
-
-    const user = await prisma.user.findUnique({
-        where: { id },
-        ...getUserInputArgs,
-    });
+    const user = await getUserByClerkId(clerkId);
 
     if (!user) {
-        throw new StatusError(401, 'You are not logged in');
+        throw new StatusError(401, 'You are not authorized');
     }
 
     return NextResponse.json(user, { status: 200 });

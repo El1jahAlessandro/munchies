@@ -90,6 +90,16 @@ async function main() {
     const max = await createUser({
         email: 'max.mustermann@gmail.com',
         name: 'Max Mustermann',
+        clerkId: 'user_2iVEcd0Hx3eqHPcponcxNjAWcMD',
+        accountType: 'user',
+        profilePic: '',
+        articles: [],
+    });
+
+    const elijah = await createUser({
+        email: 'elijahfreimuth@gmail.com',
+        name: '',
+        clerkId: 'user_2iSPANaXTMECvI3JkbvvHk6dOgY',
         accountType: 'user',
         profilePic: '',
         articles: [],
@@ -102,6 +112,7 @@ async function main() {
 
     console.log({
         max,
+        elijah,
         alpensteig,
         asienPerle,
         tajMahal,

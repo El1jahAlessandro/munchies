@@ -14,15 +14,11 @@ export const POST = asyncNextHandler(async req => {
     // get user from the database based on email
     const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
 
-    if (!user) {
-        throw new StatusError(400, 'User with that Email does not exists');
-    }
-
     // compare both hashed passwords
     const compareHashedPassword = await bcrypt.compare(password, user?.password ?? '');
 
-    if (!compareHashedPassword) {
-        throw new StatusError(401, 'Email or Password is incorrect');
+    if (!user || !compareHashedPassword) {
+        throw new StatusError(401, 'Invalid Credentials');
     }
 
     // Create Token and send it back as Cookie

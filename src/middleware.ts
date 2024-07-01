@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pages } from '@/lib/utils/routes';
-import { getAuthCookieValue } from '@/lib/helpers/getCookieValues';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { createI18nMiddleware } from 'next-international/middleware';
 import { localesSchema } from '@/lib/schemas/locale.schema';
+import { pages } from '@/lib/utils/routes';
 
 function getUrlSplit(request: NextRequest) {
     const [, unknownLocale, ...path] = request.nextUrl.pathname.split('/');
@@ -12,51 +13,55 @@ function getUrlSplit(request: NextRequest) {
     return [locale, path.join('/'), fallbackPath];
 }
 
+const hasLocale = (request: NextRequest) => locales.some(locale => request.nextUrl.pathname.includes(locale));
+
+const locales = ['de', 'en'];
 const defaultLocale = 'de';
 
-export function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
+const intlMiddleware = createI18nMiddleware({
+    locales,
+    defaultLocale,
+    urlMappingStrategy: 'redirect',
+});
+
+const protectedPageRoutes = ['(.*)/profile', '((?!_next|api).*)/cart', '((?!_next|api).*)/orders'];
+const protectedApiRoutes = ['(.*)/api/user/(!create|auth)(.*)', '(.*)/api/orders/(.*)', '(.*)/api/cart/(.*)'];
+
+const isProtectedPageRoute = createRouteMatcher(protectedPageRoutes);
+const isProtectedApiRoute = createRouteMatcher(protectedApiRoutes);
+const isLocaleRoute = createRouteMatcher([
+    '(.*)/overview(.*)',
+    '((?!_next|api).*)/article(.*)',
+    ...protectedPageRoutes,
+]);
+const isApiRoute = createRouteMatcher(['(.*)/api(.*)']);
+
+export default clerkMiddleware((auth, req, event) => {
     const [locale, path, fallbackPath] = getUrlSplit(req);
+    if (isApiRoute(req)) {
+        if (hasLocale(req)) {
+            req.nextUrl.pathname = `/${path}`;
+            return NextResponse.redirect(req.nextUrl);
+        }
 
-    const isAuthenticated = !!getAuthCookieValue(req).id;
-    const onAuthenticationPage = [pages.login, pages.register].some(page => pathname.includes(page));
-    const noLocalePath = ['api', '_next'].some(page => pathname.includes(page));
+        if (isProtectedApiRoute(req)) auth().protect();
 
-    /*   if (!noLocalePath) {
-        console.log('pathname: ', pathname);
-        console.log('locale: ', locale);
-        console.log('path: ', path?.length);
-        console.log('fallbackPath: ', fallbackPath);
-        console.log('isAuthenticated: ', isAuthenticated);
-        console.log('onAuthenticationPage: ', onAuthenticationPage);
-        console.log('noLocalePath: ', noLocalePath);
-        console.log("!locale && !path?.includes('/overview'): ", !locale && !path?.includes('/overview'));
-        console.log('onAuthenticationPage && isAuthenticated: ', onAuthenticationPage && isAuthenticated);
-        console.log('!locale && path?.length === 0: ', !locale || path?.length === 0);
-        console.log('!isAuthenticated && !onAuthenticationPage: ', !isAuthenticated && !onAuthenticationPage);
-    }*/
-
-    if (noLocalePath) {
-        req.nextUrl.pathname = `/${path}`;
-        return NextResponse.redirect(req.nextUrl);
+        return NextResponse.next();
     }
 
-    if (!locale || path?.length === 0 || (onAuthenticationPage && isAuthenticated)) {
+    if (!locale || path?.length === 0) {
         // Redirect to overview homepage when domain is visited
         req.nextUrl.pathname = `/${locale ?? defaultLocale}/${fallbackPath ?? pages.home}`;
         return NextResponse.redirect(req.nextUrl);
     }
 
-    if (!isAuthenticated && !onAuthenticationPage) {
-        // Redirect to login page if not authenticated
-        req.nextUrl.pathname = `/${locale}${pages.login}`;
-        return NextResponse.redirect(req.nextUrl);
-    }
+    if (isProtectedPageRoute(req)) auth().protect();
 
-    // If the user is authenticated or on an login/register page, continue as normal
-    return NextResponse.next();
-}
+    if (isLocaleRoute(req)) {
+        return intlMiddleware(req);
+    }
+});
 
 export const config = {
-    matcher: ['/((?!_next|api).*)'],
+    matcher: ['/((?!_next).*)'],
 };

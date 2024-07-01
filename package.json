@@ -41,12 +41,14 @@
     "eslint-config-next": "14.2.3",
     "postcss": "^8.4.38",
     "prettier": "3.3.2",
-    "prisma": "^5.15.1",
+    "prisma": "^5.16.1",
     "tailwindcss": "^3.4.4",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
   },
   "dependencies": {
+    "@clerk/localizations": "^2.4.6",
+    "@clerk/nextjs": "^5.1.6",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

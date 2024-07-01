@@ -3,7 +3,6 @@ export const api = {
         auth: 'api/user/auth',
         create: 'api/user/create',
         get: 'api/user/get',
-        logout: 'api/user/logout',
         edit: 'api/user/edit',
     },
     article: {
@@ -22,9 +21,9 @@ export const api = {
 
 export const pages = {
     home: '/overview',
-    login: '/login',
+    login: '/sign-up',
     cart: '/cart',
-    register: '/register',
+    register: '/sign-in',
     article: '/article',
     profile: '/profile',
     orders: '/orders',

@@ -16,14 +16,12 @@ import PersonIcon from '@mui/icons-material/Person';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import { NextLinkComposed } from '@/components/common/NextLinkComposed';
 import ProfilePic from '@/components/common/ProfilePic';
-import { api, pages } from '@/lib/utils/routes';
-import { useRouter } from 'next/navigation';
+import { pages } from '@/lib/utils/routes';
 import { useCartContext } from '@/components/hooks/cartContext';
 import { ButtonComponent } from '@/components/common/ButtonComponent';
 import { useCurrentLocale, useI18n } from '@/locales/client';
-import { postFetcher } from '@/lib/helpers/fetcher';
-import { pushWithLocale } from '@/lib/helpers/pushWithLocale';
 import { useUserContext } from '@/components/hooks/userContext';
+import { useAuth } from '@clerk/nextjs';
 
 type ToggleDrawerType = (newOpen: boolean) => () => void;
 
@@ -40,13 +38,11 @@ function LogOutButton() {
     const t = useI18n();
     const { mutate: userMutate } = useUserContext();
     const { mutate: cartMutate } = useCartContext();
-    const { push } = useRouter();
+    const { signOut } = useAuth();
     const handleClick = async () => {
-        postFetcher(api.user.logout).then(() => {
-            userMutate();
-            cartMutate();
-            pushWithLocale(pages.login, push, locale);
-        });
+        await signOut({ redirectUrl: `/${locale}/${pages.login}` });
+        await userMutate();
+        await cartMutate();
     };
 
     return (

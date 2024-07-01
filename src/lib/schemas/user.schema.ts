@@ -77,6 +77,7 @@ export const getUserInputArgs = {
     select: {
         id: true,
         email: true,
+        clerkId: true,
         name: true,
         profilePic: true,
         accountType: true,
