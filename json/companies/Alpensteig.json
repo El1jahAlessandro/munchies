@@ -1,0 +1,145 @@
+{
+  "name": "Alpensteig",
+  "email": "alpensteig@gmail.com",
+  "profilePic": "munchies/Profile Pictures/a75xd3vgqmtmzozkcalt",
+  "articles": [
+    {
+      "name": "Kässpätzle",
+      "description": "Hausgemachte Spätzle mit geschmolzenem Käse und Röstzwiebeln",
+      "ingredients": [
+        "Spätzle",
+        "Käse",
+        "Röstzwiebeln",
+        "Butter",
+        "Salz",
+        "Pfeffer"
+      ],
+      "price": 12.50,
+      "picture": "munchies/Article Pictures/idmr20y2t8hseoq08psy",
+      "category": [
+        "main_course"
+      ]
+    },
+    {
+      "name": "Allgäuer Cordon Bleu",
+      "description": "Panierte Schnitzel gefüllt mit Käse und Schinken, serviert mit Pommes und Salat",
+      "ingredients": [
+        "Schweineschnitzel",
+        "Käse",
+        "Schinken",
+        "Paniermehl",
+        "Eier",
+        "Pommes",
+        "Salat"
+      ],
+      "price": 16.80,
+      "picture": "munchies/Article Pictures/d7zyqpwtq31hklowgg66",
+      "category": [
+        "main_course"
+      ]
+    },
+    {
+      "name": "Zwiebelrostbraten",
+      "description": "Saftiges Rindersteak mit knusprigen Röstzwiebeln und Bratkartoffeln",
+      "ingredients": [
+        "Rindersteak",
+        "Röstzwiebeln",
+        "Bratkartoffeln",
+        "Butter",
+        "Salz",
+        "Pfeffer"
+      ],
+      "price": 19.50,
+      "picture": "munchies/Article Pictures/bpkdenbzk3nqxwqcmntd",
+      "category": [
+        "main_course"
+      ]
+    },
+    {
+      "name": "Tiroler Knödeltris",
+      "description": "Drei verschiedene Knödel: Spinat-, Käse- und Speckknödel, serviert mit Krautsalat",
+      "ingredients": [
+        "Spinatknödel",
+        "Käseknödel",
+        "Speckknödel",
+        "Krautsalat"
+      ],
+      "price": 14.20,
+      "picture": "munchies/Article Pictures/onn3xxfk350yb9wyex8o",
+      "category": [
+        "main_course"
+      ]
+    },
+    {
+      "name": "Putenmakkaroni",
+      "description": "Makkaroni mit Putenstreifen in einer cremigen Sahnesauce mit Pilzen",
+      "ingredients": [
+        "Makkaroni",
+        "Putenstreifen",
+        "Sahnesauce",
+        "Parmesan",
+        "Salz",
+        "Pfeffer",
+        "Pilze"
+      ],
+      "price": 11.90,
+      "picture": "munchies/Article Pictures/zlmf1xs0iz20okldtccv",
+      "category": [
+        "pasta"
+      ]
+    },
+    {
+      "name": "Hirtenmakkaroni",
+      "description": "Makkaroni mit würziger Hackfleischsauce, wahlweise mild oder feurig",
+      "ingredients": [
+        "Makkaroni",
+        "Hackfleischsauce",
+        "Paprika",
+        "Chili (optional)",
+        "Salz",
+        "Pfeffer"
+      ],
+      "price": 12.30,
+      "category": [
+        "pasta"
+      ],
+      "picture": "munchies/Article Pictures/asalx8nqvxpk2hnjzmaf"
+    },
+    {
+      "name": "Alpensteig Burger",
+      "description": "Burger mit Rindfleisch, Käse, Speck, Salat und Spezialsoße, serviert mit Pommes",
+      "ingredients": [
+        "Burgerbrötchen",
+        "Rindfleisch",
+        "Käse",
+        "Speck",
+        "Salat",
+        "Spezialsoße",
+        "Pommes"
+      ],
+      "price": 14.90,
+      "category": [
+        "burger"
+      ],
+      "picture": "munchies/Article Pictures/on880hayi6eqopp8aweo"
+    },
+    {
+      "name": "Schweinefilet Medaillons",
+      "description": "Zarte Schweinefilet Medaillons mit Pfeffersauce und Kartoffelgratin",
+      "ingredients": [
+        "Schweinefilet",
+        "Pfeffersauce",
+        "Kartoffelgratin",
+        "Butter",
+        "Salz",
+        "Pfeffer"
+      ],
+      "price": 18.70,
+      "category": [
+        "main_course"
+      ],
+      "picture": "munchies/Article Pictures/np8ll9nptcdm27xpg0jt"
+    }
+  ]
+}
+    
